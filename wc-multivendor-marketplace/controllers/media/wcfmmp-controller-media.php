@@ -143,7 +143,7 @@ class WCFMmp_Media_Controller {
 				}
         
 				// Status
-				$actions = '<a class="wcfm-action-icon" target="_blank" href="' . wp_get_attachment_url( $wcfm_media_single->ID ) . '" ><span class="wcfmfa fa-eye text_tip" data-tip="' . esc_attr__( 'View', 'wc-frontend-manager' ) . '"></span></a>';;
+				$actions = '<a class="wcfm-action-icon" target="_blank" href="' . wp_get_attachment_url( $wcfm_media_single->ID ) . '" ><span class="wcfmfa fa-eye text_tip" data-tip="' . esc_attr__( 'View', 'wc-frontend-manager' ) . '"></span></a>';
 				
 				if( apply_filters( 'wcfm_is_allow_delete_media', true ) ) {
 					$actions .= '<a class="wcfm_media_dalete wcfm-action-icon" href="#" data-mediaid="' . $wcfm_media_single->ID . '"><span class="wcfmfa fa-trash-alt text_tip" data-tip="' . esc_attr__( 'Delete', 'wc-multivendor-marketplace' ) . '"></span></a>';

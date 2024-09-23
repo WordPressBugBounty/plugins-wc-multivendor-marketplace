@@ -54,9 +54,9 @@ $max_radius_to_search = isset( $WCFMmp->wcfmmp_marketplace_options['max_radius_t
 
 $radius_unit = isset( $WCFMmp->wcfmmp_marketplace_options['radius_unit'] ) ? $WCFMmp->wcfmmp_marketplace_options['radius_unit'] : 'km';
 
-$search_radius_range	= isset( $_GET['wcfmmp_radius_range'] ) ? $_GET['wcfmmp_radius_range'] : $search_radius_range;
-$search_radius_lat 		= isset( $_GET['wcfmmp_radius_lat'] ) ? $_GET['wcfmmp_radius_lat'] : $search_radius_lat;
-$search_radius_lng 		= isset( $_GET['wcfmmp_radius_lng'] ) ? $_GET['wcfmmp_radius_lng'] : $search_radius_lng;
+$search_radius_range	= isset( $_GET['wcfmmp_radius_range'] ) ? sanitize_text_field($_GET['wcfmmp_radius_range']) : $search_radius_range;
+$search_radius_lat 		= isset( $_GET['wcfmmp_radius_lat'] ) ? sanitize_text_field($_GET['wcfmmp_radius_lat']) : $search_radius_lat;
+$search_radius_lng 		= isset( $_GET['wcfmmp_radius_lng'] ) ? sanitize_text_field($_GET['wcfmmp_radius_lng']) : $search_radius_lng;
 
 $args = array(
 		'stores'          => $stores,

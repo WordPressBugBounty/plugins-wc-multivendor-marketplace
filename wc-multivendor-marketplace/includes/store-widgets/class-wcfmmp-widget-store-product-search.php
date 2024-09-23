@@ -27,7 +27,7 @@ class WCFMmp_Store_Product_Search extends WP_Widget {
 	 * @return void Echoes it's output
 	 */
 	function widget( $args, $instance ) {
-		global $WCFM, $WCFMmp, $wcfmmp_product_search_form_index;;
+		global $WCFM, $WCFMmp, $wcfmmp_product_search_form_index;
 
 		if ( ! wcfmmp_is_store_page() ) {
 				return;

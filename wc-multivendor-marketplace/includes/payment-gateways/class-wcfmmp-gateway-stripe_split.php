@@ -10,6 +10,7 @@ use Stripe\Source as Stripe_Source;
 use Stripe\Charge as Stripe_Charge;
 use Stripe\Transfer as Stripe_Transfer;
 use Stripe\Token as Stripe_Token;
+use \Stripe\StripeClient;
 
 class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 
@@ -38,6 +39,8 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 	private $token_type;
 	private $charge_type;
 	private $debug;
+
+	protected $stripe;
 
 	public function __construct() {
 		global $WCFM, $WCFMmp;
@@ -80,6 +83,8 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			$this->published_key = isset( $WCFMmp->wcfmmp_withdrawal_options['stripe_test_published_key'] ) ? $WCFMmp->wcfmmp_withdrawal_options['stripe_test_published_key'] : '';
 			$this->secret_key = isset( $WCFMmp->wcfmmp_withdrawal_options['stripe_test_secret_key'] ) ? $WCFMmp->wcfmmp_withdrawal_options['stripe_test_secret_key'] : '';
 		}
+
+		$this->stripe = new StripeClient($this->secret_key);
 		
 		$this->title        = apply_filters( 'wcfmmp_stripe_split_pay_title', __('Credit or Debit Card (Stripe)', 'wc-multivendor-marketplace') );
 		$this->description  = __('Pay with your credit or debit card via Stripe.', 'wc-multivendor-marketplace');
@@ -435,10 +440,66 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		
 		$card_charged = false;
 		$all_success = array();
+
+		/**
+		 * 	Before proceeding with creating a charge
+		 * 	we need to ensure if all connected vendors 
+		 * 	supports card_payments
+		 * 
+		 * 	if not, forcefully change the charge_type to transfers_charges
+		 * 	as direct_charges won't be possible
+		 * 	destination_charges is still possible
+		 */
+		if (apply_filters('wcfmmp_switch_to_stripe_transfer_if_no_card_payments', true)) {
+
+			if ($this->charge_type == 'direct_charges') {
+
+				$all_vendor_supports_card_payments = true;
+
+				if (!class_exists('WCFM_Stripe_Connect_Client')) {
+					include_once $WCFM->plugin_path . "helpers/class-wcfm-stripe-connect-client.php";
+				}
+
+				$stripe_client = new WCFM_Stripe_Connect_Client($this->client_id, $this->secret_key);
+
+				/**
+				 * 	Check stripe account capabilities
+				 */
+				foreach ($wcfmmp_stripe_split_pay_list['distribution_list'] as $vendor_id => $distribution_info) {
+
+					$capabilities = get_user_meta( $vendor_id, 'stripe_account_capabilities', true );
+
+					if (!$capabilities) {
+						$stripe_client->set_user_id($vendor_id);
+						$stripe_account_obj = $stripe_client->retrieve_account();
+
+						if ($stripe_account_obj) {
+							$capabilities = $stripe_account_obj->capabilities;
+							update_user_meta( $vendor_id, 'stripe_account_capabilities', $capabilities );
+						}
+					}
+
+					if (
+						!is_object($capabilities) ||
+						!isset($capabilities->card_payments) ||
+						'active' == $capabilities->card_payments
+					) {
+						$all_vendor_supports_card_payments = false;
+						break;
+					}
+				}
+
+				if (!$all_vendor_supports_card_payments) {
+
+					wcfm_stripe_log("Stripe Charge Type changed from {$this->charge_type} to transfers_charges, as some vendors doesn't support card_payments", 'warning');
+
+					$this->charge_type = 'transfers_charges';
+				}
+			}
+		}
 		
 		$order->update_meta_data('wcfmmp_stripe_split_pay_charge_type', $this->charge_type);
 
-		
 		switch ($this->charge_type) {
 			case 'direct_charges':
 				
@@ -594,15 +655,26 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 						
 						// Directly Charge the Customer and collect the application_fee
 						try {
+							// $charge_data = array(
+							// 	"amount"       => $this->get_stripe_amount($distribution_info['gross_sales']),
+							// 	"currency"     => $wcfmmp_stripe_split_pay_list['currency'],
+							// 	"source"       => $wcfmmp_stripe_split_pay_list['stripe_token'][$i],
+							// 	"destination"  => array(
+							// 		"amount"     => $this->get_stripe_amount($re_total_commission),
+							// 		"account"    => $distribution_info['destination'],
+							// 	),
+							// 	"description"    => $wcfmmp_stripe_split_pay_list['description'],
+							// );
 							$charge_data = array(
-								"amount"       => $this->get_stripe_amount($distribution_info['gross_sales']),
-								"currency"     => $wcfmmp_stripe_split_pay_list['currency'],
-								"source"       => $wcfmmp_stripe_split_pay_list['stripe_token'][$i],
-								"destination"  => array(
-									"amount"     => $this->get_stripe_amount($re_total_commission),
-									"account"    => $distribution_info['destination'],
-								),
-								"description"    => $wcfmmp_stripe_split_pay_list['description'],
+								"amount"     	=> $this->get_stripe_amount($distribution_info['gross_sales']),
+								"currency"     	=> $wcfmmp_stripe_split_pay_list['currency'],
+								"source"       	=> $wcfmmp_stripe_split_pay_list['stripe_token'][$i],
+								"description" 	=> $wcfmmp_stripe_split_pay_list['description'],
+								"transfer_data"	=> [
+									"destination"	=> $distribution_info['destination'],
+									"amount"     	=> $this->get_stripe_amount($re_total_commission),
+								],
+								"transfer_group" => $wcfmmp_stripe_split_pay_list['transfer_group'],
 							);
 							$charge_data = apply_filters('wcfmmp_stripe_split_pay_destination_charges', $charge_data);
 							$i++;
@@ -1795,7 +1867,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			'currency'             => strtolower( $order->get_currency() ),
 			'description'          => $full_request['description'],
 			'metadata'             => $full_request['metadata'],
-			'statement_descriptor' => $full_request['statement_descriptor'],
+			'statement_descriptor_suffix' => $full_request['statement_descriptor'],
 			'capture_method'       => 'automatic',
 			'payment_method_types' => array(
 				'card',

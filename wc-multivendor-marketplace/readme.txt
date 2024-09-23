@@ -3,11 +3,11 @@ Contributors: wclovers
 Tags: woocommerce marketplace, multivendor marketplace, multi vendor, multi seller, woocommerce product vendors 
 Donate link: https://www.paypal.me/wclovers/25usd
 Requires at least: 4.4
-Tested up to: 6.5
+Tested up to: 6.6
 WC requires at least: 3.0
-WC tested up to: 9.0.0
+WC tested up to: 9.3.0
 Requires PHP: 5.6
-Stable tag: 3.6.10
+Stable tag: 3.6.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -254,6 +254,14 @@ NONE.
 
 
 == Changelog ==
+
+= 3.6.11 =
+*Updated - 23/09/2024*
+
+* Enhanced – Added condition for missing source_transaction parameter in stripe transfer args
+* Fixed    –  Cross Site Scripting (XSS) vulnerability in store list search as reported by Le Ngoc Anh, Credit goes to Le Ngoc Anh Wesley for identifying this issue.
+* Fixed    – Stripe Split Payment Issue with Cross-Border Payments: If the platform account and connected account(s) are not from the same country, Stripe payments fail when using "direct charge" mode.
+* Fixed    – Minor typo & bug fixes
 
 = 3.6.10 =
 *Updated - 26/06/2024*
@@ -1704,12 +1712,8 @@ NONE.
 
 == Upgrade Notice ==
 
-= 3.6.10 =
-* Enhanced – WooCommerce 9.0+ compatibility added
-* Enhanced – Filter added for Store list page map that can show all store markers irrespective of pagination - apply_filters('wcfmmp_show_all_vendor_markers_on_map', false)
-* Fixed    – Order review page - payment radio button style issue, Payment stuck issue
-* Fixed    – Removed double slash in URLs from the vendor store page tabs
-* Fixed    – Stripe Split Pay - Direct charge stripe_fee added to admin & vendor both, a new filter added to enable/disable this behaviour - apply_filters( 'wcfmmp_prevent_stripe_direct_charge_deduct_transaction_fee', true )
-* Fixed    – Stripe Split Pay - `$wpdb->prefix` was not added to `wcfm_marketplace_orders` table query correctly
-* Fixed    – Stripe Split Pay - Separate charges & transfer - `source_transaction` parameter added
-* Fixed    - Store new email sent twice issue, order with `wc-checkout-draft` status removed from getting store_new_order email
+= 3.6.11 =
+* Enhanced – Added condition for missing source_transaction parameter in stripe transfer args
+* Fixed    –  Cross Site Scripting (XSS) vulnerability in store list search as reported by Le Ngoc Anh, Credit goes to Le Ngoc Anh Wesley for identifying this issue.
+* Fixed    – Stripe Split Payment Issue with Cross-Border Payments: If the platform account and connected account(s) are not from the same country, Stripe payments fail when using "direct charge" mode.
+* Fixed    – Minor typo & bug fixes

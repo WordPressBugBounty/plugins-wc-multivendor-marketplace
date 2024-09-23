@@ -578,15 +578,21 @@ class WCFMmp_Store_Setup {
 							
 							if (empty($stripe_user_id)) {
 								$account = $stripe_client->create_account($stripe_client->get_stripe_accounts_args());
-								$stripe_user_id = $account->id;
+								
+								if (isset($account->id)) {
+									$stripe_user_id = $account->id;
+								}
 							}
-	
-							$stripe_account_links_args = $stripe_client->get_stripe_account_links_args($stripe_user_id);
-							$stripe_account_links_args['refresh_url'] = add_query_arg( array( 'stripe_action' => 'refresh' ), $payment_url );
-							$stripe_account_links_args['return_url'] = $payment_url;
-	
-							// create account_url & redirect
-							$link = $stripe_client->create_account_link($stripe_account_links_args);
+							
+							$link = '';
+							if ($stripe_user_id) {
+								$stripe_account_links_args = $stripe_client->get_stripe_account_links_args($stripe_user_id);
+								$stripe_account_links_args['refresh_url'] = add_query_arg( array( 'stripe_action' => 'refresh' ), $payment_url );
+								$stripe_account_links_args['return_url'] = $payment_url;
+								
+								// create account_url & redirect
+								$link = $stripe_client->create_account_link($stripe_account_links_args);
+							}
 							
 							if ($link) {
 								?>

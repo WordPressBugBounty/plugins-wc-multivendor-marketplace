@@ -10,7 +10,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-global $WCFM, $WCFMmp, $post, $wp, $wpdb;;
+global $WCFM, $WCFMmp, $post, $wp, $wpdb;
 
 if ( '' === get_option( 'permalink_structure' ) ) {
 	$form_action = remove_query_arg( array( 'page', 'paged', 'product-page' ), add_query_arg( $wp->query_string, '', home_url( $wp->request ) ) );
