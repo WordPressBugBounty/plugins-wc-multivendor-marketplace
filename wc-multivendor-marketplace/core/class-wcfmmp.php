@@ -106,6 +106,8 @@ class WCFMmp {
 	public function load_stripe_split_pay_gateway_class() {
 		global $WCFMmp;
 
+		$this->setup_properties();
+
 		$active_payment_methods = get_wcfm_marketplace_active_withdrwal_payment_methods();
 		$payment_method = 'stripe_split';
 

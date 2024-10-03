@@ -7,7 +7,7 @@ Tested up to: 6.6
 WC requires at least: 3.0
 WC tested up to: 9.3.0
 Requires PHP: 5.6
-Stable tag: 3.6.11
+Stable tag: 3.6.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -255,11 +255,17 @@ NONE.
 
 == Changelog ==
 
+= 3.6.12 =
+*Updated - 02/10/2024*
+
+* Fixed    – Cross Site Scripting (XSS) vulnerability in store list search as reported by Le Ngoc Anh, Credit goes to Le Ngoc Anh for identifying this issue.
+* Fixed    – PHP Fatal error Class Stripe\StripeClient not found when Woocommerce Booking plugin active
+* Fixed    – Stripe Gateway is disabled. Please re-check withdrawal setting panel. This occurs mostly due to absence of Stripe Secret Key when Woocommerce Booking plugin active
+
 = 3.6.11 =
 *Updated - 23/09/2024*
 
 * Enhanced – Added condition for missing source_transaction parameter in stripe transfer args
-* Fixed    –  Cross Site Scripting (XSS) vulnerability in store list search as reported by Le Ngoc Anh, Credit goes to Le Ngoc Anh Wesley for identifying this issue.
 * Fixed    – Stripe Split Payment Issue with Cross-Border Payments: If the platform account and connected account(s) are not from the same country, Stripe payments fail when using "direct charge" mode.
 * Fixed    – Minor typo & bug fixes
 
@@ -1712,8 +1718,7 @@ NONE.
 
 == Upgrade Notice ==
 
-= 3.6.11 =
-* Enhanced – Added condition for missing source_transaction parameter in stripe transfer args
-* Fixed    –  Cross Site Scripting (XSS) vulnerability in store list search as reported by Le Ngoc Anh, Credit goes to Le Ngoc Anh Wesley for identifying this issue.
-* Fixed    – Stripe Split Payment Issue with Cross-Border Payments: If the platform account and connected account(s) are not from the same country, Stripe payments fail when using "direct charge" mode.
-* Fixed    – Minor typo & bug fixes
+= 3.6.12 =
+* Fixed    – Cross Site Scripting (XSS) vulnerability in store list search as reported by Le Ngoc Anh, Credit goes to Le Ngoc Anh for identifying this issue.
+* Fixed    – PHP Fatal error Class Stripe\StripeClient not found when Woocommerce Booking plugin active
+* Fixed    – Stripe Gateway is disabled. Please re-check withdrawal setting panel. This occurs mostly due to absence of Stripe Secret Key when Woocommerce Booking plugin active

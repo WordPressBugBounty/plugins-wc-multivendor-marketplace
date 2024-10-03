@@ -1176,13 +1176,9 @@ class WCFMmp_Shortcode {
 		
 		echo '<div class="wcfm_store_instagram_widget" style="margin-bottom:50px;">';
 		
-    
-		
 		echo '</div>';
 		
-		$content .= ob_get_clean();
-		
-		return $content;
+		return ob_get_clean();
 	}
 	
 	/**

@@ -4,7 +4,7 @@
  * Plugin URI: https://wclovers.com/knowledgebase_category/wcfm-marketplace/
  * Description: Most featured and flexible marketplace solution for your e-commerce store. Simply and Smoothly.
  * Author: WC Lovers
- * Version: 3.6.11
+ * Version: 3.6.12
  * Author URI: https://wclovers.com
  *
  * Text Domain: wc-multivendor-marketplace

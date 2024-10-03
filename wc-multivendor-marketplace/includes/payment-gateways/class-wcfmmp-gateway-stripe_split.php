@@ -10,7 +10,6 @@ use Stripe\Source as Stripe_Source;
 use Stripe\Charge as Stripe_Charge;
 use Stripe\Transfer as Stripe_Transfer;
 use Stripe\Token as Stripe_Token;
-use \Stripe\StripeClient;
 
 class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 
@@ -84,8 +83,6 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			$this->secret_key = isset( $WCFMmp->wcfmmp_withdrawal_options['stripe_test_secret_key'] ) ? $WCFMmp->wcfmmp_withdrawal_options['stripe_test_secret_key'] : '';
 		}
 
-		$this->stripe = new StripeClient($this->secret_key);
-		
 		$this->title        = apply_filters( 'wcfmmp_stripe_split_pay_title', __('Credit or Debit Card (Stripe)', 'wc-multivendor-marketplace') );
 		$this->description  = __('Pay with your credit or debit card via Stripe.', 'wc-multivendor-marketplace');
 		$this->charge_type  = isset( $WCFMmp->wcfmmp_withdrawal_options['stripe_split_pay_mode'] ) ? $WCFMmp->wcfmmp_withdrawal_options['stripe_split_pay_mode'] : 'direct_charges';
