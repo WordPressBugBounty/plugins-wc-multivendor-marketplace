@@ -3,11 +3,11 @@ Contributors: wclovers
 Tags: woocommerce marketplace, multivendor marketplace, multi vendor, multi seller, woocommerce product vendors 
 Donate link: https://www.paypal.me/wclovers/25usd
 Requires at least: 4.4
-Tested up to: 6.6
+Tested up to: 6.7
 WC requires at least: 3.0
-WC tested up to: 9.3.0
+WC tested up to: 9.5.0
 Requires PHP: 5.6
-Stable tag: 3.6.12
+Stable tag: 3.6.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -254,6 +254,12 @@ NONE.
 
 
 == Changelog ==
+
+= 3.6.13 =
+*Updated - 12/01/2025*
+
+* Enhance - WordPress 6.7+ compatibility check added
+* Enhance - WooCommerce 9.5+ compatibility check added
 
 = 3.6.12 =
 *Updated - 02/10/2024*
@@ -1718,7 +1724,6 @@ NONE.
 
 == Upgrade Notice ==
 
-= 3.6.12 =
-* Fixed    – Cross Site Scripting (XSS) vulnerability in store list search as reported by Le Ngoc Anh, Credit goes to Le Ngoc Anh for identifying this issue.
-* Fixed    – PHP Fatal error Class Stripe\StripeClient not found when Woocommerce Booking plugin active
-* Fixed    – Stripe Gateway is disabled. Please re-check withdrawal setting panel. This occurs mostly due to absence of Stripe Secret Key when Woocommerce Booking plugin active
+= 3.6.13 =
+* Enhance - WordPress 6.7+ compatibility check added
+* Enhance - WooCommerce 9.5+ compatibility check added
