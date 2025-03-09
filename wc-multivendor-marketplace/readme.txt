@@ -5,9 +5,9 @@ Donate link: https://www.paypal.me/wclovers/25usd
 Requires at least: 4.4
 Tested up to: 6.7
 WC requires at least: 3.0
-WC tested up to: 9.5.0
+WC tested up to: 9.7.0
 Requires PHP: 5.6
-Stable tag: 3.6.13
+Stable tag: 3.6.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -254,6 +254,13 @@ NONE.
 
 
 == Changelog ==
+
+= 3.6.14 =
+*Updated - 09/03/2025*
+
+* Enhance - WooCommerce 9.7+ compatibility check added
+* Fixed   - Stripe vendor connect issue for cross border countries. Now vendor needs to choose from a list of supported countries.
+* Fixed   - Minor bug fixes
 
 = 3.6.13 =
 *Updated - 12/01/2025*
@@ -1724,6 +1731,7 @@ NONE.
 
 == Upgrade Notice ==
 
-= 3.6.13 =
-* Enhance - WordPress 6.7+ compatibility check added
-* Enhance - WooCommerce 9.5+ compatibility check added
+= 3.6.14 =
+* Enhance - WooCommerce 9.7+ compatibility check added
+* Fixed   - Stripe vendor connect issue for cross border countries. Now vendor needs to choose from a list of supported countries.
+* Fixed   - Minor bug fixes

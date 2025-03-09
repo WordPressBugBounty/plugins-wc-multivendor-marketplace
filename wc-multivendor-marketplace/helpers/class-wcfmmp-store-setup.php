@@ -619,7 +619,10 @@ class WCFMmp_Store_Setup {
 							$btn_class = "stripe-connect light-blue";
 						} else {
 							$message = __('You are not connected with stripe.', 'wc-frontend-manager');
-							$url = add_query_arg( array( 'stripe_action' => 'connect' ), $payment_url );
+							$url = add_query_arg([
+								'stripe_action'		=> 'connect',
+								'vendor_country'	=> $stripe_client->get_platform_country()
+							], $payment_url);
 							$btn_text = __('Connect with Stripe', 'wc-frontend-manager');
 							$btn_class = "stripe-connect";
 						}
@@ -643,9 +646,61 @@ class WCFMmp_Store_Setup {
 										<tr>
 											<th></th>
 											<td>
-												<a class="<?php echo $btn_class; ?>" style="float:none;" href=<?php echo $url; ?> target="_self"><span><?php echo $btn_text; ?></span></a>
+												<a id="stripe-connect-btn" class="<?php echo $btn_class; ?>" style="float:none;" href=<?php echo $url; ?> target="_self"><span><?php echo $btn_text; ?></span></a>
 											</td>
 										</tr>
+										<?php if (!$stripe_client->is_connected_to_stripe()) { ?>
+											<tr>
+												<td></td>
+												<td>
+												<?php
+													$country_codes = $stripe_client->get_supported_transfer_countries();
+
+													if (!empty($country_codes)) {
+														$countries = WC()->countries->get_countries();
+														$supported_transfer_countries = [];
+
+														foreach ($country_codes as $country_code) {
+															if (isset($countries[$country_code])) {
+																$supported_transfer_countries[$country_code] = $countries[$country_code];
+															}
+														}
+
+														// Sort the array by country name (values)
+														asort($supported_transfer_countries);
+
+														?>
+														<select id="stripe_vendor_country" name="stripe_vendor_country" class="wcfm-select wcfm_ele">
+															<?php	
+															foreach ($supported_transfer_countries as $country_code => $country_name) {
+																?>
+																<option value="<?php echo $country_code; ?>" <?php selected($stripe_client->get_platform_country(), $country_code); ?>><?php echo $country_name; ?></option>
+																<?php
+															}
+															?>
+														</select>
+														<p class="description"><?php _e('Please select your country, as this will be used to configure your Stripe payment settings.', 'wc-frontend-manager'); ?></p>
+														<script>
+															jQuery('#stripe_vendor_country').on('change', (e) => {
+																e.preventDefault();
+
+																const $connectBtn = jQuery('#stripe-connect-btn');
+
+																const countryCode = jQuery(e.currentTarget).val();
+
+																const url = new URL($connectBtn.attr('href'));
+
+																url.searchParams.set('vendor_country', countryCode);
+
+																$connectBtn.attr('href', url);
+															});
+														</script>
+														<?php
+													}
+													?>
+												</td>
+											</tr>
+										<?php } ?>
 									</tbody>
 								</table>
 							</div>

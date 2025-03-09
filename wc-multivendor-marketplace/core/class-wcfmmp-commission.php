@@ -1041,10 +1041,10 @@ class WCFMmp_Commission {
 					$line_item     = new WC_Order_Item_Product($item);
 					$pproduct_id   = $line_item->get_product_id();
 					$pvariation_id = $line_item->get_variation_id();
-					$quantity      = $line_item->get_quantity();
 					if (($pvariation_id && $variation_id && ($variation_id == $pvariation_id)) || (!$pvariation_id && $pproduct_id && ($product_id == $pproduct_id))) {
 						$pvendor_id = wcfm_get_vendor_id_by_post($product_id);
 						if ($pvendor_id && ($pvendor_id == $vendor_id)) {
+							$quantity      = $line_item->get_quantity();
 							if (!$item_total) {
 								$line_item_total = $line_item->get_total() + $line_item->get_total_tax();
 								$vendor_wise_gross_sales += $line_item_total;

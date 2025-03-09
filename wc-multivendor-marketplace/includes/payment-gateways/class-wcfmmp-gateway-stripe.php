@@ -122,28 +122,16 @@ class WCFMmp_Gateway_Stripe extends WCFMmp_Abstract_Gateway {
 
 	private function process_stripe_payment( $args = array() ) {
 		global $WCFM, $WCFMmp;
+		
 		try {
 			Stripe::setApiKey($this->secret_key);
-			$transfer_args = array(
-					'amount'              => $this->get_stripe_amount(),
-					'currency'            => $this->currency,
-					'destination'         => $this->stripe_user_id,
-					'description'         => __('Payout for withdrawal ID #', 'wc-multivendor-marketplace') . sprintf( '%06u', $this->withdrawal_id )
-			);
 
-			if (apply_filters( 'wcfmmp_stripe_split_pay_source_transaction_enabled', true, $this->vendor_id )) {
-				/**
-				 * 	Checks if $args['source_transaction'] is provided and not empty.
-				 * 	P.S. we don't use 'source_transaction' as it cannot be empty.
-				 */
-				if (isset($args['source_transaction']) && !empty($args['source_transaction'])) {
-					/**
-					 * 	Setting $transfer_args['source_transaction'] to '' ensures it is included in wp_parse_args(), 
-					 * 	preventing it from being omitted.
-					 */
-					$transfer_args['source_transaction'] = '';
-				}
-			}
+			$transfer_args = apply_filters('wcfmmp_stripe_default_transfer_args', [
+				'amount'  		=> $this->get_stripe_amount(),
+				'currency'      => $this->currency,
+				'destination'   => $this->stripe_user_id,
+				'description'   => __('Payout for withdrawal ID #', 'wc-multivendor-marketplace') . sprintf( '%06u', $this->withdrawal_id ),
+			], $this);
 
 			if( $this->transaction_mode == 'manual' ) {
 				$transfer_args['transfer_group'] = __('Payout for withdrawal ID #', 'wc-multivendor-marketplace') . sprintf( '%06u', $this->withdrawal_id );

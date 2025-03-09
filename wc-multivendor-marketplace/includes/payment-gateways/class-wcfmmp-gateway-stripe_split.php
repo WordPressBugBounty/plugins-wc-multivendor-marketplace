@@ -466,7 +466,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 
 					$capabilities = get_user_meta( $vendor_id, 'stripe_account_capabilities', true );
 
-					if (!$capabilities) {
+					if (!$capabilities || apply_filters('wcfmmp_refresh_stripe_account_capabilities', false, $vendor_id)) {
 						$stripe_client->set_user_id($vendor_id);
 						$stripe_account_obj = $stripe_client->retrieve_account();
 
@@ -479,7 +479,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 					if (
 						!is_object($capabilities) ||
 						!isset($capabilities->card_payments) ||
-						'active' == $capabilities->card_payments
+						'active' !== $capabilities->card_payments
 					) {
 						$all_vendor_supports_card_payments = false;
 						break;
@@ -487,9 +487,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 				}
 
 				if (!$all_vendor_supports_card_payments) {
-
-					wcfm_stripe_log("Stripe Charge Type changed from {$this->charge_type} to transfers_charges, as some vendors doesn't support card_payments", 'warning');
-
+					wcfm_stripe_log("Stripe charge type has been changed from {$this->charge_type} to transfers_charges because some vendors do not support card_payments.", 'warning');
 					$this->charge_type = 'transfers_charges';
 				}
 			}
@@ -769,7 +767,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			case 'transfers_charges':
 				try {
 					$charge_data = array(
-						"amount"         =>  $this->get_stripe_amount($wcfmmp_stripe_split_pay_list['total_amount']),
+						"amount"         => $this->get_stripe_amount($wcfmmp_stripe_split_pay_list['total_amount']),
 						"currency"       => $wcfmmp_stripe_split_pay_list['currency'],
 						"source"         => $wcfmmp_stripe_split_pay_list['stripe_source'],
 						"customer"       => $this->customer->id,
