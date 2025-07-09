@@ -3,11 +3,11 @@ Contributors: wclovers
 Tags: woocommerce marketplace, multivendor marketplace, multi vendor, multi seller, woocommerce product vendors 
 Donate link: https://www.paypal.me/wclovers/25usd
 Requires at least: 4.4
-Tested up to: 6.7
+Tested up to: 6.8
 WC requires at least: 3.0
-WC tested up to: 9.7.0
+WC tested up to: 9.9.0
 Requires PHP: 5.6
-Stable tag: 3.6.14
+Stable tag: 3.6.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -254,6 +254,12 @@ NONE.
 
 
 == Changelog ==
+
+= 3.6.15 =
+*Updated - 09/07/2025*
+
+* Enhance - WordPrss 6.8+ compatibility check added
+* Enhance - WooCommerce 9.9+ compatibility check added
 
 = 3.6.14 =
 *Updated - 09/03/2025*
@@ -1731,7 +1737,6 @@ NONE.
 
 == Upgrade Notice ==
 
-= 3.6.14 =
-* Enhance - WooCommerce 9.7+ compatibility check added
-* Fixed   - Stripe vendor connect issue for cross border countries. Now vendor needs to choose from a list of supported countries.
-* Fixed   - Minor bug fixes
+= 3.6.15 =
+* Enhance - WordPrss 6.8+ compatibility check added
+* Enhance - WooCommerce 9.9+ compatibility check added
