@@ -32,6 +32,8 @@ class WCFMmp_Commission {
 		// Recheck Marketplace New Order after WC New Order object update
 		add_action('woocommerce_order_object_updated_props', array($this, 'wcfmmp_new_order_check'), 100, 2);
 
+		add_action('woocommerce_resume_order', array($this, 'wcfmmp_remove_old_order_items'));
+
 		// WC POS Order Process
 		add_action('woocommerce_pos_process_payment', array($this, 'wcfmmp_pos_order_check'), 100, 2);
 
@@ -827,6 +829,16 @@ class WCFMmp_Commission {
 			
 			add_action('woocommerce_order_object_updated_props', array($this, 'wcfmmp_new_order_check'), 100, 2);
 		}
+	}
+
+	/**
+	 * Issue: Vendors can't see order on their dashboard if payment fails
+	 * On order resume WooCommerce remove existing items and re-add them.
+	 * so we need to reset the commission calculation as well
+	 */
+	function wcfmmp_remove_old_order_items($order_id) {
+		remove_action('woocommerce_order_object_updated_props', array($this, 'wcfmmp_new_order_check'), 100);
+		do_action('wcfm_manual_order_reset', $order_id, true);
 	}
 
 	/**

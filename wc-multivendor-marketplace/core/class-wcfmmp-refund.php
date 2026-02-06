@@ -513,18 +513,20 @@ class WCFMmp_Refund {
 
 					// Create WC Refund Item
 					if ($order_id) {
+						$order = wc_get_order($order_id);
+
 						$line_item = new WC_Order_Item_Product($item_id);
 
 						if ($c_refunded_qty) {
+							$refunded_qty = abs( $order->get_qty_refunded_for_item( $item_id ) );
 							$item_qty  = $line_item->get_quantity();
-							if ($item_qty == $c_refunded_qty) {
+							if (($item_qty - $refunded_qty) === $c_refunded_qty) {
 								$is_partially_refunded = 0;
 							}
 						}
 
 						if (!$is_partially_refunded) $is_refunded = 1;
 
-						$order                  = wc_get_order($order_id);
 
 						// API Refund Check
 						$api_refund             = false;

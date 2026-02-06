@@ -785,6 +785,7 @@ class WCFMmp_Shortcode {
 		
 		$store_user  = wcfmmp_get_store( $store_id );
 		$store_info  = $store_user->get_shop_info();
+		$address     = $store_user->get_address_string(); 
 		
 		$content = '<div class="wcfmmp_store_info wcfmmp_store_info_' . $data_info . '">';
 		
@@ -850,6 +851,7 @@ class WCFMmp_Shortcode {
 					$WCFMmp->template->get_template( 'store/widgets/wcfmmp-view-store-location.php', array( 
 																												 'store_user' => $store_user, 
 																												 'store_info' => $store_info,
+																												 'address'    => $address,
 																												 'store_lat'  => $store_lat,
 																												 'store_lng'  => $store_lng,
 																												 'map_id'     => 'wcfm_sold_by_widget_map_'.rand(10,100)

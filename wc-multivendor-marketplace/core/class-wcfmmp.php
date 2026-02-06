@@ -77,10 +77,13 @@ class WCFMmp {
 		$this->text_domain = WCFMmp_TEXT_DOMAIN;
 		$this->version = WCFMmp_VERSION;
 
+		// Loads text-domain and other helper functions
+		add_action('init', array(&$this, 'init_plugin'), 0);
+		
+		add_action('init', array(&$this, 'init'), 8);
+
 		// Installer Hook
 		add_action('init', array(&$this, 'run_wcfmmp_installer'));
-
-		add_action('init', array(&$this, 'init'), 8);
 
 		add_action('wcfm_init', array(&$this, 'init_wcfmmp'), 11);
 
@@ -100,6 +103,12 @@ class WCFMmp {
 		add_action( 'plugins_loaded', array($this, 'load_stripe_split_pay_gateway_class') );
 	}
 
+	public function init_plugin() {
+		// Init Text Domain
+		$this->load_plugin_textdomain();
+		require_once $this->plugin_path . 'helpers/wcfmmp-core-functions.php';
+	}
+
 	/**
 	 * 	Load WCFMmp_Gateway_Stripe_Split class
 	 */
@@ -108,10 +117,16 @@ class WCFMmp {
 
 		$this->setup_properties();
 
-		$active_payment_methods = get_wcfm_marketplace_active_withdrwal_payment_methods();
+		$wcfm_withdrawal_options = (array) get_option( 'wcfm_withdrawal_options', [] );
+		$active_payment_methods = $wcfm_withdrawal_options['payment_methods'] ?? [];
+
+		if (empty($active_payment_methods)) {
+			return;
+		}
+
 		$payment_method = 'stripe_split';
 
-		if(isset($active_payment_methods[$payment_method])) {
+		if(in_array( $payment_method, $active_payment_methods )) {
 			$gateway = 'WCFMmp_Gateway_' . ucfirst($payment_method);
 
 			if( !class_exists( $gateway ) ) {
@@ -153,9 +168,6 @@ class WCFMmp {
 		global $WCFM, $WCFMmp;
 
 		$this->setup_properties();
-
-		// Init Text Domain
-		$this->load_plugin_textdomain();
 
 		// Load WCFM Marketplace setup class
 		// http://localhost/wwd/wp-admin/?page=wcfmmp-setup&step=dashboard

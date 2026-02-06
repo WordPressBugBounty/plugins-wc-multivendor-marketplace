@@ -1,6 +1,6 @@
 <?php 
 
-  global $WCFM; 
+  global $WCFM, $WCFMmp; 
   //$user_id = apply_filters( 'wcfm_current_vendor_id', get_current_user_id() );
   
   $wcfmmp_all_shiping_types = wcfmmp_get_shipping_types();

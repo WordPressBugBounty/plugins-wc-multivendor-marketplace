@@ -42,14 +42,12 @@ class WCFMmp_Non_Ajax {
 	 * @return	array
 	 */
 	public function wcfmmp_plugin_row_meta( $links, $file ) {
-		global $WCFM, $WCFMmp;
+		global $WCFMmp;
 		if ( $WCFMmp->plugin_base_name == $file ) {
 			$row_meta = array(
-				'docs'      => '<a target="_blank" href="' . esc_url( apply_filters( 'wcfm_docs_url', 'https://wclovers.com/knowledgebase_category/wcfm-marketplace/' ) ) . '" aria-label="' . esc_attr__( 'View WCFM documentation', 'wc-frontend-manager' ) . '">' . esc_html__( 'Documentation', 'wc-frontend-manager' ) . '</a>',
-				//'guide'     => '<a target="_blank" href="' . esc_url( apply_filters( 'wcfm_guide_url', 'http://wclovers.com/documentation/developers-guide/' ) ) . '" aria-label="' . esc_attr__( 'View WCFM Developer Guide', 'wc-frontend-manager' ) . '">' . esc_html__( 'Developer Guide', 'wc-frontend-manager' ) . '</a>',
-				'support'   => '<a target="_blank" href="' . esc_url( apply_filters( 'wcfm_support_url', 'https://wclovers.com/forums/forum/wcfm-marketplace-woocommerce-multivendor-marketplace/' ) ) . '" aria-label="' . esc_attr__( 'Visit premium customer support', 'woocommerce' ) . '">' . esc_html__( 'Support', 'woocommerce' ) . '</a>',
-				//'contactus' => '<a target="_blank" href="' . esc_url( apply_filters( 'wcfm_contactus_url', 'http://wclovers.com/contact-us/' ) ) . '" aria-label="' . esc_attr__( 'Any WC help feel free to contact us', 'wc-frontend-manager' ) . '">' . esc_html__( 'Contact US', 'wc-frontend-manager' ) . '</a>'
-				'customizationa' => '<a target="_blank" href="' . esc_url( apply_filters( 'wcfm_customization_url', 'https://wclovers.com/woocommerce-multivendor-customization/' ) ) . '" aria-label="' . esc_attr__( 'Any WC help feel free to contact us', 'wc-frontend-manager' ) . '">' . esc_html__( 'Customization Help', 'wc-frontend-manager' ) . '</a>'
+				'docs'				=> '<a target="_blank" href="' . esc_url( apply_filters( 'wcfm_docs_url', 'https://wclovers.com/knowledgebase_category/wcfm-marketplace/' ) ) . '" aria-label="' . esc_attr__( 'View WCFM documentation', 'wc-frontend-manager' ) . '">' . esc_html__( 'Documentation', 'wc-frontend-manager' ) . '</a>',
+				'go-premium'   		=> '<a target="_blank" href="' . esc_url( apply_filters( 'wcfm_go_premium_url', 'https://wclovers.com/addons/' ) ) . '" aria-label="' . esc_attr__( 'Go Premium', WCFMmp_TEXT_DOMAIN ) . '">' . esc_html__( 'Go Premium', WCFMmp_TEXT_DOMAIN ) . '</a>',
+				'customizationa' 	=> '<a target="_blank" href="' . esc_url( apply_filters( 'wcfm_customization_url', 'https://wclovers.com/woocommerce-multivendor-customization/' ) ) . '" aria-label="' . esc_attr__( 'Any WC help feel free to contact us', 'wc-frontend-manager' ) . '">' . esc_html__( 'Customization Help', 'wc-frontend-manager' ) . '</a>'
 			);
 			return array_merge( $links, $row_meta );
 		}

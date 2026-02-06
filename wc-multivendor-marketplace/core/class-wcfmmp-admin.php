@@ -49,7 +49,10 @@ class WCFMmp_Admin {
 			add_filter( 'manage_edit-product_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
 			add_filter( 'manage_edit-shop_coupon_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
 			add_filter( 'manage_edit-job_listing_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
+			//legacy – for CPT-based orders
 			add_filter( 'manage_edit-shop_order_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
+			// for HPOS-based orders
+			add_filter( 'manage_woocommerce_page_wc-orders_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
 			add_filter( 'manage_edit-shop_subscription_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
 			add_filter( 'manage_edit-wc_booking_columns', array( &$this, 'wcfmmp_store_post_columns' ), 99 );
 			add_filter( 'manage_edit-wc_appointment_columns', array( &$this, 'wcfmmp_store_post_columns' ), 99 );
@@ -59,7 +62,10 @@ class WCFMmp_Admin {
 			add_action( 'manage_product_posts_custom_column' , array( &$this, 'wcfmmp_store_post_custom_column' ), 10, 2 );
 			add_action( 'manage_shop_coupon_posts_custom_column' , array( &$this, 'wcfmmp_store_post_custom_column' ), 10, 2 );
 			add_action( 'manage_job_listing_posts_custom_column' , array( &$this, 'wcfmmp_store_post_custom_column' ), 10, 2 );
+			//legacy – for CPT-based orders
 			add_action( 'manage_shop_order_posts_custom_column' , array( &$this, 'wcfmmp_store_shop_order_custom_column' ), 10, 2 );
+			// for HPOS-based orders
+			add_action( 'manage_woocommerce_page_wc-orders_custom_column' , array( &$this, 'wcfmmp_store_shop_order_custom_column' ), 10, 2 );
 			add_action( 'manage_shop_subscription_posts_custom_column' , array( &$this, 'wcfmmp_store_shop_subscription_custom_column' ), 10, 2 );
 			add_action( 'manage_wc_booking_posts_custom_column' , array( &$this, 'wcfmmp_store_wc_booking_custom_column' ), 10, 2 );
 			add_action( 'manage_wc_appointment_posts_custom_column' , array( &$this, 'wcfmmp_store_wc_appointment_custom_column' ), 10, 2 );

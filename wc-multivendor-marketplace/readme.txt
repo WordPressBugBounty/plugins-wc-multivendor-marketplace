@@ -3,11 +3,11 @@ Contributors: wclovers
 Tags: woocommerce marketplace, multivendor marketplace, multi vendor, multi seller, woocommerce product vendors 
 Donate link: https://www.paypal.me/wclovers/25usd
 Requires at least: 4.4
-Tested up to: 6.8
+Tested up to: 6.9
 WC requires at least: 3.0
-WC tested up to: 9.9.0
+WC tested up to: 10.4
 Requires PHP: 5.6
-Stable tag: 3.6.15
+Stable tag: 3.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -254,6 +254,28 @@ NONE.
 
 
 == Changelog ==
+
+= 3.7.0 =
+*Updated - 20/12/2025*
+
+* Fixed   - Refund logic division by zero issue.
+* Enhance - WordPrss 6.9+ compatibility check added
+* Enhance - WooCommerce 10.4+ compatibility check added
+
+= 3.6.17 =
+*Updated - 07/12/2025*
+
+* Fixed   - Notice: Function _load_textdomain_just_in_time was called incorrectly.
+* Fixed   - Minor bug fixes
+
+= 3.6.16 =
+*Updated - 12/11/2025*
+
+* Enhance - Added vendor display support for HPOS-based orders on the WP Admin orders list
+* Enhance - WooCommerce 10.3+ compatibility check added
+* Fixed   - Resolved issue where orders with initial payment failures did not appear on the vendor dashboard
+* Fixed   - Corrected distance rate shipping to display the proper distance unit on vendor dashboard
+* Fixed   - Resolved Undefined variable error in store_info shortcode.
 
 = 3.6.15 =
 *Updated - 09/07/2025*
@@ -1737,6 +1759,8 @@ NONE.
 
 == Upgrade Notice ==
 
-= 3.6.15 =
-* Enhance - WordPrss 6.8+ compatibility check added
-* Enhance - WooCommerce 9.9+ compatibility check added
+= 3.7.0 =
+
+* Fixed   - Refund logic division by zero issue.
+* Enhance - WordPrss 6.9+ compatibility check added
+* Enhance - WooCommerce 10.4+ compatibility check added
