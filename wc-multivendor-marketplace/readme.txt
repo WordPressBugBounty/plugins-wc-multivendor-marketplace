@@ -5,9 +5,9 @@ Donate link: https://www.paypal.me/wclovers/25usd
 Requires at least: 4.4
 Tested up to: 6.9
 WC requires at least: 3.0
-WC tested up to: 10.4
+WC tested up to: 10.5
 Requires PHP: 5.6
-Stable tag: 3.7.0
+Stable tag: 3.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -255,8 +255,17 @@ NONE.
 
 == Changelog ==
 
+= 3.7.1 =
+*Updated - 07/02/2026*
+
+* Fixed   - PHP Fatal error: Uncaught Error: Call to undefined function wcfm_is_store_page.
+* Fixed   - Broken Access Control vulnerability reported by benzdeus, Credit goes to benzdeus for identifying this issue.
+* Fixed   - Insecure Direct Object Reference to Unauthenticated Arbitrary Refund Request Creation vulnerability reported by Gibran Abdillah, Credit goes to Gibran Abdillah for identifying this issue.
+* Enhance - Secured single and bulk media deletion.
+* Enhance - Secured shipping zone setting update by preventing cross-vendor setting manipulation.
+
 = 3.7.0 =
-*Updated - 20/12/2025*
+*Updated - 19/12/2025*
 
 * Fixed   - Refund logic division by zero issue.
 * Enhance - WordPrss 6.9+ compatibility check added
@@ -1759,8 +1768,10 @@ NONE.
 
 == Upgrade Notice ==
 
-= 3.7.0 =
+= 3.7.1 =
 
-* Fixed   - Refund logic division by zero issue.
-* Enhance - WordPrss 6.9+ compatibility check added
-* Enhance - WooCommerce 10.4+ compatibility check added
+* Fixed   - PHP Fatal error: Uncaught Error: Call to undefined function wcfm_is_store_page.
+* Fixed   - Broken Access Control vulnerability reported by benzdeus, Credit goes to benzdeus for identifying this issue.
+* Fixed   - Insecure Direct Object Reference to Unauthenticated Arbitrary Refund Request Creation vulnerability reported by Gibran Abdillah, Credit goes to Gibran Abdillah for identifying this issue.
+* Enhance - Secured single and bulk media deletion.
+* Enhance - Secured shipping zone setting update by preventing cross-vendor setting manipulation.

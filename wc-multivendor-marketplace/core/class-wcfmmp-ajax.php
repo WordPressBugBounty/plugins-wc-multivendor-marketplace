@@ -783,18 +783,28 @@ class WCFMmp_Ajax {
 
         if (!check_ajax_referer('wcfm_ajax_nonce', 'wcfm_ajax_nonce', false)) {
             wp_send_json_error(esc_html__('Invalid nonce! Refresh your page and try again.', 'wc-frontend-manager'));
-            wp_die();
         }
 
         if (!current_user_can('manage_woocommerce') && !current_user_can('wcfm_vendor') && !current_user_can('shop_staff')) {
             wp_send_json_error(esc_html__('You don&#8217;t have permission to do this.', 'woocommerce'));
-            wp_die();
+        }
+
+        $user_id = isset($_POST['userID']) ? absint($_POST['userID']) : 0;
+        if ( function_exists('wcfm_user_can_perform_request') && ! wcfm_user_can_perform_request( $user_id, 'shipping_management', 'add' ) ) {
+            wp_send_json_error(__('You don\'t have permission to do this.', 'woocommerce'));
+        }
+
+        $zone_id   = isset($_POST['zoneID']) ? absint($_POST['zoneID']) : 0;
+        $method_id = isset($_POST['method']) ? sanitize_text_field($_POST['method']) : '';
+
+        if ( !$zone_id || !$method_id ) {
+            wp_send_json_error(__('Missing required parameters.', 'wc-multivendor-marketplace'));
         }
 
         $data = array(
-            'zone_id'   => absint($_POST['zoneID']),
-            'method_id' => sanitize_text_field($_POST['method']),
-            'user_id'   => isset($_POST['userID']) ? absint($_POST['userID']) : 0
+            'zone_id'   => $zone_id,
+            'method_id' => $method_id,
+            'user_id'   => $user_id
         );
 
         $result = WCFMmp_Shipping_Zone::add_shipping_methods($data);
@@ -825,11 +835,22 @@ class WCFMmp_Ajax {
             wp_die();
         }
 
-        //print_r($_POST);
+        $user_id = isset($_POST['userID']) ? absint($_POST['userID']) : 0;
+        if ( function_exists('wcfm_user_can_perform_request') && ! wcfm_user_can_perform_request( $user_id, 'shipping_management', 'enable_disable' ) ) {
+            wp_send_json_error(__('You don\'t have permission to do this.', 'woocommerce'));
+        }
+        
+        $instance_id = isset($_POST['instance_id']) ? sanitize_text_field($_POST['instance_id']) : '';
+        $zone_id   = isset($_POST['zoneID']) ? absint($_POST['zoneID']) : 0;
+
+        if ( !$instance_id || !$zone_id ) {
+            wp_send_json_error(__('Missing required parameters.', 'wc-multivendor-marketplace'));
+        }
+
         $data = array(
-            'instance_id' => sanitize_text_field($_POST['instance_id']),
-            'zone_id'     => absint($_POST['zoneID']),
-            'user_id'     => absint($_POST['userID']),
+            'instance_id' => $instance_id,
+            'zone_id'     => $zone_id,
+            'user_id'     => $user_id,
             'checked'     => ($_POST['checked'] == 'true') ? 1 : 0
         );
         $result = WCFMmp_Shipping_Zone::toggle_shipping_method($data);
@@ -859,10 +880,22 @@ class WCFMmp_Ajax {
             wp_die();
         }
 
+        $user_id = isset($_POST['userID']) ? absint($_POST['userID']) : 0;
+        if ( function_exists('wcfm_user_can_perform_request') && ! wcfm_user_can_perform_request( $user_id, 'shipping_management', 'enable_disable' ) ) {
+            wp_send_json_error(__('You don\'t have permission to do this.', 'woocommerce'));
+        }
+        
+        $instance_id = isset($_POST['instance_id']) ? sanitize_text_field($_POST['instance_id']) : '';
+        $zone_id   = isset($_POST['zoneID']) ? absint($_POST['zoneID']) : 0;
+
+        if ( !$instance_id || !$zone_id ) {
+            wp_send_json_error(__('Missing required parameters.', 'wc-multivendor-marketplace'));
+        }
+
         $data = array(
-            'zone_id'     => absint($_POST['zoneID']),
-            'instance_id' => sanitize_text_field($_POST['instance_id']),
-            'user_id'     => absint($_POST['userID'])
+            'zone_id'     => $zone_id,
+            'instance_id' => $instance_id,
+            'user_id'     => $user_id
         );
 
         $result = WCFMmp_Shipping_Zone::delete_shipping_methods($data);
@@ -894,8 +927,13 @@ class WCFMmp_Ajax {
             wp_die();
         }
 
-        //print_r($_POST); die;
         $args =  wc_clean(wp_unslash($_POST['args']));
+        
+        $user_id = isset( $args['user_id'] ) ? absint($args['user_id']) : 0;
+        if ( function_exists('wcfm_user_can_perform_request') && ! wcfm_user_can_perform_request( $user_id, 'shipping_management', 'update' ) ) {
+            wp_send_json_error(__('You don\'t have permission to do this.', 'woocommerce'));
+        }
+
         if (empty($args['settings']['title'])) {
             wp_send_json_error(__('Shipping title must be required', 'wc-multivendor-marketplace'));
         }

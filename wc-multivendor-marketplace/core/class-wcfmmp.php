@@ -106,7 +106,6 @@ class WCFMmp {
 	public function init_plugin() {
 		// Init Text Domain
 		$this->load_plugin_textdomain();
-		require_once $this->plugin_path . 'helpers/wcfmmp-core-functions.php';
 	}
 
 	/**

@@ -225,7 +225,7 @@ class WCFMmp_Shipping_Zone {
     );
 
     $table_name = "{$wpdb->prefix}wcfm_marketplace_shipping_zone_methods";
-    $updated = $wpdb->update( $table_name, $data, array( 'instance_id' => $args['instance_id'] ), array( '%s', '%d', '%d', '%s' ) );
+    $updated = $wpdb->update( $table_name, $data, array( 'instance_id' => $instance_id, 'vendor_id' => $vendor_id ), array( '%s', '%d', '%d', '%s' ) );
 
     if ( $updated !== false) {
         return $data;

@@ -195,26 +195,33 @@ class WCFMmp_Media {
   	
   	if ( ! check_ajax_referer( 'wcfm_ajax_nonce', 'wcfm_ajax_nonce', false ) ) {
   		wp_send_json_error( __( 'Invalid nonce! Refresh your page and try again.', 'wc-frontend-manager' ) );
-  		wp_die();
   	}
   	
   	if ( !current_user_can( 'manage_woocommerce' ) && !current_user_can( 'wcfm_vendor' ) && !current_user_can( 'shop_staff' ) ) {
   		wp_send_json_error( esc_html__( 'You don&#8217;t have permission to do this.', 'woocommerce' ) );
-			wp_die();
+	}
+
+	if( !apply_filters( 'wcfm_is_allow_media', true ) ) {
+		wp_send_json_error( esc_html__( 'You don&#8217;t have permission to do this.', 'woocommerce' ) );
+	}
+  	
+  	$mediaid = isset( $_POST['mediaid'] ) ? absint( $_POST['mediaid'] ) : 0;
+
+	if ( !$mediaid ) {
+		wp_send_json_error( esc_html__( 'You don&#8217;t have permission to do this.', 'woocommerce' ) );
+	}
+
+	$resource_owner_id = get_post_field( 'post_author', $mediaid );
+	$resource_type = get_post_field( 'post_type', $mediaid );
+	if ( 'attachment' === $resource_type && '' !== $resource_owner_id && function_exists('wcfm_user_can_perform_request') && wcfm_user_can_perform_request( $resource_owner_id, 'media_delete' ) ) {
+		if( wp_delete_post( $mediaid, true ) ) {
+			wp_send_json_success( 'success' );
+		} else {
+			wp_send_json_error( 'failed' );
 		}
-  	
-  	$mediaid = absint($_POST['mediaid']);
-  	
-  	if( $mediaid ) {
-  		if( wp_delete_post( $mediaid, true ) ) {
-  			echo esc_attr('success');
-  		} else {
-  			echo esc_attr('failed');	
-  		}
-  	} else {
-  		echo esc_attr('failed');
-  	}
-  	die;
+	} else {
+		wp_send_json_error( esc_html__( 'You don&#8217;t have permission to do this.', 'woocommerce' ) );
+	}
   }
   
   /**
@@ -223,29 +230,33 @@ class WCFMmp_Media {
    * @since 1.1.2
    */
   function wcfmmp_bulk_media_delete() {
-  	global $WCFM, $wpdb, $_POST;
+	global $WCFM, $wpdb, $_POST;
   	
   	if ( ! check_ajax_referer( 'wcfm_ajax_nonce', 'wcfm_ajax_nonce', false ) ) {
   		wp_send_json_error( __( 'Invalid nonce! Refresh your page and try again.', 'wc-frontend-manager' ) );
-  		wp_die();
   	}
   	
   	if ( !current_user_can( 'manage_woocommerce' ) && !current_user_can( 'wcfm_vendor' ) && !current_user_can( 'shop_staff' ) ) {
   		wp_send_json_error( esc_html__( 'You don&#8217;t have permission to do this.', 'woocommerce' ) );
-			wp_die();
-		}
+	}
+
+	if( !apply_filters( 'wcfm_is_allow_media', true ) ) {
+		wp_send_json_error( esc_html__( 'You don&#8217;t have permission to do this.', 'woocommerce' ) );
+	}
   	
   	if( isset($_POST['selected_media']) ) {
-			$selected_medias = wc_clean( wp_unslash($_POST['selected_media']) );
-			if( is_array( $selected_medias ) && !empty( $selected_medias ) ) {
-				foreach( $selected_medias as $mediaid ) {
-					if( wp_delete_post( $mediaid, true ) ) {
-						// Do anything
-					}
+		$selected_medias = wc_clean( wp_unslash($_POST['selected_media']) );
+		if( is_array( $selected_medias ) && !empty( $selected_medias ) ) {
+			foreach( $selected_medias as $mediaid ) {
+				$resource_owner_id = get_post_field( 'post_author', (int) $mediaid );
+				$resource_type = get_post_field( 'post_type', $mediaid );
+				if ( 'attachment' === $resource_type && '' !== $resource_owner_id && function_exists('wcfm_user_can_perform_request') && wcfm_user_can_perform_request( $resource_owner_id, 'media_delete' ) ) {
+					wp_delete_post( $mediaid, true );
 				}
 			}
 		}
-		echo '{ "status": true }';
-		die;
+		wp_send_json_success( array( 'status' => true ) );
 	}
+	wp_send_json_error( esc_html__( 'You don&#8217;t have permission to do this.', 'woocommerce' ) );
+  }
 }
