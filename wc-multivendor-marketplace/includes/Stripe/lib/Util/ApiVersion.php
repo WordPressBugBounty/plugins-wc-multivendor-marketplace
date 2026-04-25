@@ -6,5 +6,6 @@ namespace Stripe\Util;
 
 class ApiVersion
 {
-    const CURRENT = '2022-11-15';
+    const CURRENT = '2026-03-25.dahlia';
+    const CURRENT_MAJOR = 'dahlia';
 }

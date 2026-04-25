@@ -51,18 +51,17 @@ if( isset( $_GET['orderby'] ) ) { $orderby = sanitize_sql_orderby($_GET['orderby
 		<?php
 		if( !empty( $search_data ) ) {
 			foreach( $search_data as $search_key => $search_value ) {
-				if( in_array( $search_key, array( 'search_term', 'wcfmmp_store_search', 'wcfmmp_store_category', 'pagination_base', 'wcfm_paged', 'paged', 'per_row', 'per_page', 'excludes', 'orderby', 'has_product', 'nonce' ) ) ) continue;
+				if( in_array( $search_key, array( 'search_term', 'wcfmmp_store_search', 'wcfmmp_store_category', 'pagination_base', 'wcfm_paged', 'paged', 'per_row', 'per_page', 'excludes', 'orderby', 'has_product', 'nonce' ) ) || is_array($search_value) ) continue;
 				echo '<input type="hidden" name="'.esc_attr($search_key).'" value="'.esc_attr($search_value).'" />';
 			}
 		}
 		?>
 		<input type="hidden" name="wcfmmp_store_search" value="<?php echo esc_html($search_query); ?>" />
 		<input type="hidden" name="wcfmmp_store_category" value="<?php echo esc_attr($search_category); ?>" />
-		<input type="hidden" name="wcfmsc_store_categories" value="<?php echo isset( $search_data['wcfmsc_store_categories'] ) ? esc_attr($search_data['wcfmsc_store_categories']) : ''; ?>" />
 		<input type="hidden" name="paged" value="1">
 	</form>
 	<p class="woocommerce-result-count">
-		<?php printf( __( 'Showing %s–%s of %s results', 'wc-multivendor-marketplace' ), ($offset+1), ( $offset + count($stores) ), $user_count ); ?>
+		<?php printf( __( 'Showing %s-%s of %s results', 'wc-multivendor-marketplace' ), ($offset+1), ( $offset + count($stores) ), $user_count ); ?>
 	</p>
 	
 	<?php if ( !empty( $stores ) && ( $num_of_pages > 1 ) ) { $WCFMmp->template->get_template( 'store-lists/wcfmmp-view-store-lists-pagination.php', $args ); } ?>

@@ -153,16 +153,16 @@ class WCFMmp_Gateway_Stripe extends WCFMmp_Abstract_Gateway {
 			if ($this->debug)
 				wcfm_stripe_log( sprintf( '#%s - Stripe payment processing success: %s', sprintf( '%06u', $this->withdrawal_id ), $transfer ), 'info' );
 			return $transfer;
-		} catch (\Stripe\Error\InvalidRequest $e) {
+		} catch (\Stripe\Exception\InvalidRequestException $e) {
 			wcfm_stripe_log( sprintf( '#%s - Stripe payment processing failed: %s', sprintf( '%06u', $this->withdrawal_id ), $e->getMessage() ), 'error' );
 			return false;
-		} catch (\Stripe\Error\Authentication $e) {
+		} catch (\Stripe\Exception\AuthenticationException $e) {
 			wcfm_stripe_log( sprintf( '#%s - Stripe payment processing failed: %s', sprintf( '%06u', $this->withdrawal_id ), $e->getMessage() ), 'error' );
 			return false;
-		} catch (\Stripe\Error\ApiConnection $e) {
+		} catch (\Stripe\Exception\ApiConnectionException $e) {
 			wcfm_stripe_log( sprintf( '#%s - Stripe payment processing failed: %s', sprintf( '%06u', $this->withdrawal_id ), $e->getMessage() ), 'error' );
 			return false;
-		} catch (\Stripe\Error\Base $e) {
+		} catch (\Stripe\Exception\ApiErrorException $e) {
 			wcfm_stripe_log( sprintf( '#%s - Stripe payment processing failed: %s', sprintf( '%06u', $this->withdrawal_id ), $e->getMessage() ), 'error' );
 			return false;
 		} catch (Exception $e) {

@@ -5,9 +5,9 @@ Donate link: https://www.paypal.me/wclovers/25usd
 Requires at least: 4.4
 Tested up to: 6.9
 WC requires at least: 3.0
-WC tested up to: 10.5
+WC tested up to: 10.7
 Requires PHP: 5.6
-Stable tag: 3.7.1
+Stable tag: 3.7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -235,7 +235,9 @@ The manual installation method involves downloading our eCommerce plugin and upl
 
 == FAQ ==
 
-NONE.
+= Where do I report security bugs found in this plugin? =
+
+Please report security bugs found in the source code of the WCFM Marketplace plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/9e5fb67d-c831-4f28-becb-615a3363fdfb). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 == Screenshots ==
 
@@ -254,6 +256,11 @@ NONE.
 
 
 == Changelog ==
+
+= 3.7.2 =
+*Updated - 25/04/2026*
+
+* Enhance - PHP compatibility expanded: now supports versions 7.2–8.4
 
 = 3.7.1 =
 *Updated - 07/02/2026*
@@ -1768,10 +1775,6 @@ NONE.
 
 == Upgrade Notice ==
 
-= 3.7.1 =
+= 3.7.2 =
 
-* Fixed   - PHP Fatal error: Uncaught Error: Call to undefined function wcfm_is_store_page.
-* Fixed   - Broken Access Control vulnerability reported by benzdeus, Credit goes to benzdeus for identifying this issue.
-* Fixed   - Insecure Direct Object Reference to Unauthenticated Arbitrary Refund Request Creation vulnerability reported by Gibran Abdillah, Credit goes to Gibran Abdillah for identifying this issue.
-* Enhance - Secured single and bulk media deletion.
-* Enhance - Secured shipping zone setting update by preventing cross-vendor setting manipulation.
+* Enhance - PHP compatibility expanded: now supports versions 7.2–8.4
