@@ -2807,6 +2807,9 @@ class WCFMmp_Vendor {
 
         // Radius Query
         if ($wcfmmp_radius_lat && $wcfmmp_radius_lng && !apply_filters('wcfm_is_pref_multi_store', true)) {
+            $wcfmmp_radius_lat = floatval( $wcfmmp_radius_lat );
+            $wcfmmp_radius_lng = floatval( $wcfmmp_radius_lng );
+
             $store_query->query_fields .= ', wcfmmplat.meta_value as wcfmmp_latitude, wcfmmplong.meta_value as wcfmmp_longitude';
 
             $radius_unit   = isset($WCFMmp->wcfmmp_marketplace_options['radius_unit']) ? $WCFMmp->wcfmmp_marketplace_options['radius_unit'] : 'km';
@@ -2844,11 +2847,11 @@ class WCFMmp_Vendor {
         foreach ($search_data as $search_key => $search_value) {
             if ($search_value) {
                 if (in_array($search_key, ['wcfmmp_radius_lat', 'radius_lat'])) {
-                    $wcfmmp_radius_lat = $search_value;
+                    $wcfmmp_radius_lat = floatval($search_value);
                 } elseif (in_array($search_key, ['wcfmmp_radius_lng', 'radius_lng'])) {
-                    $wcfmmp_radius_lng = $search_value;
+                    $wcfmmp_radius_lng = floatval($search_value);
                 } elseif (in_array($search_key, ['wcfmmp_radius_range', 'radius_range'])) {
-                    $wcfmmp_radius_range = $search_value;
+                    $wcfmmp_radius_range = absint($search_value);
                 }
             }
         }

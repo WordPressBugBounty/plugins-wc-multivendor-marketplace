@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 3.0
 WC tested up to: 10.7
 Requires PHP: 5.6
-Stable tag: 3.7.2
+Stable tag: 3.7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -256,6 +256,12 @@ Please report security bugs found in the source code of the WCFM Marketplace plu
 
 
 == Changelog ==
+
+= 3.7.3 =
+*Updated - 20/05/2026*
+
+* Security - Patched a SQL Injection vulnerability in the Reviews Dashboard.
+* Security - Patched an unauthenticated SQL Injection vulnerability in the Store List Map integration.
 
 = 3.7.2 =
 *Updated - 25/04/2026*
@@ -1775,6 +1781,7 @@ Please report security bugs found in the source code of the WCFM Marketplace plu
 
 == Upgrade Notice ==
 
-= 3.7.2 =
+= 3.7.3 =
 
-* Enhance - PHP compatibility expanded: now supports versions 7.2–8.4
+* Security - Patched a SQL Injection vulnerability in the Reviews Dashboard.
+* Security - Patched an unauthenticated SQL Injection vulnerability in the Store List Map integration.

@@ -30,10 +30,10 @@ class WCFMmp_Reviews_Controller {
 		
     $status_filter = '';
     if( isset($_POST['status_type']) && ( $_POST['status_type'] != '' ) ) {
-    	$status_filter = sanitize_text_field( $_POST['status_type'] );
-    	if( $status_filter == 'approved' ) {
+    	$status_type = sanitize_text_field( $_POST['status_type'] );
+    	if( $status_type == 'approved' ) {
     		$status_filter = ' AND `approved` = 1';
-    	} elseif( $status_filter == 'pending' ) {
+    	} elseif( $status_type == 'pending' ) {
     		$status_filter = ' AND `approved` = 0';
     	}
     }
