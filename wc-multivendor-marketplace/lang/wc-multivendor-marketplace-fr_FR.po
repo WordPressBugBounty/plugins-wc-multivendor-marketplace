@@ -174,51 +174,51 @@ msgstr "<b>%s</b> élément de commande <b>%s</b> état mis à jour vers <b>%s</
 msgid "N/A"
 msgstr "N/A"
 
-#: core/class-wcfmmp-ajax.php:543
+#: core/class-wcfmmp-ajax.php:556
 msgid "Back to Zone List"
 msgstr "Retour à la liste des zones"
 
-#: core/class-wcfmmp-ajax.php:549
-#: core/class-wcfmmp-ajax.php:552
+#: core/class-wcfmmp-ajax.php:562
+#: core/class-wcfmmp-ajax.php:565
 #: views/shipping/wcfmmp-view-shipping-settings.php:178
 msgid "Zone Name"
 msgstr "Nom de la Zone"
 
-#: core/class-wcfmmp-ajax.php:561
-#: core/class-wcfmmp-ajax.php:565
+#: core/class-wcfmmp-ajax.php:574
+#: core/class-wcfmmp-ajax.php:578
 msgid "Zone Location"
 msgstr "Zone Localisation"
 
-#: core/class-wcfmmp-ajax.php:598
+#: core/class-wcfmmp-ajax.php:611
 msgid "Limit Zone Location"
 msgstr "Limiter aux Zones"
 
-#: core/class-wcfmmp-ajax.php:613
+#: core/class-wcfmmp-ajax.php:626
 msgid "Select Specific Countries"
 msgstr "Sélectionnez des pays spécifiques"
 
-#: core/class-wcfmmp-ajax.php:629
+#: core/class-wcfmmp-ajax.php:642
 msgid "Select Specific States"
 msgstr "Sélectionner des états spécifiques"
 
-#: core/class-wcfmmp-ajax.php:646
+#: core/class-wcfmmp-ajax.php:659
 msgid "Select Specific City"
 msgstr "Sélectionnez une ville spécifique"
 
-#: core/class-wcfmmp-ajax.php:663
+#: core/class-wcfmmp-ajax.php:676
 msgid "Set your postcode"
 msgstr "Définissez votre code postal"
 
-#: core/class-wcfmmp-ajax.php:681
+#: core/class-wcfmmp-ajax.php:694
 #: views/shipping/wcfmmp-view-shipping-settings.php:180
 msgid "Shipping Method"
 msgstr "Méthode d'envoi"
 
-#: core/class-wcfmmp-ajax.php:685
+#: core/class-wcfmmp-ajax.php:698
 msgid "Add your shipping method for appropiate zone"
 msgstr "Ajoutez votre méthode d'expédition pour la zone appropriée"
 
-#: core/class-wcfmmp-ajax.php:693
+#: core/class-wcfmmp-ajax.php:706
 #: includes/shipping-gateways/class-wcfmmp-shipping-by-weight.php:194
 #: includes/shipping-gateways/class-wcfmmp-shipping-by-country.php:78
 #: includes/shipping-gateways/class-wcfmmp-shipping-by-distance.php:190
@@ -228,7 +228,7 @@ msgstr "Ajoutez votre méthode d'expédition pour la zone appropriée"
 msgid "Method Title"
 msgstr "Titre de la méthode"
 
-#: core/class-wcfmmp-ajax.php:694
+#: core/class-wcfmmp-ajax.php:707
 #: views/ledger/wcfmmp-view-ledger.php:107
 #: views/ledger/wcfmmp-view-ledger.php:117
 #: views/reviews/wcfmmp-view-product-reviews.php:92
@@ -239,7 +239,7 @@ msgstr "Titre de la méthode"
 msgid "Status"
 msgstr "Statut"
 
-#: core/class-wcfmmp-ajax.php:695
+#: core/class-wcfmmp-ajax.php:708
 #: includes/payment-gateways/class-wcfmmp-gateway-wirecard.php:137
 #: views/shipping/wcfmmp-view-edit-method-popup.php:78
 #: views/shipping/wcfmmp-view-edit-method-popup.php:155
@@ -247,66 +247,66 @@ msgstr "Statut"
 msgid "Description"
 msgstr "Description"
 
-#: core/class-wcfmmp-ajax.php:703
+#: core/class-wcfmmp-ajax.php:716
 msgid "No shipping method found"
 msgstr "Aucune méthode d'expédition trouvée"
 
-#: core/class-wcfmmp-ajax.php:717
+#: core/class-wcfmmp-ajax.php:730
 #: views/shipping/wcfmmp-view-shipping-settings.php:195
 msgid "Edit"
 msgstr "modifier"
 
-#: core/class-wcfmmp-ajax.php:722
+#: core/class-wcfmmp-ajax.php:735
 #: controllers/reviews/wcfmmp-controller-reviews.php:135
 #: controllers/reviews/wcfmmp-controller-product-reviews.php:141
 #: controllers/media/wcfmmp-controller-media.php:149
 msgid "Delete"
 msgstr "Effacer"
 
-#: core/class-wcfmmp-ajax.php:757
+#: core/class-wcfmmp-ajax.php:770
 #: views/shipping/wcfmmp-view-add-method-popup.php:37
 msgid "Add Shipping Method"
 msgstr "Ajouter une méthode d'expédition"
 
-#: core/class-wcfmmp-ajax.php:816
+#: core/class-wcfmmp-ajax.php:830
 msgid "Shipping method added successfully"
 msgstr "Méthode d'expédition ajoutée avec succès"
 
-#: core/class-wcfmmp-ajax.php:860
+#: core/class-wcfmmp-ajax.php:875
 msgid "Shipping method enabled successfully"
 msgstr "Méthode d'expédition activée avec succès"
 
-#: core/class-wcfmmp-ajax.php:860
+#: core/class-wcfmmp-ajax.php:875
 msgid "Shipping method disabled successfully"
 msgstr "Méthode d'expédition désactivée avec succès"
 
-#: core/class-wcfmmp-ajax.php:906
+#: core/class-wcfmmp-ajax.php:922
 msgid "Shipping method deleted"
 msgstr "Méthode d'expédition supprimée"
 
-#: core/class-wcfmmp-ajax.php:938
+#: core/class-wcfmmp-ajax.php:956
 msgid "Shipping title must be required"
 msgstr "Le titre d'expédition doit être obligatoire"
 
-#: core/class-wcfmmp-ajax.php:945
+#: core/class-wcfmmp-ajax.php:963
 msgid "Shipping method updated"
 msgstr "Méthode d'expédition mise à jour"
 
-#: core/class-wcfmmp-ajax.php:1011
+#: core/class-wcfmmp-ajax.php:1029
 #, php-format
 msgid "Your Store: <b>%s</b> has been set off-line."
 msgstr "Votre magasin: <b>%s</b> a été mis hors ligne."
 
-#: core/class-wcfmmp-ajax.php:1030
+#: core/class-wcfmmp-ajax.php:1048
 msgid "Vendor Store Off-line."
 msgstr "Magasin du Vendeur Off-line."
 
-#: core/class-wcfmmp-ajax.php:1058
+#: core/class-wcfmmp-ajax.php:1076
 #, php-format
 msgid "Your Store: <b>%s</b> has been set on-line."
 msgstr "Votre magasin: <b>%s</b> a été mis en ligne."
 
-#: core/class-wcfmmp-ajax.php:1077
+#: core/class-wcfmmp-ajax.php:1095
 msgid "Vendor Store On-line."
 msgstr "Magasin du vendeur en ligne."
 
@@ -1576,23 +1576,23 @@ msgstr ""
 msgid "Store Style"
 msgstr "Magasin > style"
 
-#: core/class-wcfmmp-shipping-zone.php:95
+#: core/class-wcfmmp-shipping-zone.php:130
 msgid "No shipping method found for adding"
 msgstr "Aucune méthode d'expédition trouvée pour l'ajout"
 
-#: core/class-wcfmmp-shipping-zone.php:120
+#: core/class-wcfmmp-shipping-zone.php:154
 msgid "Shipping method not added successfully"
 msgstr "Méthode d'expédition non ajoutée avec succès"
 
-#: core/class-wcfmmp-shipping-zone.php:141
+#: core/class-wcfmmp-shipping-zone.php:178
 msgid "Shipping method not deleted"
 msgstr "Méthode d'expédition non supprimée"
 
-#: core/class-wcfmmp-shipping-zone.php:165
+#: core/class-wcfmmp-shipping-zone.php:202
 msgid "Lets you charge a rate for shipping"
 msgstr "Vous permet de facturer un tarif pour l'expédition"
 
-#: core/class-wcfmmp-shipping-zone.php:252
+#: core/class-wcfmmp-shipping-zone.php:295
 msgid "Method enable or disable not working"
 msgstr "La méthode activer ou désactiver ne fonctionne pas"
 
@@ -3722,13 +3722,14 @@ msgstr ""
 msgid "Order item <b>%s</b> status updated to <b>%s</b> by <b>%s</b>"
 msgstr ""
 
-#: core/class-wcfmmp-ajax.php:668
+#: core/class-wcfmmp-ajax.php:681
 msgid "Postcodes containing wildcards (e.g. CB23*) or fully numeric ranges (e.g. 90210...99000) are also supported."
 msgstr ""
 
-#: core/class-wcfmmp-ajax.php:801
-#: core/class-wcfmmp-ajax.php:847
-#: core/class-wcfmmp-ajax.php:892
+#: core/class-wcfmmp-ajax.php:441
+#: core/class-wcfmmp-ajax.php:815
+#: core/class-wcfmmp-ajax.php:862
+#: core/class-wcfmmp-ajax.php:908
 msgid "Missing required parameters."
 msgstr ""
 
@@ -4204,7 +4205,7 @@ msgstr ""
 msgid "Analytics Data Cleanup"
 msgstr ""
 
-#: core/class-wcfmmp-shipping-zone.php:234
+#: core/class-wcfmmp-shipping-zone.php:274
 msgid "Shipping method not updated"
 msgstr ""
 
@@ -4799,4 +4800,12 @@ msgid ""
 "\t\t\t\t\t\t\tYou may specify “per_row” attribute to specify number of store in one row, by default it’s “2”.%s\n"
 "\t\t\t\t\t\t\tAlso specify “per_page” attribute to set how many stores you want to show in a page. Default value is 10.%s\n"
 "\t\t\t\t\t\t\tYou may also specify “excludes” attribute (comma separated store ids) to excludes some store from list."
+msgstr ""
+
+#: core/class-wcfmmp-shipping-zone.php:29
+msgid "Invalid vendor."
+msgstr ""
+
+#: core/class-wcfmmp-shipping-zone.php:107
+msgid "Shipping zone not found."
 msgstr ""

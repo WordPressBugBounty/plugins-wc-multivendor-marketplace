@@ -98,13 +98,11 @@ class WCFMmp_Store_Featured_Product extends WP_Widget {
 		$query_args['post_parent'] = 0;
 		
 		if ( 'yes' === get_option( 'woocommerce_hide_out_of_stock_items' ) ) {
-			$query_args['tax_query'] = array(
-				array(
-					'taxonomy' => 'product_visibility',
-					'field'    => 'term_taxonomy_id',
-					'terms'    => $product_visibility_term_ids['outofstock'],
-					'operator' => 'NOT IN',
-				),                               
+			$query_args['tax_query'][] = array(
+                'taxonomy' => 'product_visibility',
+                'field'    => 'term_taxonomy_id',
+                'terms'    => $product_visibility_term_ids['outofstock'],
+                'operator' => 'NOT IN',
 			);
 		}
 		

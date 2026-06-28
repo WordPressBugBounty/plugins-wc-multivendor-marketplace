@@ -430,14 +430,27 @@ class WCFMmp_Ajax {
             wp_die();
         }
 
-        if (isset($_POST['zoneID'])) {
-            $zones = WCFMmp_Shipping_Zone::get_zone(absint($_POST['zoneID']), absint($_POST['userID']));
-            //print_r($zones); die;
+        $user_id = isset($_POST['userID']) ? absint($_POST['userID']) : 0;
+        $user_id = WCFMmp_Shipping_Zone::get_authorized_vendor_id($user_id, 'view');
+        if (is_wp_error($user_id)) {
+            wp_send_json_error($user_id->get_error_message());
+            wp_die();
         }
+
+        if (!isset($_POST['zoneID'])) {
+            wp_send_json_error(esc_html__('Missing required parameters.', 'wc-multivendor-marketplace'));
+            wp_die();
+        }
+
+        $zones = WCFMmp_Shipping_Zone::get_zone(absint($_POST['zoneID']), $user_id);
+        if (is_wp_error($zones)) {
+            wp_send_json_error($zones->get_error_message());
+            wp_die();
+        }
+        //print_r($zones); die;
         $show_post_code_list = $show_state_list = $show_post_code_list = false;
         //print_r($zones);die;
         $zone_id = $zones['data']['id'];
-        $user_id =  absint($_POST['userID']);
         $zone_locations = $zones['data']['zone_locations'];
         //print_r($zone_locations);
         $zone_location_types = array_column(array_map('wcfmmp_convert_to_array', $zone_locations), 'type', 'code');
@@ -590,7 +603,7 @@ class WCFMmp_Ajax {
                         )
                     )
                 );
-                if ($show_limit_location_link && $zone_id !== 0) {
+                if ( 'Everywhere' !== $zones['formatted_zone_location'] && $show_limit_location_link && $zone_id !== 0) {
 
                     $WCFM->wcfm_fields->wcfm_generate_form_field(
                         array(
@@ -790,14 +803,15 @@ class WCFMmp_Ajax {
         }
 
         $user_id = isset($_POST['userID']) ? absint($_POST['userID']) : 0;
-        if ( function_exists('wcfm_user_can_perform_request') && ! wcfm_user_can_perform_request( $user_id, 'shipping_management', 'add' ) ) {
-            wp_send_json_error(__('You don\'t have permission to do this.', 'woocommerce'));
+        $user_id = WCFMmp_Shipping_Zone::get_authorized_vendor_id($user_id, 'add');
+        if (is_wp_error($user_id)) {
+            wp_send_json_error($user_id->get_error_message());
         }
 
-        $zone_id   = isset($_POST['zoneID']) ? absint($_POST['zoneID']) : 0;
+        $zone_id   = isset($_POST['zoneID']) ? absint($_POST['zoneID']) : 0; // 0 for - "Locations not covered by your other zones" - zone
         $method_id = isset($_POST['method']) ? sanitize_text_field($_POST['method']) : '';
 
-        if ( !$zone_id || !$method_id ) {
+        if ( !$method_id ) {
             wp_send_json_error(__('Missing required parameters.', 'wc-multivendor-marketplace'));
         }
 
@@ -836,14 +850,15 @@ class WCFMmp_Ajax {
         }
 
         $user_id = isset($_POST['userID']) ? absint($_POST['userID']) : 0;
-        if ( function_exists('wcfm_user_can_perform_request') && ! wcfm_user_can_perform_request( $user_id, 'shipping_management', 'enable_disable' ) ) {
-            wp_send_json_error(__('You don\'t have permission to do this.', 'woocommerce'));
+        $user_id = WCFMmp_Shipping_Zone::get_authorized_vendor_id($user_id, 'enable_disable');
+        if (is_wp_error($user_id)) {
+            wp_send_json_error($user_id->get_error_message());
         }
         
         $instance_id = isset($_POST['instance_id']) ? sanitize_text_field($_POST['instance_id']) : '';
         $zone_id   = isset($_POST['zoneID']) ? absint($_POST['zoneID']) : 0;
 
-        if ( !$instance_id || !$zone_id ) {
+        if ( !$instance_id ) {
             wp_send_json_error(__('Missing required parameters.', 'wc-multivendor-marketplace'));
         }
 
@@ -881,14 +896,15 @@ class WCFMmp_Ajax {
         }
 
         $user_id = isset($_POST['userID']) ? absint($_POST['userID']) : 0;
-        if ( function_exists('wcfm_user_can_perform_request') && ! wcfm_user_can_perform_request( $user_id, 'shipping_management', 'enable_disable' ) ) {
-            wp_send_json_error(__('You don\'t have permission to do this.', 'woocommerce'));
+        $user_id = WCFMmp_Shipping_Zone::get_authorized_vendor_id($user_id, 'enable_disable');
+        if (is_wp_error($user_id)) {
+            wp_send_json_error($user_id->get_error_message());
         }
         
         $instance_id = isset($_POST['instance_id']) ? sanitize_text_field($_POST['instance_id']) : '';
         $zone_id   = isset($_POST['zoneID']) ? absint($_POST['zoneID']) : 0;
 
-        if ( !$instance_id || !$zone_id ) {
+        if ( !$instance_id ) {
             wp_send_json_error(__('Missing required parameters.', 'wc-multivendor-marketplace'));
         }
 
@@ -930,9 +946,11 @@ class WCFMmp_Ajax {
         $args =  wc_clean(wp_unslash($_POST['args']));
         
         $user_id = isset( $args['user_id'] ) ? absint($args['user_id']) : 0;
-        if ( function_exists('wcfm_user_can_perform_request') && ! wcfm_user_can_perform_request( $user_id, 'shipping_management', 'update' ) ) {
-            wp_send_json_error(__('You don\'t have permission to do this.', 'woocommerce'));
+        $user_id = WCFMmp_Shipping_Zone::get_authorized_vendor_id($user_id, 'update');
+        if (is_wp_error($user_id)) {
+            wp_send_json_error($user_id->get_error_message());
         }
+        $args['user_id'] = $user_id;
 
         if (empty($args['settings']['title'])) {
             wp_send_json_error(__('Shipping title must be required', 'wc-multivendor-marketplace'));

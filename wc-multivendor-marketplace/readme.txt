@@ -1,111 +1,124 @@
 ﻿=== WCFM Marketplace - Multivendor Marketplace for WooCommerce ===
 Contributors: wclovers
-Tags: woocommerce marketplace, multivendor marketplace, multi vendor, multi seller, woocommerce product vendors 
+Tags: woocommerce marketplace, multivendor marketplace, ai marketplace, vendor dashboard, multi vendor, multi seller, woocommerce product vendors
 Donate link: https://www.paypal.me/wclovers/25usd
-Requires at least: 4.4
-Tested up to: 6.9
-WC requires at least: 3.0
-WC tested up to: 10.7
-Requires PHP: 5.6
-Stable tag: 3.7.3
+Requires at least: 5.5
+Tested up to: 7.0
+WC requires at least: 7.0
+WC tested up to: 10.9
+Requires PHP: 7.4
+Stable tag: 3.7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The most featured and powerful multi vendor plugin for WordPress, setup fantastic woocommerce marketplace store in minutes. More flexible than WC Markerplace, WC Vendors Marketplace and Dokan Multivendor.
+The enterprise-grade multi-vendor engine for WooCommerce. Scale your marketplace with advanced commissions, automated split payments, and AI-powered vendor tools.
 
 == Description ==
 
-### Magnificent multivendor marketplace solution for WordPress and WooCommerce
+= The Smart Multivendor Engine for High-Revenue WooCommerce Marketplaces =
 
-WooCommerce Multivendor Marketplace (WCFM Marketplace) is the best free front end multi-vendor marketplace plugin on WordPress, powered by WooCommerce. It helps you to build your own dream marketplace like Amazon, eBay, etsy, AirBnB or Flipkart within minutes, with minimal setup. 
+WCFM Marketplace is the ultimate multi vendor plugin for WordPress, empowering you to build a complete eCommerce marketplace like Amazon, Etsy, or eBay. It seamlessly transforms your standard store into a powerful WooCommerce multivendor marketplace, complete with frontend vendor dashboards, automated split payments, and advanced commission structures.
 
-👉 Know more about it's exclusive [features list](https://wclovers.com/blog/woocommerce-frontend-manager/)
-👉 Experience before decide - [WCFM Marketplace Demo](https://wcfmmp.wcfmdemos.com/my-account/)
+Join thousands of entrepreneurs powering high-revenue marketplaces with WCFM.
 
-It has got everything from our own with [WooCommerce Frontend Manager](https://wordpress.org/plugins/wc-frontend-manager/) plus a lot more! With powerful and customized features like <strong>Flexible Commission</strong>, <strong>Refund Request</strong>, <strong>Withdrawal & Reverse Withdrawal</strong>, <strong>Single Product Multi-vendor</strong>, <strong>Ledger Book</strong>, Zone & Country Wise Vendor Shipping, Store Inquiry & Review and <strong>Stripe Split Pay</strong>. WCfM Marketplace will take your e-commerce site to another level.
+**WCFM Marketplace at a Glance:**
+* 👉 100% Frontend Vendor Dashboard (No unintentional wp-admin access)
+* 👉 Hyper-Flexible Commission & Payout Rules
+* 👉 Automated Stripe Split Payments
+* 👉 Advanced Vendor Shipping & Logistics
+* 👉 Extensive AI Content & Image Studio (via [WCFM AI Suite](https://wclovers.com/product/woocommerce-frontend-manager-ai-suite/))
 
-🎉 It will enahnce your vendor's marketplace experience to next level using <strong>FREE</stong> [Vendor Mobile APP](https://docs.wclovers.com/wcfm-app/)
+Building a successful marketplace requires more than just splitting orders—it requires an engine that handles complex vendor logistics, protects your margins, and ensures your sellers present a professional storefront. **WCFM Marketplace** is that engine. Whether you are building a digital goods hub, a local delivery network, or a global retail empire, WCFM Marketplace provides the enterprise-grade architecture you need to scale securely and profitably.
 
-Experience Advanced modules like <strong>Store Invoice</strong>, <strong>Support Ticket</strong>, <strong>Shipment Tracking</strong>, Product Importer & Bulk Stock Manager along with WooCommerce Bookings, WooCommerce Appointments, WooCommerce Rental & Bookings System, WooCommerce Subscriptions and WP Job Manager compatibility using [WCFM – Ultimate](https://wclovers.com/product/woocommerce-frontend-manager-ultimate/) that will make business for your vendors easier. With steady support from our team, create and manage your e-commerce website hassle-free with the all new WCfM Marketplace!
+Designed for serious marketplace entrepreneurs and agencies, WCFM gives you total control over your platform. From hyper-flexible commission structures and automated Stripe Split Pay to granular vendor capability controls, you maintain the authority while your vendors get a seamless, empowering frontend dashboard.
 
-🎉 Let your vendors give quick real-time support via [Live Chat](https://docs.wclovers.com/live-chat/)
+👉 Know more about its exclusive [features list](https://wclovers.com/blog/woocommerce-frontend-manager/)
+👉 Experience before deciding - [WCFM Marketplace Demo](https://wcfmmp.wcfmdemos.com/my-account/)
 
-What's interesting in WCfM Marketplace you think? You’ll get to know that by and by as we gradually develop our brainchild. However, let’s have a look at a few of our features...
+= 🚀 WooCommerce Vendor Dashboard & AI Marketplace Suite =
 
-### Most Featured Store List & Filters
+The biggest threat to a new marketplace is low-quality vendor listings. The **WCFM AI Suite** addon solves this by equipping your vendors with an **AI Commerce & Content Studio** directly inside their dashboard, ensuring every product page looks premium.
 
-👉 Radius search
-👉 Search by city
-👉 Search by zip code
-👉 Search by category
+Unlock with the WCFM AI Suite addon:
 
-[Full details here ...](https://docs.wclovers.com/store-list/)
+* **AI Copywriting & Image Enhancement:** Vendors can generate SEO-optimized product descriptions from simple prompts or product photos, and instantly upgrade amateur images by removing backgrounds or adding professional lifestyle scenes.
+* **Monetize AI with the Credit Economy:** Worried about unpredictable API costs? Set monthly free AI credit allowances per vendor membership tier, and **sell extra AI credit packs** via automated WooCommerce checkout. Turn your vendors' AI usage into a brand-new, high-margin revenue stream for your marketplace.
+* **AI Insights Dashboard:** Track marketplace-wide AI adoption, monitor credit revenue, and see exactly which AI-assisted products are driving the most sales.
 
-### Most Powerful Commission System
+= 💰 Multi-Vendor Commissions & Marketplace Financials =
 
-👉 Fixed
-👉 Percent
-👉 Percent + Fixed
-👉 By Vendor Sales
-👉 By Product Price
-👉 Vendor wise commission
-👉 Product wise commission
-👉 Category wise commission
-👉 Membership wise commission
+WCFM provides unparalleled control over your marketplace revenue stream, ensuring accurate payouts and pristine records.
 
-[Read about it here ....](htps://wclovers.com/knowledgebase/wcfm-marketplace-commission/)
+* **Hyper-Flexible Commission Rules:** Configure commissions by Fixed, Percentage, Percent + Fixed, Vendor Sales, Product Price, Category, or specific Membership tiers. Override globally, per vendor, or per product. [Read more...](https://docs.wclovers.com/commission-setup/)
+* **Stripe Split Pay (SCA Compliant):** Automatically split payments between your marketplace platform and your vendors at checkout. Support for 3D Secure, cross-border payments, and direct charges.
+* **Global Payout Gateways:** Extensive payout support including [PayPal Direct Pay - Marketplace API](https://wordpress.org/plugins/wc-frontend-manager-direct-paypal/), [PayFast](https://github.com/wclovers/wcfm-pg-payfast), [PayStack](https://github.com/wclovers/wcfm-pg-paystack), [MangoPay](https://github.com/wclovers/wcfm-pg-mangopay), Skrill, Bank Transfer, and Cash. Plus, a developer-friendly API to build custom gateways ([Developer's guide](https://wclovers.com/knowledgebase/wcfm-marketplace-custom-payment-gateway-developers-guide/)).
+* **Versatile Withdrawal Options:** Empower your vendors with flexible, stress-free payout controls - Schedule Withdrawal, Withdrawal by Order Status, or Manual Withdrawal.
+* **The Ledger Book & Reverse Withdrawal:** Maintain pristine financial records. Automatically deduct platform fees, shipping taxes, and handle "Reverse Withdrawals" when vendors owe you money (e.g., for platform-paid shipping labels, ads, or refunds).
 
-### Most Flexible Shiping Management
+= 📦 Multi-Seller Shipping & Vendor Store Management =
 
-👉 Shipping Rate By Zone
-👉 Shipping Rate By Country
-👉 Shipping Rate By Distance (Distance rate shipping)
-👉 Shipping Rate By Weight (Rule and by per unit cost)
-👉 Shipping Class Support
-👉 Restriction by Country
-👉 Restriction by Zip code
+Equip your vendors with advanced tools to manage fulfillment, logistics, and build buyer trust.
 
-[Know more on this ...](https://docs.wclovers.com/store-shipping/)
+* **Next-Gen Vendor Shipping Engine:** Support for Zone, Country, Weight-based, and **Distance Rate Shipping**. Vendors can configure complex shipping classes, local pickup, and postcode restrictions directly from their frontend dashboard. [Read more...](https://docs.wclovers.com/store-shipping/)
+* **Single Product Multi-Vendor (SPMV):** Allow multiple sellers to offer the exact same product. Buyers see a "More Offers" tab to compare price and vendor ratings, creating a competitive, Amazon-style marketplace experience.
+* **Comprehensive Refund Module:** Customers can request partial or full refunds, including tax and shipping. Admins can approve, reject, or negotiate, with commissions automatically recalculated and ledger books updated in real-time.
+* **Vendor Verification & Trust:** Build buyer confidence with ID verification modules, store reviews, and badge systems.
 
-### Versatile Withdrawal Options
+= 🏪 Premium Vendor Storefronts & WooCommerce Integration =
 
-👉 Schedule Withdrawal
-👉 Withdrawal by Order Status
-👉 Manual Withdrawal
+Provide your vendors with beautiful, conversion-optimized storefronts that empower them to sell more.
 
-[Read more here ...](https://wclovers.com/knowledgebase/wcfm-marketplace-withdrawal/)
+* **Beautiful Marketplace Store Pages:** Radius search, city/zip filters, category filtering, and interactive maps (Google Maps & OpenStreetMap) for local vendor discovery. [Read more...](https://docs.wclovers.com/store-list/)
+* **Store Hours & Vacation Mode:** Vendors can set complex opening hours, daily time slots, and vacation modes that automatically hide "Add to Cart" buttons.
+* **Store Invoices & Packing Slips:** Vendors can generate professional, branded PDF invoices and packing slips for their orders.
+* **Live Chat & Support Tickets:** Reduce admin bottleneck. Vendors can chat directly with customers via integrated [Live Chat](https://wclovers.com/knowledgebase/wcfm-marketplace-chat-module/) and manage their own support tickets.
 
-### Extensive Payout Options
+= 🛠️ Built for Agencies & Developers =
 
-👉 Stripe
-👉 Stripe Split Pay ([3D Secure & SCA Compatible](https://wclovers.com/blog/wcfm-marketplace-stripe-sca-compatibility/))
-👉 PayPal
-👉 [PayPal Direct Pay](https://wordpress.org/plugins/wc-frontend-manager-direct-paypal/)
-👉 [PayFast](https://github.com/wclovers/wcfm-pg-payfast)
-👉 [PayStack](https://github.com/wclovers/wcfm-pg-paystack)
-👉 [MangoPay](https://github.com/wclovers/wcfm-pg-mangopay)
-👉 Wirecard (Moip)
-👉 Skrill
-👉 Bank Transfer
-👉 Cash Pay
+WCFM Marketplace is built with a flexible, extensible architecture designed to adapt to your custom requirements.
 
-You may create your own Payment Gateway as well, [developer's guide](https://wclovers.com/knowledgebase/wcfm-marketplace-custom-payment-gateway-developers-guide/)
+* **Elementor Integration:** Build custom, pixel-perfect vendor store pages using Elementor.
+* **REST API Ready:** Connect your marketplace to external CRMs, ERPs, or build a custom headless frontend.
+* **White-Label Mobile App:** Give your vendors a native mobile experience with the WCFM Vendor App integration.
+* **WPML & Multilingual:** Fully compatible with WPML for global, multi-language marketplaces.
 
-> WCFM Marketplace will come with the most featured vendor dashboard along with integrated vendor membership module as well
->
-> [WC Frontend Manager](https://wordpress.org/plugins/wc-frontend-manager/) - as Frontend Dashboard
-> [WCFM - Membership](https://wordpress.org/plugins/wc-multivendor-membership/) - as Vendor Registration / Membership Module
->
-> Do you think anything is missing then WCFM Ultimate is also there for you :)
->
-> [WCFM - Ultimate](https://wclovers.com/product/woocommerce-frontend-manager-ultimate/) - [Pro Modules](https://wclovers.com/blog/woocommerce-frontend-manager/)
-> [WCFM - Delivery](https://wclovers.com/product/woocommerce-frontend-manager-delivery/) - [Delivery Person](https://wclovers.com/knowledgebase/wcfm-marketplace-delivery/) and [Delivery Time](https://docs.wclovers.com/delivery-time/) modules
-> [WCFM - Affiliate](https://wclovers.com/product/woocommerce-frontend-manager-affiliate/) - [Marketplace Affiliate Mpdule](https://docs.wclovers.com/wcfm-affiliate/)
+= 🌍 Seamless WooCommerce Ecosystem Compatibility =
 
-> [View Demo](https://wcfmmp.wcfmdemos.com/my-account/)
->
+WCFM Marketplace is engineered to play nicely with the tools you already use to scale your business.
 
-### Other Coolest Components
+* **Bookings & Appointments:** Exclusively compatible with WooCommerce Bookings, Appointments, and Rental systems.
+* **Subscriptions:** Empower vendors to offer product subscriptions, allowing them to offer services or products on a recurring basis while you earn recurring commissions.
+* **70+ Integrations:** Works flawlessly with Yoast SEO, RankMath, ACF, Toolset, FooEvents, ShipStation, and dozens more. [View full compatibility list](https://wclovers.com/wcfm-compatible-plugins/).
+
+= Explore the WCFM Ecosystem =
+
+Dive into our resources to see exactly how WCFM can transform your eCommerce business.
+
+👉 **Official demo link:** [WCFM Live Demo](http://wcfmmp.wcfmdemos.com/my-account/)
+
+👉 **Comprehensive feature list:** [Learn More About WCFM](https://wclovers.com/blog/woocommerce-frontend-manager/)
+
+👉 **Easy to follow step-by-step guides:** [Getting Started](https://docs.wclovers.com/getting-started/)
+
+👉 **First-look:** [Overview Video](https://youtu.be/ZKGD1PkdgYI)
+
+👉 **Exclusive plugin support:** [Compatible Plugins](https://wclovers.com/wcfm-compatible-plugins/)
+
+**Core Companion Plugins (Free)**
+
+[WCFM - Frontend Manager](https://wordpress.org/plugins/wc-frontend-manager/) (The Frontend Dashboard) | [WCFM - Membership](https://wordpress.org/plugins/wc-multivendor-membership/) | [WCFM - REST API](https://wordpress.org/plugins/wcfm-marketplace-rest-api/) | [WCFM - Elementor](https://wordpress.org/plugins/wc-frontend-manager-elementor/)
+
+**Premium Addons for Ultimate Scale**
+
+🏆 [WCFM - Ultimate](https://wclovers.com/product/woocommerce-frontend-manager-ultimate/)
+🏆 [WCFM - AI Suite](https://wclovers.com/product/woocommerce-frontend-manager-ai-suite/)
+🏆 [WCFM - Groups & Staff](https://wclovers.com/product/woocommerce-frontend-manager-groups-staffs/)
+🏆 [WCFM - Delivery](https://wclovers.com/product/woocommerce-frontend-manager-delivery/)
+🏆 [WCFM - Affiliate](https://wclovers.com/product/woocommerce-frontend-manager-affiliate/)
+🏆 [WCFM - Analytics](https://wclovers.com/product/woocommerce-frontend-manager-analytics/)
+🏆 [WCFM - Product HUB](https://wclovers.com/product/woocommerce-frontend-manager-product-hub/)
+
+**Must-Have Modules**
 
 🎉 [Live Chat Module](https://wclovers.com/knowledgebase/wcfm-marketplace-chat-module/)
 🎉 [Refund Module](https://wclovers.com/knowledgebase/wcfm-marketplace-refund/)
@@ -125,47 +138,23 @@ You may create your own Payment Gateway as well, [developer's guide](https://wcl
 
 [Read all documentations from here.](https://wclovers.com/knowledgebase/)
 
-### Elementor Integration
+**Some Important Additions**
 
-💁 [WCFM Marketplace integrate with Elementor](https://wordpress.org/plugins/wc-frontend-manager-elementor/)
+⭐️ [Widgets & Short codes](https://wclovers.com/knowledgebase/wcfm-marketplace-widgets-short-codes/)
+⭐️ [Vendor Registration](https://wclovers.com/knowledgebase/wcfm-marketplace-vendor-registration/)
 
-This will allow you to create your marketplace store page using Elementor with your own design. Easily and Beatifully!
+**Short Codes**
 
-### REST API
+👉 [Store list](https://docs.wclovers.com/store-list/)
+👉 [All other shortcodes](https://docs.wclovers.com/shortcode)
 
-💁 [WCFM Marketplace - REST API Addon](https://wordpress.org/plugins/wcfm-marketplace-rest-api/)
-💁 [Documentation](https://wclovers.github.io/wcfm-rest-api/)
+= Migrate to WCFM Marketplace =
 
-### SMS Notification & OTP Veirification 
+If you already have a multi-vendor store setup using WC Marketplace or WC Vendors or Dokan Multivendor and you want to switch into WCFM Marketplace, the [WCFM Marketplace Migrator](https://wordpress.org/plugins/wc-multivendor-marketplace-migration/) is there to handle the transition seamlessly.
 
-👨 Indian Users - https://wordpress.org/plugins/sms-alert/
-👨 Other Users  - https://woocommerce.com/products/twilio-sms-notifications/
-👨 Netgsm       - https://wordpress.org/plugins/netgsm/
+= Third Party Plugin Compatibility =
 
-### Some Important Additions
-
-👉 [Widgets & Short codes](https://wclovers.com/knowledgebase/wcfm-marketplace-widgets-short-codes/)
-👉 [Vendor Registration](https://wclovers.com/knowledgebase/wcfm-marketplace-vendor-registration/)
-
-### Short Codes
-
-👉 wcfm_stores             - [List all stores - Map and Redius Filter](https://docs.wclovers.com/store-list/)
-👉 wcfm_stores_map         - Stores in Map
-👉 wcfm_store_info         - Display any store info by ID
-👉 wcfm_stores_carousel    - Stores as slider
-👉 wcfm_store_hours        - Store opening-closing hours
-👉 wcfm_shipping_time      - Product estimated shipping time display 
-👉 wcfm_more_offers        - Other vendors pricing offer for a product
-👉 wcfm_store_fb_feed      - Store Facebook page feed
-👉 wcfm_store_twitter_feed - Store Twitter feed
-👉 wcfm_inquiry            - Inquiry button for any store, add store="store_id" parameter
-👉 wcfm_follow             - Follow button for any store, add store="store_id" parameter
-
-###  Migrate to WCFM Marketplace
-
-If you already have a multi-vendor store setup using WC Marketplace or WC Vendors or Dokan Multivendor and you want to switch into WCFM Marketplace then [WCFM Marketplace Migrator](https://wordpress.org/plugins/wc-multivendor-marketplace-migration/) is also there for you.
-
-### Third Party Plugin Compatibility
+WCFM Marketplace integrates with top-tier WordPress plugins to extend your platform's capabilities.
 
 🔖 WooCommerce Bookings - [Demo](http://wcbookings.wcfmdemos.com/my-account/)
 🔖 WooCommerce Bookings Accommodation - [Demo](http://wcbookings.wcfmdemos.com/my-account/)
@@ -191,24 +180,16 @@ If you already have a multi-vendor store setup using WC Marketplace or WC Vendor
 
 Check full list from [here](https://wclovers.com/wcfm-compatible-plugins/)
 
-= Setup Guide = 
+= Translations =
 
-[youtube https://youtu.be/ZKGD1PkdgYI]
-
-### Translations
+WCFM is a global product, actively supported by international communities.
 
 - Chinese - Taiwan (Thanks to Ming)
 - Spanish   (Thanks to Felipe @sophivorus)
 
-### Feedback 
+= Feedback =
 
-All we want is love. We are extremely responsive about support requests - so if you face a problem or find any bugs, shoot us a mail or post it in the support forum, and we will respond within 6-12 hours(during business days). If you get the impulse to rate the plugin low because it is not working as it should, please do wait for our response because the root cause of the problem may be something else. 
-
-It is extremely disheartening when trigger happy users downrate a plugin for no fault of the plugin. 
-
-Feel free to reach us either via our [support forum](https://wclovers.com/forums) or [WordPress.org](https://wordpress.org/support/plugin/wc-multivendor-marketplace), happy to serve anything you looking for.
-
-Inspired by WC Marketplace, Dokan Multivendor, WC Vendors, Amazon, Zomato and all other marketplace solutions, really thankful to all of them :) 
+All we want is love. We are extremely responsive about support requests - so if you face a problem or find any bugs, shoot us a mail or post it in the support forum.
 
 Really proud to serve and enhance [WooCommerce](http://woocommerce.com).
 
@@ -216,12 +197,14 @@ Be with us ... Team [WC Lovers](https://wclovers.com)
 
 == Installation ==
 
+Follow the instructions below to install and set up WCFM Marketplace on your WooCommerce store.
+
 = Minimum Requirements =
 
-* WordPress 4.7 or greater
-* WooCommerce 3.0 or greater
-* PHP version 5.6 or greater
-* MySQL version 5.0 or greater
+* WordPress 5.5 or greater
+* WooCommerce 7.0 or greater
+* PHP version 7.4 or greater
+* MySQL version 5.6 or greater
 
 = Automatic installation =
 
@@ -235,11 +218,23 @@ The manual installation method involves downloading our eCommerce plugin and upl
 
 == FAQ ==
 
+Find answers to the most common questions about configuring and using WCFM Marketplace.
+
+= Is the AI Suite included in the free WCFM Marketplace plugin? =
+
+No, the WCFM AI Suite is a separate premium addon. You need both the free WCFM - Frontend Manager and WCFM Marketplace plugins installed as the foundation, and then you can add the AI Suite addon to unlock the AI copywriting, image enhancement, and credit economy features.
+
+= Can I migrate from Dokan or WC Vendors to WCFM Marketplace? =
+
+Yes! If you already have a multi-vendor store setup using WC Marketplace, WC Vendors, or Dokan, you can easily switch using the free [WCFM Marketplace Migrator](https://wordpress.org/plugins/wc-multivendor-marketplace-migration/) plugin.
+
 = Where do I report security bugs found in this plugin? =
 
-Please report security bugs found in the source code of the WCFM Marketplace plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/9e5fb67d-c831-4f28-becb-615a3363fdfb). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+Please report security bugs found in the source code of the WCFM Marketplace plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fb67d-c831-4f28-becb-615a3363fdfb). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 == Screenshots ==
+
+Explore the frontend interfaces and management screens included in WCFM Marketplace.
 
 1. Store Page
 2. Store Reviews
@@ -254,11 +249,21 @@ Please report security bugs found in the source code of the WCFM Marketplace plu
 11. Customer Support
 12. Store Invoice
 
-
 == Changelog ==
 
+Below is a record of updates, features, and fixes across all releases.
+
+= 3.7.4 =
+*Updated - 28/06/2026*
+
+* Security - Patched a Stored XSS vulnerability in the Media Manager.
+* Security - Strengthened vendor shipping zone authorization to prevent cross-vendor shipping setting manipulation.
+* Enhance  - WordPress 7.0+ compatibility check added.
+* Enhance  - WooCommerce 10.9+ compatibility check added.
+* Fix      - Store Featured Products widget: "Hide out of stock items" no longer overrides the widget's product visibility query.
+
 = 3.7.3 =
-*Updated - 20/05/2026*
+*Updated - 07/05/2026*
 
 * Security - Patched a SQL Injection vulnerability in the Reviews Dashboard.
 * Security - Patched an unauthenticated SQL Injection vulnerability in the Store List Map integration.
@@ -281,7 +286,7 @@ Please report security bugs found in the source code of the WCFM Marketplace plu
 *Updated - 19/12/2025*
 
 * Fixed   - Refund logic division by zero issue.
-* Enhance - WordPrss 6.9+ compatibility check added
+* Enhance - WordPress 6.9+ compatibility check added
 * Enhance - WooCommerce 10.4+ compatibility check added
 
 = 3.6.17 =
@@ -1781,7 +1786,10 @@ Please report security bugs found in the source code of the WCFM Marketplace plu
 
 == Upgrade Notice ==
 
-= 3.7.3 =
+= 3.7.4 =
 
-* Security - Patched a SQL Injection vulnerability in the Reviews Dashboard.
-* Security - Patched an unauthenticated SQL Injection vulnerability in the Store List Map integration.
+* Security - Patched a Stored XSS vulnerability in the Media Manager.
+* Security - Strengthened vendor shipping zone authorization to prevent cross-vendor shipping setting manipulation.
+* Enhance  - WordPress 7.0+ compatibility check added.
+* Enhance  - WooCommerce 10.9+ compatibility check added.
+* Fix      - Store Featured Products widget: "Hide out of stock items" no longer overrides the widget's product visibility query.

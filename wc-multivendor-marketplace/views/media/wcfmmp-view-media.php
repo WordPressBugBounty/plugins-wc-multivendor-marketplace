@@ -30,7 +30,7 @@ $vendor_id = $WCFMmp->vendor_id;
 	  
 	  <div class="wcfm-container wcfm-top-element-container">
 			<h2><?php _e( 'Media Manager', 'wc-multivendor-marketplace' ); ?></h2>
-			
+			<?php do_action( 'after_wcfm_media_manager_title' ); ?>
 			<?php
 			if( wcfm_is_vendor() ) {
 				echo '<span class="wcfm_disk_limit_label">' . __('Total Disk Space Usage: ', 'wc-multivendor-marketplace' ) . $WCFM->wcfm_vendor_support->wcfm_vendor_space_limit_stat( $vendor_id ) . '</span>';

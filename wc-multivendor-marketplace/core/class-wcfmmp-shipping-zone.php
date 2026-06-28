@@ -12,24 +12,55 @@
 class WCFMmp_Shipping_Zone {
 
   /**
+   * Resolve and authorize the vendor whose shipping settings are being accessed.
+   *
+   * @param int    $user_id Requested vendor ID.
+   * @param string $action  Shipping management action being performed.
+   *
+   * @return int|WP_Error
+   */
+  public static function get_authorized_vendor_id( $user_id = 0, $action = 'view' ) {
+    $vendor_id = absint( $user_id );
+    if ( ! $vendor_id ) {
+      $vendor_id = absint( apply_filters( 'wcfm_current_vendor_id', get_current_user_id() ) );
+    }
+
+    if ( ! $vendor_id ) {
+      return new WP_Error( 'invalid-vendor', __( 'Invalid vendor.', 'wc-multivendor-marketplace' ) );
+    }
+
+    if ( function_exists( 'wcfm_user_can_perform_request' ) ) {
+      if ( wcfm_user_can_perform_request( $vendor_id, 'shipping_management', $action ) ) {
+        return $vendor_id;
+      }
+    } elseif ( current_user_can( 'manage_woocommerce' ) && !current_user_can('wcfm_vendor') && !current_user_can('seller') && !current_user_can('vendor') && !current_user_can('shop_staff') ) {
+      return $vendor_id;
+    } elseif ( absint( apply_filters( 'wcfm_current_vendor_id', get_current_user_id() ) ) === $vendor_id ) {
+      return $vendor_id;
+    }
+
+    return new WP_Error( 'unauthorized-vendor', __( 'You don&#8217;t have permission to do this.', 'woocommerce' ) );
+  }
+
+  /**
    * Get All Zone
    *
    * @since 1.0.0
    *
-   * @return void
+   * @return []|WP_Error
    */
   public static function get_zones($user_id = 0) {
     $data_store = WC_Data_Store::load( 'shipping-zone' );
     $raw_zones  = $data_store->get_zones();
     $zones      = array();
-    if($user_id) {
-      $vendor_id = $user_id;
-    } else {
-      $vendor_id  = apply_filters( 'wcfm_current_vendor_id', get_current_user_id() );
+    $vendor_id = self::get_authorized_vendor_id( $user_id, 'view' );
+    if ( is_wp_error( $vendor_id ) ) {
+      return $vendor_id;
     }
+
     foreach ( $raw_zones as $raw_zone ) {
-			$zone             = new WC_Shipping_Zone( $raw_zone );
-			$enabled_methods  = $zone->get_shipping_methods( true );
+				$zone             = new WC_Shipping_Zone( $raw_zone );
+				$enabled_methods  = $zone->get_shipping_methods( true );
 			$methods_id = wp_list_pluck( $enabled_methods, 'id' );
 
 			if ( in_array( 'wcfmmp_product_shipping_by_zone', $methods_id ) ) {
@@ -60,21 +91,25 @@ class WCFMmp_Shipping_Zone {
    *
    * @since 1.0.0
    *
-   * @return void
+   * @return WC_Shipping_Zone|WP_Error
+
    */
   public static function get_zone( $zone_id, $user_id = 0 ) {
     $zone = array();
-    if( $user_id ) {
-      $vendor_id = $user_id;
-    } else {
-      $vendor_id = apply_filters( 'wcfm_current_vendor_id', get_current_user_id() );
+    $vendor_id = self::get_authorized_vendor_id( $user_id, 'view' );
+    if ( is_wp_error( $vendor_id ) ) {
+      return $vendor_id;
     }
 
     $zone_obj = WC_Shipping_Zones::get_zone_by( 'zone_id', $zone_id );
+
+    if( ! $zone_obj ) {
+      return new WP_Error( 'zone-not-found', __( 'Shipping zone not found.', 'wc-multivendor-marketplace' ) );
+    }
     $zone['data']                    = $zone_obj->get_data();
     $zone['formatted_zone_location'] = $zone_obj->get_formatted_location();
     $zone['shipping_methods']        = self::get_shipping_methods( $zone_id, $vendor_id );
-    $zone['locations']               = self::get_locations( $zone_id, $user_id );
+    $zone['locations']               = self::get_locations( $zone_id, $vendor_id );
 
     return $zone;
   }
@@ -95,10 +130,9 @@ class WCFMmp_Shipping_Zone {
         return new WP_Error( 'no-method-id', __( 'No shipping method found for adding', 'wc-multivendor-marketplace' ) );
     }
     
-    if( $data['user_id'] != 0 ) {
-      $vendor_id = $data['user_id'];
-    } else {
-      $vendor_id = apply_filters( 'wcfm_current_vendor_id', get_current_user_id() );
+    $vendor_id = self::get_authorized_vendor_id( isset( $data['user_id'] ) ? $data['user_id'] : 0, 'add' );
+    if ( is_wp_error( $vendor_id ) ) {
+      return $vendor_id;
     }
     
 
@@ -134,7 +168,10 @@ class WCFMmp_Shipping_Zone {
     global $wpdb;
 
     $table_name = "{$wpdb->prefix}wcfm_marketplace_shipping_zone_methods";
-    $vendor_id = empty( $data['user_id'] ) ? apply_filters( 'wcfm_current_vendor_id', get_current_user_id() ) : $data['user_id'];
+    $vendor_id = self::get_authorized_vendor_id( isset( $data['user_id'] ) ? $data['user_id'] : 0, 'enable_disable' );
+    if ( is_wp_error( $vendor_id ) ) {
+      return $vendor_id;
+    }
     $result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table_name} WHERE zone_id=%d AND vendor_id=%d AND instance_id=%d", $data['zone_id'], $vendor_id, $data['instance_id'] ) );
 
     if ( ! $result ) {
@@ -149,7 +186,7 @@ class WCFMmp_Shipping_Zone {
    *
    * @since 1.0.0
    *
-   * @return void
+   * @return array|WP_Error
    */
   public static function get_shipping_methods( $zone_id, $vendor_id ) {
     global $wpdb;
@@ -194,14 +231,17 @@ class WCFMmp_Shipping_Zone {
     $instance_id = $args['instance_id'];
     $zone_id = $args['zone_id'];
     $method_id = $args['method_id'];
-    $vendor_id = empty( $args['user_id'] ) ? apply_filters( 'wcfm_current_vendor_id', get_current_user_id() ) : $args['user_id'];
+    $vendor_id = self::get_authorized_vendor_id( isset( $args['user_id'] ) ? $args['user_id'] : 0, 'update' );
+    if ( is_wp_error( $vendor_id ) ) {
+      return $vendor_id;
+    }
     $settings = $args['settings'];
     
     // WPML Shipping Class Compatibility - 6.4.4
     if ( defined( 'ICL_SITEPRESS_VERSION' ) && ! ICL_PLUGIN_INACTIVE && class_exists( 'SitePress' ) ) {
 			$old_settings = array();
-			$sql = "SELECT * FROM {$wpdb->prefix}wcfm_marketplace_shipping_zone_methods WHERE `instance_id`=%d";
-			$results = $wpdb->get_results( $wpdb->prepare($sql, $instance_id) );
+				$sql = "SELECT * FROM {$wpdb->prefix}wcfm_marketplace_shipping_zone_methods WHERE `instance_id`=%d AND `vendor_id`=%d";
+				$results = $wpdb->get_results( $wpdb->prepare($sql, $instance_id, $vendor_id) );
 			if( !empty( $results ) ) {
 				foreach ( $results as $key => $result ) {
 					$old_settings = ! empty( $result->settings ) ? maybe_unserialize( $result->settings ) : array();
@@ -245,7 +285,10 @@ class WCFMmp_Shipping_Zone {
   public static function toggle_shipping_method( $data ) {
     global $wpdb;
     $table_name = "{$wpdb->prefix}wcfm_marketplace_shipping_zone_methods";
-    $vendor_id = empty( $data['user_id'] ) ? apply_filters( 'wcfm_current_vendor_id', get_current_user_id() ) : $data['user_id'];
+    $vendor_id = self::get_authorized_vendor_id( isset( $data['user_id'] ) ? $data['user_id'] : 0, 'enable_disable' );
+    if ( is_wp_error( $vendor_id ) ) {
+      return $vendor_id;
+    }
     $updated    = $wpdb->update( $table_name, array( 'is_enabled' => $data['checked']  ), array( 'instance_id' => $data['instance_id' ], 'zone_id' => $data['zone_id'], 'vendor_id' => $vendor_id ), array( '%d' ) );
 
     if ( ! $updated ) {
@@ -260,15 +303,16 @@ class WCFMmp_Shipping_Zone {
    *
    * @since 1.0.0
    *
-   * @return void
+   * @return array
    */
   public static function get_locations( $zone_id, $vendor_id = null ) {
     global $wpdb;
 
     $table_name = "{$wpdb->prefix}wcfm_marketplace_shipping_zone_locations";
 
-    if ( ! $vendor_id ) {
-        $vendor_id  = apply_filters( 'wcfm_current_vendor_id', get_current_user_id() );
+    $vendor_id = self::get_authorized_vendor_id( $vendor_id, 'view' );
+    if ( is_wp_error( $vendor_id ) ) {
+        return array();
     }
 
     $sql = "SELECT * FROM {$table_name} WHERE zone_id=%d AND vendor_id=%d";
@@ -302,10 +346,9 @@ class WCFMmp_Shipping_Zone {
     // Setup arrays for Actual Values, and Placeholders
     $values        = array();
     $place_holders = array();
-    if( $user_id ) {
-      $vendor_id = $user_id;
-    } else {
-      $vendor_id     = apply_filters( 'wcfm_current_vendor_id', get_current_user_id() );
+    $vendor_id = self::get_authorized_vendor_id( $user_id, 'update' );
+    if ( is_wp_error( $vendor_id ) ) {
+      return $vendor_id;
     }
     $table_name    = "{$wpdb->prefix}wcfm_marketplace_shipping_zone_locations";
 

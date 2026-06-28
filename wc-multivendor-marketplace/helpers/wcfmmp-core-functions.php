@@ -1020,14 +1020,17 @@ function wcfmmp_get_user_vendor_distance( $store_id ) {
   */
 
 if(!function_exists('wcfmmp_get_shipping_zone')) {
-  function wcfmmp_get_shipping_zone($zoneID = '', $user_id = 0 ) {
-    if ( isset( $zoneID ) && $zoneID != '' ) {
-        $zones = WCFMmp_Shipping_Zone::get_zone( $zoneID );
-    } else {
-        $zones = WCFMmp_Shipping_Zone::get_zones( $user_id );
-    }
-    return $zones;
-  }
+	function wcfmmp_get_shipping_zone($zoneID = '', $user_id = 0 ) {
+	  if ( isset( $zoneID ) && $zoneID != '' ) {
+	      $zones = WCFMmp_Shipping_Zone::get_zone( $zoneID, $user_id );
+	  } else {
+	      $zones = WCFMmp_Shipping_Zone::get_zones( $user_id );
+	  }
+	  if ( is_wp_error( $zones ) ) {
+	    return array();
+	  }
+	  return $zones;
+	}
 }
 
 function wcfmmp_convert_to_array($a) {
@@ -1166,4 +1169,3 @@ if (!function_exists('wcfmmp_generate_timestamp_for_period')) {
 		];
 	}
 }
-?>

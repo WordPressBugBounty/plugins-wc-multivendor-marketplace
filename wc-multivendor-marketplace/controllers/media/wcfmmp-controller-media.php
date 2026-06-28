@@ -114,21 +114,21 @@ class WCFMmp_Media_Controller {
 					default:
 						$media =  $base . "default.png";
 				}
-				$wcfm_media_json_arr[$index][] = '<a class="wcfmmp-author-img" target="_blank" href="' . wp_get_attachment_url( $wcfm_media_single->ID ) . '" ><img width="75" src="' . esc_url($media) . '" /></a>';
-				
+				$wcfm_media_json_arr[$index][] = '<a class="wcfmmp-author-img" target="_blank" href="' . esc_url( wp_get_attachment_url( $wcfm_media_single->ID ) ) . '" ><img width="75" src="' . esc_url( $media ) . '" /></a>';
+
 				// File
-				$wcfm_media_json_arr[$index][] = '<span class="wcfmmp_media_name">' . $wcfm_media_single->post_title . "</span><br />(" . $type . ")";
-				
+				$wcfm_media_json_arr[$index][] = '<span class="wcfmmp_media_name">' . esc_html( $wcfm_media_single->post_title ) . "</span><br />(" . esc_html( $type ) . ")";
+
         // Associate
         if( $wcfm_media_single->post_parent ) {
-					$wcfm_media_json_arr[$index][] = '<a class="wcfmmp-author-img" target="_blank" href="' . get_permalink( $wcfm_media_single->post_parent ) . '" >' . get_the_title( $wcfm_media_single->post_parent ) . '</a>';
+					$wcfm_media_json_arr[$index][] = '<a class="wcfmmp-author-img" target="_blank" href="' . esc_url( get_permalink( $wcfm_media_single->post_parent ) ) . '" >' . esc_html( get_the_title( $wcfm_media_single->post_parent ) ) . '</a>';
 				} else {
 					$wcfm_media_json_arr[$index][] = '&ndash;';
 				}
         
         // Store
         if( $wcfm_media_single->post_author && wcfm_is_vendor($wcfm_media_single->post_author) ) {
-					$wcfm_media_json_arr[$index][] = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_by_vendor( absint($wcfm_media_single->post_author) );
+					$wcfm_media_json_arr[$index][] = wp_kses_post( $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_by_vendor( absint($wcfm_media_single->post_author) ) );
 				} else {
 					$wcfm_media_json_arr[$index][] = '&ndash;';
 				}
@@ -143,13 +143,12 @@ class WCFMmp_Media_Controller {
 				}
         
 				// Status
-				$actions = '<a class="wcfm-action-icon" target="_blank" href="' . wp_get_attachment_url( $wcfm_media_single->ID ) . '" ><span class="wcfmfa fa-eye text_tip" data-tip="' . esc_attr__( 'View', 'wc-frontend-manager' ) . '"></span></a>';
+				$actions = '<a class="wcfm-action-icon" target="_blank" href="' . esc_url( wp_get_attachment_url( $wcfm_media_single->ID ) ) . '" ><span class="wcfmfa fa-eye text_tip" data-tip="' . esc_attr__( 'View', 'wc-frontend-manager' ) . '"></span></a>';
 				
 				if( apply_filters( 'wcfm_is_allow_delete_media', true ) ) {
 					$actions .= '<a class="wcfm_media_dalete wcfm-action-icon" href="#" data-mediaid="' . $wcfm_media_single->ID . '"><span class="wcfmfa fa-trash-alt text_tip" data-tip="' . esc_attr__( 'Delete', 'wc-multivendor-marketplace' ) . '"></span></a>';
 				}
-				$wcfm_media_json_arr[$index][] =  $actions;
-				
+				$wcfm_media_json_arr[$index][] = apply_filters ( 'wcfm_media_actions', $actions, $wcfm_media_single->ID );
 				$index++;
 			}												
 		}
