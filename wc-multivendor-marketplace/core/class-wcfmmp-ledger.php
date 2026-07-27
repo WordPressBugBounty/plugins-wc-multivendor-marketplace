@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin core
- *
- * WCFM Ledger core
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Ledger {
 
@@ -16,45 +16,45 @@ class WCFMmp_Ledger {
 		
 		if( apply_filters( 'wcfm_is_pref_ledger_book', true ) && wcfm_is_vendor() && apply_filters( 'wcfm_is_allow_ledger', true ) && ( !is_admin() || defined('DOING_AJAX') ) ) {
 		
-			// WCFM Ledger Query Var Filter
+			 
 			add_filter( 'wcfm_query_vars', array( &$this, 'wcfm_ledger_query_vars' ), 10 );
 			add_filter( 'wcfm_endpoint_title', array( &$this, 'wcfm_ledger_endpoint_title' ), 10, 2 );
 			add_action( 'init', array( &$this, 'wcfm_ledger_init' ), 120 );
 			
-			// WCFMu Ledger Load WCFMu Scripts
+			 
 			add_action( 'wcfm_load_scripts', array( &$this, 'wcfm_ledger_load_scripts' ), 10 );
 			add_action( 'after_wcfm_load_scripts', array( &$this, 'wcfm_ledger_load_scripts' ), 10 );
 			
-			// WCFMu Ledger Load WCFMu Styles
+			 
 			add_action( 'wcfm_load_styles', array( &$this, 'wcfm_ledger_load_styles' ), 10 );
 			add_action( 'after_wcfm_load_styles', array( &$this, 'wcfm_ledger_load_styles' ), 10 );
 			
-			// WCFMu Ledger Load WCFMu views
+			 
 			add_action( 'wcfm_load_views', array( &$this, 'wcfm_ledger_load_views' ), 10 );
 			
-			// WCFMu Ledger Ajax Controller
+			 
 			add_action( 'after_wcfm_ajax_controller', array( &$this, 'wcfm_ledger_ajax_controller' ) );
 			
-			// Ledger menu on WCfM dashboard
+			 
 			add_filter( 'wcfm_menus', array( &$this, 'wcfm_ledger_menus' ), 30 );
 		}
 		
-		// Vendor Ledger update on order process
+		 
 		add_action( 'wcfmmp_order_item_processed', array( &$this, 'wcfmmp_order_item_processed_ledger_update' ), 10, 9 );
 		
-		// Vendor Ledger update on withdraw request process
+		 
 		add_action( 'wcfmmp_withdraw_request_processed', array( &$this, 'wcfmmp_withdraw_request_processed_ledger_update' ), 10, 9 );
 		
-		// Vendor Ledger update on reverse withdraw request process
+		 
 		add_action( 'wcfmmp_reverse_withdraw_request_processed', array( &$this, 'wcfmmp_reverse_withdraw_request_processed_ledger_update' ), 10, 10 );
 		
-		// Vendor Ledger update on refund request process
+		 
 		add_action( 'wcfmmp_refund_request_processed', array( &$this, 'wcfmmp_refund_request_processed_ledger_update' ), 10, 6 );
 	}
 	
-	/**
-   * WCfM Ledger Query Var
-   */
+	
+
+
   function wcfm_ledger_query_vars( $query_vars ) {
   	$wcfm_modified_endpoints = wcfm_get_option( 'wcfm_endpoints', array() );
   	
@@ -66,9 +66,9 @@ class WCFMmp_Ledger {
 		return $query_vars;
   }
   
-  /**
-   * WCfM Ledger End Point Title
-   */
+  
+
+
   function wcfm_ledger_endpoint_title( $title, $endpoint ) {
   	
   	switch ( $endpoint ) {
@@ -80,26 +80,26 @@ class WCFMmp_Ledger {
   	return $title;
   }
   
-  /**
-   * WCfM Ledger Endpoint Intialize
-   */
+  
+
+
   function wcfm_ledger_init() {
   	global $WCFM_Query;
 	
-		// Intialize WCFM End points
+		 
 		$WCFM_Query->init_query_vars();
 		$WCFM_Query->add_endpoints();
 		
-		//if( !get_option( 'wcfm_updated_end_point_payment' ) ) {
-			// Flush rules after endpoint update
+		 
+			 
 			flush_rewrite_rules();
 			update_option( 'wcfm_updated_end_point_ledger', 1 );
-		//}
+		 
   }
   
-	/**
-   * WCfM Ledger Ledger Menu
-   */
+	
+
+
   function wcfm_ledger_menus( $menus ) {
   	global $WCFM;
   		
@@ -114,9 +114,9 @@ class WCFMmp_Ledger {
   	return $menus;
   }
   
-	/**
-   * WCfM Ledger Scripts
-   */
+	
+
+
   public function wcfm_ledger_load_scripts( $end_point ) {
 	  global $WCFM, $WCFMmp;
     
@@ -129,9 +129,9 @@ class WCFMmp_Ledger {
 	  }
 	}
 	
-	/**
-   * WCfM Ledger Styles
-   */
+	
+
+
 	public function wcfm_ledger_load_styles( $end_point ) {
 	  global $WCFM, $WCFMmp;
 		
@@ -144,9 +144,9 @@ class WCFMmp_Ledger {
 	  }
 	}
 	
-	/**
-   * WCfM Ledger Views
-   */
+	
+
+
   public function wcfm_ledger_load_views( $end_point ) {
 	  global $WCFM, $WCFMmp;
 	  
@@ -157,9 +157,9 @@ class WCFMmp_Ledger {
 	  }
 	}
 	
-	/**
-   * WCfM Ledger Ajax Controllers
-   */
+	
+
+
   public function wcfm_ledger_ajax_controller() {
   	global $WCFM, $WCFMmp;
   	
@@ -187,9 +187,9 @@ class WCFMmp_Ledger {
   	}
   }
   
-  /**
-   * Reference Name
-   */
+  
+
+
   function wcfmmp_vendor_ledger_reference_name( $reference ) {
   	$ledger_references = apply_filters( 'wcfmmp_ledger_references', 
   																		 array(
@@ -205,9 +205,9 @@ class WCFMmp_Ledger {
   	return $reference_name;
   }
   
-  /**
-	 * Vendor Ledger update on new commission processed
-	 */
+  
+
+
 	function wcfmmp_order_item_processed_ledger_update( $commission_id, $order_id, $order, $vendor_id, $product_id, $order_item_id, $grosse_total, $total_commission, $is_auto_withdrawal ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -215,13 +215,13 @@ class WCFMmp_Ledger {
 		$this->wcfmmp_ledger_update( $vendor_id, $commission_id, $total_commission, 0, 'order', $reference_details );
 	}
 	
-	/**
-	 * Vendor Ledger update on new withdrawal request processed
-	 */
+	
+
+
 	function wcfmmp_withdraw_request_processed_ledger_update( $withdraw_request_id, $vendor_id, $order_ids, $commission_ids, $withdraw_amount, $withdraw_charges, $withdraw_status, $withdraw_mode, $is_auto_withdrawal ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
-		// Withdrawal Charges Ledger Entry
+		 
 		if( $withdraw_charges ) {
 			$reference_details = __( 'Withdrawal Charges.', 'wc-multivendor-marketplace' );
 			$this->wcfmmp_ledger_update( $vendor_id, $withdraw_request_id, 0, $withdraw_charges, 'withdraw-charges', $reference_details );
@@ -238,9 +238,9 @@ class WCFMmp_Ledger {
 		$this->wcfmmp_ledger_update( $vendor_id, $withdraw_request_id, 0, $withdraw_amount, 'withdraw', $reference_details );
 	}
 	
-	/**
-	 * Vendor Ledger update on new reverse withdrawal request processed
-	 */
+	
+
+
 	function wcfmmp_reverse_withdraw_request_processed_ledger_update( $reverse_withdraw_request_id, $vendor_id, $order_id, $commission_id, $grosse_total, $withdraw_amount, $balance, $withdraw_status, $withdraw_mode, $is_auto_withdrawal ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -249,9 +249,9 @@ class WCFMmp_Ledger {
 		$this->wcfmmp_ledger_update( $vendor_id, $reverse_withdraw_request_id, 0, $balance, 'reverse-withdraw', $reference_details );
 	}
 	
-	/**
-	 * Vendor Ledger update on new refund request processed
-	 */
+	
+
+
 	function wcfmmp_refund_request_processed_ledger_update( $refund_request_id, $vendor_id, $order_id, $commission_id, $refunded_amount, $refund_type ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -271,9 +271,9 @@ class WCFMmp_Ledger {
 		$this->wcfmmp_ledger_update( $vendor_id, $refund_request_id, 0, $refunded_amount, $refund_type, $reference_details );
 	}
 	
-	/**
-	 * Vendor Ledger Update
-	 */
+	
+
+
 	public function wcfmmp_ledger_update( $vendor_id, $reference_id, $credit = 0, $debit = 0, $reference = 'order', $reference_details = '', $reference_status = 'pending' ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -312,9 +312,9 @@ class WCFMmp_Ledger {
 		do_action( 'after_wcfmmp_ledger_update', $ledger_id, $reference_id, $reference, $credit, $debit );
 	}
 	
-	/**
-	 * Vendor Ledger Entry Status Update
-	 */
+	
+
+
 	public function wcfmmp_ledger_status_update( $reference_id, $reference_status  = 'completed', $reference = 'order' ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		if( !$reference_id ) return;

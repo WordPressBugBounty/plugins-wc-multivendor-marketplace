@@ -1,20 +1,20 @@
 <?php
-/**
- * The Template for displaying store list search form.
- *
- * @package WCfM Markeplace Views Store List Search Form
- *
- * For edit coping this to yourtheme/wcfm/store/store-lists
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp, $post;
 
 $paged  = max( 1, get_query_var( 'paged' ) );
 
-// GEO Locate Support
+ 
 if( apply_filters( 'wcfmmp_is_allow_store_list_by_user_location', true ) ) {
 	if( is_user_logged_in() && !$search_country ) {
 		$user_location = get_user_meta( get_current_user_id(), 'wcfm_user_location', true );
@@ -40,7 +40,7 @@ $search_zip     = isset( $_GET['wcfmmp_store_zip'] ) ? sanitize_text_field( $_GE
 $search_category  = isset( $_GET['wcfmmp_store_category'] ) ? sanitize_text_field( $_GET['wcfmmp_store_category'] ) : $search_category;
 $store_category   = isset( $_GET['wcfmsc_store_categories'] ) ? sanitize_text_field( $_GET['wcfmsc_store_categories'] ) : $store_category;
 
-// Country -> States
+ 
 $country_obj   = new WC_Countries();
 $countries     = $country_obj->countries;
 $states        = $country_obj->states;

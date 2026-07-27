@@ -1,16 +1,18 @@
 <?php
-/**
- * The Template for displaying store.
- *
- * @package WCfM Markeplace Views Store
- *
- * For edit coping this to yourtheme/wcfm/store 
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
+
+$store_tab = isset( $store_tab ) ? $store_tab : get_query_var( 'store_tab' );
 
 $wcfm_store_url    = wcfm_get_option( 'wcfm_store_url', 'store' );
 $wcfm_store_name   = apply_filters( 'wcfmmp_store_query_var', get_query_var( $wcfm_store_url ) );
@@ -44,7 +46,7 @@ get_header( 'shop' );
 	}
 }
 </style>		
-<?php //do_action( 'woocommerce_before_main_content' ); ?>
+<?php  ?>
 <?php echo '<div id="primary" class="content-area"><main id="main" class="site-main" role="main">'; ?>
 <?php do_action( 'wcfmmp_before_store', $store_user->data, $store_info ); ?>
 
@@ -132,7 +134,7 @@ get_header( 'shop' );
 <div class="wcfm-clearfix"></div>
 
 <?php do_action( 'wcfmmp_after_store', $store_user->data, $store_info ); ?>
-<?php //do_action( 'woocommerce_after_main_content' ); ?>
+<?php  ?>
 <?php echo '</main></div>'; ?>
 <script>
 jQuery(document).ready(function($) {

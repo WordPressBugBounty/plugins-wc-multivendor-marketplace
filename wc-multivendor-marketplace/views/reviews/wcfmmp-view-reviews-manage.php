@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin view
- *
- * wcfm Support Manage View
- *
- * @author 		WC Lovers
- * @package 	wcfmu/views/support
- * @version   4.0.3
- */
+
+
+
+
+
+
+
+
+
  
 global $wp, $WCFM, $WCFMu, $wpdb;
 
@@ -25,7 +25,7 @@ $close_new_reply = 'no';
 if( isset( $wp->query_vars['wcfm-support-manage'] ) && !empty( $wp->query_vars['wcfm-support-manage'] ) ) {
 	$support_id = $wp->query_vars['wcfm-support-manage'];
 	$support_post = $wpdb->get_row( $wpdb->prepare( "SELECT * from {$wpdb->prefix}wcfm_support WHERE `ID` = %d", $support_id ) );
-	// Fetching Support Data
+	 
 	if($support_post && !empty($support_post)) {
 		$support_ticket_content = $support_post->query;
 		$support_order_id = $support_post->order_id;

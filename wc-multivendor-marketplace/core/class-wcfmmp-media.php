@@ -1,54 +1,54 @@
 <?php
-/**
- * WCFM plugin core
- *
- * WCFM Media Manager core
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Media {
 
 	public function __construct() {
 		global $WCFM, $WCFMmp;
 		
-		// WCFM Media Query Var Filter
+		 
 		add_filter( 'wcfm_query_vars', array( &$this, 'wcfm_media_query_vars' ), 10 );
 		add_filter( 'wcfm_endpoint_title', array( &$this, 'wcfm_media_endpoint_title' ), 10, 2 );
 		add_action( 'init', array( &$this, 'wcfm_media_init' ), 120 );
 		
-		// WCFMu Media Load WCFMu Scripts
+		 
 		add_action( 'wcfm_load_scripts', array( &$this, 'wcfm_media_load_scripts' ), 10 );
 		add_action( 'after_wcfm_load_scripts', array( &$this, 'wcfm_media_load_scripts' ), 10 );
 		
-		// WCFMu Media Load WCFMu Styles
+		 
 		add_action( 'wcfm_load_styles', array( &$this, 'wcfm_media_load_styles' ), 10 );
 		add_action( 'after_wcfm_load_styles', array( &$this, 'wcfm_media_load_styles' ), 10 );
 		
-		// WCFMu Media Load WCFMu views
+		 
 		add_action( 'wcfm_load_views', array( &$this, 'wcfm_media_load_views' ), 10 );
 		
-		// WCFMu Media Ajax Controller
+		 
 		add_action( 'after_wcfm_ajax_controller', array( &$this, 'wcfm_media_ajax_controller' ) );
 		
-		// Media menu on WCfM dashboard
+		 
 		if( apply_filters( 'wcfm_is_allow_media', true ) ) {
 			add_filter( 'wcfm_menus', array( &$this, 'wcfm_media_menus' ), 30 );
 		}
 		
-		// Media Delete
+		 
 		add_action( 'wp_ajax_wcfmmp_media_delete', array( &$this, 'wcfmmp_media_delete' ) );
 		
-		// Bulk Media Delete
+		 
 		add_action( 'wp_ajax_wcfmmp_bulk_media_delete', array( &$this, 'wcfmmp_bulk_media_delete' ) );
 		
 	}
 	
-	/**
-   * WCfM Media Query Var
-   */
+	
+
+
   function wcfm_media_query_vars( $query_vars ) {
   	$wcfm_modified_endpoints = wcfm_get_option( 'wcfm_endpoints', array() );
   	
@@ -60,9 +60,9 @@ class WCFMmp_Media {
 		return $query_vars;
   }
   
-  /**
-   * WCfM Media End Point Title
-   */
+  
+
+
   function wcfm_media_endpoint_title( $title, $endpoint ) {
   	
   	switch ( $endpoint ) {
@@ -74,26 +74,26 @@ class WCFMmp_Media {
   	return $title;
   }
   
-  /**
-   * WCfM Media Endpoint Intialize
-   */
+  
+
+
   function wcfm_media_init() {
   	global $WCFM_Query;
 	
-		// Intialize WCFM End points
+		 
 		$WCFM_Query->init_query_vars();
 		$WCFM_Query->add_endpoints();
 		
-		//if( !get_option( 'wcfm_updated_end_point_payment' ) ) {
-			// Flush rules after endpoint update
+		 
+			 
 			flush_rewrite_rules();
 			update_option( 'wcfm_updated_end_point_media', 1 );
-		//}
+		 
   }
   
-	/**
-   * WCfM Media Media Menu
-   */
+	
+
+
   function wcfm_media_menus( $menus ) {
   	global $WCFM;
   		
@@ -107,9 +107,9 @@ class WCFMmp_Media {
   	return $menus;
   }
   
-	/**
-   * WCfM Media Scripts
-   */
+	
+
+
   public function wcfm_media_load_scripts( $end_point ) {
 	  global $WCFM, $WCFMmp;
     
@@ -130,9 +130,9 @@ class WCFMmp_Media {
 	  }
 	}
 	
-	/**
-   * WCfM Media Styles
-   */
+	
+
+
 	public function wcfm_media_load_styles( $end_point ) {
 	  global $WCFM, $WCFMmp;
 		
@@ -144,9 +144,9 @@ class WCFMmp_Media {
 	  }
 	}
 	
-	/**
-   * WCfM Media Views
-   */
+	
+
+
   public function wcfm_media_load_views( $end_point ) {
 	  global $WCFM, $WCFMmp;
 	  
@@ -157,9 +157,9 @@ class WCFMmp_Media {
 	  }
 	}
 	
-	/**
-   * WCfM Media Ajax Controllers
-   */
+	
+
+
   public function wcfm_media_ajax_controller() {
   	global $WCFM, $WCFMmp;
   	
@@ -187,9 +187,9 @@ class WCFMmp_Media {
   	}
   }
   
-  /**
-   * WCfM Media Delete
-   */
+  
+
+
   function wcfmmp_media_delete() {
   	global $WCFM, $WCFMmp, $_POST, $wpdb;
   	
@@ -224,11 +224,11 @@ class WCFMmp_Media {
 	}
   }
   
-  /**
-   * WCfM Media Bulk Delete
-   *
-   * @since 1.1.2
-   */
+  
+
+
+
+
   function wcfmmp_bulk_media_delete() {
 	global $WCFM, $wpdb, $_POST;
   	

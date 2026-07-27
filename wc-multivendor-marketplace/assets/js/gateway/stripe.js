@@ -26,7 +26,7 @@ jQuery( function( $ ) {
 		getAjaxURL: function( endpoint ) {
 			return wcfmmp_stripe_split_pay_params.ajaxurl
 				.toString()
-				.replace( '%%endpoint%%', 'wc_stripe_' + endpoint );
+				.replace( '%%endpoint%%', 'wcfmmp_stripe_' + endpoint );
 		},
 
 		unmountElements: function() {
@@ -208,7 +208,7 @@ jQuery( function( $ ) {
 
 		// Check to see if Stripe in general is being used for checkout.
 		isStripeChosen: function() {
-			return $( '#payment_method_stripe_split' );
+			return $( '#payment_method_stripe_split' ).is(':checked');
 		},
 
 		hasSource: function() {
@@ -453,6 +453,8 @@ jQuery( function( $ ) {
 			wcfmmp_stripe_split_pay_form.reset();
 			$( '.woocommerce-NoticeGroup-checkout' ).remove();
 			console.log( result.error.message ); // Leave for troubleshooting.
+			// Never render an undefined message (e.g. a localized key absent for this error type).
+			message = message || result.error.message;
 			$( errorContainer ).html( '<ul class="woocommerce_error woocommerce-error wc-stripe-error"><li>' + message + '</li></ul>' );
 
 			if ( $( '.wc-stripe-error' ).length ) {

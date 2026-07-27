@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM Marketplace plugin controllers
- *
- * Plugin Sell Items Catalog Controller
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/controllers/product_multivendor
- * @version   3.1.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Sell_Items_Catalog_Controller {
 	
@@ -42,7 +42,7 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 							'post_type'        => 'product',
 							'post_mime_type'   => '',
 							'post_parent'      => '',
-							//'author'	   => get_current_user_id(),
+							 
 							'post_status'      => array('publish'),
 							'suppress_filters' => 0 
 						);
@@ -110,7 +110,7 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 			}
 		}
 		
-		// Exclude Hidden Products
+		 
 		if( apply_filters( 'wcfm_is_allow_exclude_hidden_products_from_add_to_my_store_catalog', true ) ) {
 			$product_visibility_terms  = wc_get_product_visibility_term_ids();
 			$product_visibility_not_in = array( $product_visibility_terms['exclude-from-search'], $product_visibility_terms['exclude-from-catalog'] );
@@ -132,10 +132,10 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 		}
 		
 		
-		// Vendor Filter
+		 
 		$args['author__not_in'] = array( $WCFMmp->vendor_id );
 		
-		// Exclude current vendor products
+		 
 		$exclude = array();
 		$more_offers = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `{$wpdb->prefix}wcfm_marketplace_product_multivendor` WHERE `vendor_id` = %d", $WCFMmp->vendor_id ) );
 		foreach ($more_offers as $more_offer) {
@@ -143,7 +143,7 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 		}
 		$args['exclude'] = $exclude;
 		
-		// Order by Price
+		 
 		if( isset( $_POST['order'] ) && isset( $_POST['order'][0] ) && isset( $_POST['order'][0]['column'] ) && ( $_POST['order'][0]['column'] == 3 ) ) {
 			$args['meta_key'] = '_price';
 			$args['orderby']  = 'meta_value_num';
@@ -156,7 +156,7 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 		
 		$pro_count = 0;
 		$filtered_pro_count = 0;
-		// Get Product Count
+		 
 		$args['posts_per_page'] = -1;
 		$args['offset'] = 0;
 		$args['fields'] = 'ids';
@@ -175,7 +175,7 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 					$search_ids[] = $term;
 				}
 	
-				// Attempt to get a SKU
+				 
 				$sku_to_id = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_parent FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id WHERE meta_key='_sku' AND meta_value LIKE %s;", '%' . $wpdb->esc_like( wc_clean( $term ) ) . '%' ) );
 				$sku_to_id = array_merge( wp_list_pluck( $sku_to_id, 'ID' ), wp_list_pluck( $sku_to_id, 'post_parent' ) );
 	
@@ -201,7 +201,7 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 			}
 		}
 		
-		// Generate Products JSON
+		 
 		$wcfm_products_json = '';
 		$wcfm_products_json = '{
 															"draw": ' . absint($_POST['draw']) . ',
@@ -216,19 +216,19 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 				
 				if( !is_a( $the_product, 'WC_Product' ) ) continue;
 				
-				// Multi select Action Checkbox
+				 
 				$wcfm_products_json_arr[$index][] =  '<input type="checkbox" class="wcfm-checkbox bulk_action_checkbox_single" name="bulk_action_checkbox[]" value="' . $wcfm_products_single->ID . '" />';
 				
-				// Thumb
+				 
 				$wcfm_products_json_arr[$index][] =  $the_product->get_image( 'thumbnail' );
 				
-				// Title
+				 
 				$wcfm_products_json_arr[$index][] =  '<a target="_blank" href="' . get_permalink($wcfm_products_single->ID) . '" class="wcfm_product_title">' . $wcfm_products_single->post_title . '</a>';
 				
-				// Price
+				 
 				$wcfm_products_json_arr[$index][] =  $the_product->get_price_html() ? $the_product->get_price_html() : '<span class="na">&ndash;</span>';
 				
-				// Taxonomies
+				 
 				$taxonomies = '';
 				$pcategories = get_the_terms( $the_product->get_id(), 'product_cat' );
 				if( !empty($pcategories) ) {
@@ -241,13 +241,13 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 					}
 				}
 				
-				// Custom Taxonomies
+				 
 				$product_taxonomies = get_object_taxonomies( 'product', 'objects' );
 				if( !empty( $product_taxonomies ) ) {
 					foreach( $product_taxonomies as $product_taxonomy ) {
 						if( !in_array( $product_taxonomy->name, array( 'product_cat', 'product_tag', 'wcpv_product_vendors' ) ) ) {
 							if( $product_taxonomy->public && $product_taxonomy->show_ui && $product_taxonomy->meta_box_cb && $product_taxonomy->hierarchical ) {
-								// Fetching Saved Values
+								 
 								$taxonomy_values = get_the_terms( $the_product->get_id(), $product_taxonomy->name );
 								if( !empty($taxonomy_values) ) {
 									$taxonomies .= "<br /><strong>" . __( $product_taxonomy->label, 'wc-frontend-manager' ) . '</strong>: ';
@@ -266,7 +266,7 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 				if( !$taxonomies ) $taxonomies = '&ndash;';
 				$wcfm_products_json_arr[$index][] =  $taxonomies;
 				
-				// Store
+				 
 				$vendor_name = '&ndash;';
 				$vendor_id = wcfm_get_vendor_id_by_post( $wcfm_products_single->ID );
 				$store_name = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_by_vendor( $vendor_id );
@@ -275,10 +275,10 @@ class WCFMmp_Sell_Items_Catalog_Controller {
 				}
 				$wcfm_products_json_arr[$index][] =  $vendor_name;
 				
-				// Additional Info
+				 
 				$wcfm_products_json_arr[$index][] = apply_filters( 'wcfm_sell_items_catalog_additonal_data', '&ndash;', $wcfm_products_single->ID );
 				
-				// Action
+				 
 				$actions  = '<a class="wcfm-action-icon" target="_blank" href="' . apply_filters( 'wcfm_product_preview_url', get_permalink( $wcfm_products_single->ID ) ) . '"><span class="wcfmfa fa-eye text_tip" data-tip="' . esc_attr__( 'View', 'wc-frontend-manager' ) . '"></span></a>';
 				$actions .= '<br/><a class="wcfm_sell_this_item wcfm-action-icon text_tip" href="#" data-proid="' . $wcfm_products_single->ID . '" data-tip="' . esc_attr__( 'Click here add to your store', 'wc-multivendor-marketplace' ) . '"><span class="wcfmfa fa-hand-pointer"></span>&nbsp;<span class="">' . __( 'Add to My Store', 'wc-multivendor-marketplace' ) . '</span></a>';
 					

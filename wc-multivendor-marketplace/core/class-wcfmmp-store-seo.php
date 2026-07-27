@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM Markeplace plugin core
- *
- * WCfM Markeplace Store SEO
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 class WCFMmp_Store_SEO {
 
 	public  $feedback   = false;
@@ -59,13 +59,13 @@ class WCFMmp_Store_SEO {
 			add_filter( 'wpseo_opengraph_desc', array( $this, 'wcfmmp_replace_og_desc' ) );
 			add_filter( 'wpseo_opengraph_image', array( $this, 'wcfmmp_replace_og_img' ) );
 			add_action( 'wpseo_frontend_presenters', array( $this, 'wcfmmp_print_og_img' ), 20 );
-			//add_action( 'wpseo_opengraph', array( $this, 'wcfmmp_print_og_img' ), 250 );
+			 
 
 			add_filter( 'wpseo_twitter_title', array( $this, 'wcfmmp_replace_twitter_title' ) );
 			add_filter( 'wpseo_twitter_description', array( $this, 'wcfmmp_replace_twitter_desc' ) );
 			add_filter( 'wpseo_twitter_image', array( $this, 'wcfmmp_replace_twitter_img' ) );
 			add_action( 'wpseo_frontend_presenters', array( $this, 'wcfmmp_print_twitter_img' ), 20 );
-			//add_action( 'wpseo_twitter', array( $this, 'wcfmmp_print_twitter_img' ), 250 );
+			 
 		} elseif ( defined('RANK_MATH_FILE' ) ) {
 			add_filter( 'rank_math/frontend/title', array( $this, 'wcfmmp_replace_rank_math_seo_title' ), 16 );
 			add_filter( 'rank_math/frontend/description', array( $this, 'wcfmmp_replace_rank_math_seo_description' ) );
@@ -79,9 +79,9 @@ class WCFMmp_Store_SEO {
 		add_filter( 'document_title_parts', array( $this, 'wcfmmp_replace_store_title' ), 250 );
 	}
 
- /**
-	* Register wcfmmp-stores sitemap on yoast SEO
-	*/
+ 
+
+
 	function register_sitemap() {
 		global $WCFM, $WCFMmp, $wpseo_sitemaps;
 
@@ -90,9 +90,9 @@ class WCFMmp_Store_SEO {
 		}
 
 	}
-	/**
-	 * Add wcfmmp-stores sitemap url to sitemap_index list
-	 */
+	
+
+
 	function wcfmmp_add_sellers_sitemap() {
 
 		$base_url = WPSEO_Sitemaps_Router::get_base_url( 'wcfmmp-stores-sitemap.xml' );
@@ -108,9 +108,9 @@ class WCFMmp_Store_SEO {
 		return ob_get_clean();
 	}
 
-	/**
-	 * Generate output for wcfmmp_sellers sitemap
-	 */
+	
+
+
 	function sitemap_output() {
 		global $WCFM, $WCFMmp, $wpseo_sitemaps;
 		

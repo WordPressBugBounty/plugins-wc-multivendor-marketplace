@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying all store description.
- *
- * @package WCfM Markeplace Views Description
- *
- * For edit coping this to yourtheme/wcfm/store 
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 

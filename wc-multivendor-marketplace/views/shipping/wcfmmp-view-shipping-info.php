@@ -13,17 +13,17 @@ if( isset( $wcfmmp_shipping['_wcfmmp_user_shipping_enable'] ) && $processing_tim
 
 if( !apply_filters( 'wcfm_is_allow_product_free_shipping_info', true ) ) return;
 
-/*$type             = $wcfmmp_shipping['_wcfmmp_user_shipping_type'];
-$is_free_shipping = false;
-$min_amount       = 0;
-foreach ( $shipping_methods as $key => $method ) {
-	if ( 'free_shipping' == $method['id'] && 'yes' == $method['enabled'] ) {
-		$is_free_shipping = true;
-		$min_amount = (isset( $method['settings']['min_amount'] ) ) ? $method['settings']['min_amount'] : 0;
-	}
-}
-if( ( !empty($type) && $type == 'by_zone' ) && $is_free_shipping && ( $min_amount > 0 ) ) {
-	echo '<div class="wcfmmp_shipment_processing_display">'. sprintf( __ ('Free shipping available for shopping more than <b>%s%d</b>.', 'wc-multivendor-marketplace'), get_woocommerce_currency_symbol(), $min_amount ) .'</div>';
-}*/
+
+
+
+
+
+
+
+
+
+
+
+
 
 ?>

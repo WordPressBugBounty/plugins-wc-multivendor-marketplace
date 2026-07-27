@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying store sidebar top rated vendors.
- *
- * @package WCfM Markeplace Views Top Rated Vendors
- *
- * For edit coping this to yourtheme/wcfm/store/widgets
- *
- */
+
+
+
+
+
+
+
+
 global $WCFM, $WCFMmp;
-//print_r($vendor_id); 
+ 
 echo wp_kses_post( apply_filters( 'wcfmmp_before_widget_top_rated_vendor_list', '<ul class="product_list_widget">' ) );
 
   foreach ( $vendors as $key => $value ) {

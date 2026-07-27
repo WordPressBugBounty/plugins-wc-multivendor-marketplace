@@ -1,7 +1,7 @@
 <?php 
 
   global $WCFM, $WCFMmp; 
-  //$user_id = apply_filters( 'wcfm_current_vendor_id', get_current_user_id() );
+   
   
   $wcfmmp_all_shiping_types = wcfmmp_get_shipping_types();
   $processing_time = wcfmmp_get_shipping_processing_times();
@@ -205,7 +205,7 @@
                     $vendor_shipping_methods = $vendor_shipping_zones['shipping_methods'];
                     $vendor_shipping_methods_titles = array_column($vendor_shipping_methods, 'title');
                     $vendor_shipping_methods_titles = implode(', ', $vendor_shipping_methods_titles);
-                    //print_r($vendor_shipping_methods_titles);
+                     
                     if(empty($vendor_shipping_methods)) { ?>
                       <span><?php _e('No method found&nbsp;', 'wc-multivendor-marketplace'); ?> </span> 
                       <a href="JavaScript:void(0);" data-user-id="<?php echo esc_attr($user_id); ?>" data-zone-id="<?php echo esc_attr($vendor_shipping_zones['zone_id']); ?>" class="vendor_edit_zone"><?php _e(' Add Shipping Methods', 'wc-multivendor-marketplace'); ?></a>

@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying store sidebar hours.
- *
- * @package WCfM Markeplace Views Store Sidebar Shipping Rules
- *
- * For edit coping this to yourtheme/wcfm/store/widgets
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 

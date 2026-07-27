@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin view
- *
- * WCFM Marketplace Product Reviews List View
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/views/reviews/
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 global $WCFM, $WCFMmp;
 

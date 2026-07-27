@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin controllers
- *
- * Plugin WCFM Marketplace Media Dashboard Controller
- *
- * @author 		WC Lovers
- * @package 	wcfm/media/wcfmmp/controllers
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Media_Controller {
 	
@@ -39,7 +39,7 @@ class WCFMmp_Media_Controller {
 							'post_type'        => 'attachment',
 							'post_mime_type'   => '',
 							'post_parent'      => '',
-							//'author'	   => get_current_user_id(),
+							 
 							'post_status'      => 'any',
 							'suppress_filters' => 0 
 						);
@@ -57,14 +57,14 @@ class WCFMmp_Media_Controller {
 		
 		$wcfm_media_array = get_posts( $args );
 		
-		// Get Media Count
+		 
 		$filtered_coupon_count = 0;
 		$args['posts_per_page'] = -1;
 		$args['offset'] = 0;
 		$wcfm_filterd_media_array = get_posts( $args );
 		$filtered_media_count = count($wcfm_filterd_media_array);
 		
-		// Generate Media JSON
+		 
 		$wcfm_media_json = '';
 		$wcfm_media_json = '{
 															"draw": ' . absint( $_POST['draw'] ) . ',
@@ -76,14 +76,14 @@ class WCFMmp_Media_Controller {
 			$wcfm_media_json_arr = array();
 			foreach( $wcfm_media_array as $wcfm_media_single ) {
 				
-				// Bulk Delete
+				 
 				if( apply_filters( 'wcfm_is_allow_delete_media', true ) ) {
 					$wcfm_media_json_arr[$index][] =  '<input type="checkbox" class="wcfm-checkbox bulk_action_checkbox_single" name="bulk_action_checkbox[]" value="' . $wcfm_media_single->ID . '" />';
 				} else {
 					$wcfm_media_json_arr[$index][] = '';
 				}
 				
-				// Media
+				 
 				$type = get_post_mime_type( $wcfm_media_single->ID );
 				$base = $WCFM->plugin_url . "assets/images/media/";
 				$media = '';
@@ -116,17 +116,17 @@ class WCFMmp_Media_Controller {
 				}
 				$wcfm_media_json_arr[$index][] = '<a class="wcfmmp-author-img" target="_blank" href="' . esc_url( wp_get_attachment_url( $wcfm_media_single->ID ) ) . '" ><img width="75" src="' . esc_url( $media ) . '" /></a>';
 
-				// File
+				 
 				$wcfm_media_json_arr[$index][] = '<span class="wcfmmp_media_name">' . esc_html( $wcfm_media_single->post_title ) . "</span><br />(" . esc_html( $type ) . ")";
 
-        // Associate
+         
         if( $wcfm_media_single->post_parent ) {
 					$wcfm_media_json_arr[$index][] = '<a class="wcfmmp-author-img" target="_blank" href="' . esc_url( get_permalink( $wcfm_media_single->post_parent ) ) . '" >' . esc_html( get_the_title( $wcfm_media_single->post_parent ) ) . '</a>';
 				} else {
 					$wcfm_media_json_arr[$index][] = '&ndash;';
 				}
         
-        // Store
+         
         if( $wcfm_media_single->post_author && wcfm_is_vendor($wcfm_media_single->post_author) ) {
 					$wcfm_media_json_arr[$index][] = wp_kses_post( $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_by_vendor( absint($wcfm_media_single->post_author) ) );
 				} else {
@@ -134,7 +134,7 @@ class WCFMmp_Media_Controller {
 				}
         
         
-        // Size
+         
         $attached_file = get_attached_file( $wcfm_media_single->ID );
 				if( file_exists( $attached_file ) ) {
 					$wcfm_media_json_arr[$index][] = round( filesize( $attached_file )/1024, 2 ) . ' KB';
@@ -142,7 +142,7 @@ class WCFMmp_Media_Controller {
 					$wcfm_media_json_arr[$index][] = '&ndash;';
 				}
         
-				// Status
+				 
 				$actions = '<a class="wcfm-action-icon" target="_blank" href="' . esc_url( wp_get_attachment_url( $wcfm_media_single->ID ) ) . '" ><span class="wcfmfa fa-eye text_tip" data-tip="' . esc_attr__( 'View', 'wc-frontend-manager' ) . '"></span></a>';
 				
 				if( apply_filters( 'wcfm_is_allow_delete_media', true ) ) {

@@ -1,14 +1,14 @@
 <?php
 
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Store Sidebar and Widgets
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Sidebar_Widgets {
 
@@ -29,9 +29,9 @@ class WCFMmp_Sidebar_Widgets {
 		$this->wcfmmp_register_store_lists_sidebar();
 	}
 
-	/**
-	 * Register Store Sidebar
-	 */
+	
+
+
 	function wcfmmp_register_store_sidebar() {
 		register_sidebar(
 			apply_filters(
@@ -48,9 +48,9 @@ class WCFMmp_Sidebar_Widgets {
 		);
 	}
 
-	/**
-	 * Register Store List Sidebar
-	 */
+	
+
+
 	function wcfmmp_register_store_lists_sidebar() {
 		register_sidebar(
 			apply_filters(
@@ -67,13 +67,13 @@ class WCFMmp_Sidebar_Widgets {
 		);
 	}
 
-	/**
-	 * Register Store Widgets
-	 */
+	
+
+
 	function wcfmmp_register_widgets() {
 		$this->init();
 
-		// Store Widgets
+		 
 		register_widget('WCFMmp_Store_Info');
 		register_widget('WCFMmp_Store_Location');
 		register_widget('WCFMmp_Store_Category');
@@ -89,14 +89,14 @@ class WCFMmp_Sidebar_Widgets {
 		register_widget('WCFMmp_Store_Recent_Products');
 		register_widget('WCFMmp_Store_Recent_Articles');
 
-		// Store Lists Widgerts
+		 
 		register_widget('WCFMmp_Store_Lists_Search');
 		register_widget('WCFMmp_Store_Lists_Category_Filter');
 		register_widget('WCFMmp_Store_Lists_Location_Filter');
 		register_widget('WCFMmp_Store_Lists_Radius_Filter');
 		register_widget('WCFMmp_Store_Lists_Meta_Filter');
 
-		// Global Widgets
+		 
 		register_widget('WCFMmp_Store_Top_Rated_Vendors');
 		register_widget('WCFMmp_Store_Best_Selling_Vendors');
 		register_widget('WCFMmp_Products_Search_by_Vendors');
@@ -108,6 +108,6 @@ class WCFMmp_Sidebar_Widgets {
 			if (file_exists($WCFMmp->plugin_path . 'includes/store-widgets/class-wcfmmp-widget-' . esc_attr($widget) . '.php')) {
 				require_once($WCFMmp->plugin_path . 'includes/store-widgets/class-wcfmmp-widget-' . esc_attr($widget) . '.php');
 			}
-		} // End If Statement
+		}  
 	}
 }

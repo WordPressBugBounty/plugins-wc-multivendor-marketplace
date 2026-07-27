@@ -1,21 +1,21 @@
 <?php
-/**
- * The Template for displaying store.
- *
- * @package WCfM Markeplace Views Store Sold By as Tab
- *
- * For edit coping this to yourtheme/wcfm/sold-by
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 
 $vendor_id = wcfm_get_vendor_id_by_post( $product_id );
 if( $vendor_id ) {
 	if( apply_filters( 'wcfmmp_is_allow_sold_by', true, $vendor_id ) && wcfm_vendor_has_capability( $vendor_id, 'sold_by' ) ) {
-		// Check is store Online
+		 
 		$is_store_offline = get_user_meta( $vendor_id, '_wcfm_store_offline', true );
 		if ( $is_store_offline ) {
 			return;
@@ -112,7 +112,7 @@ if( $vendor_id ) {
 				wp_enqueue_script( 'wcfmmp_store_js', $WCFMmp->library->js_lib_url . 'store/wcfmmp-script-store.js', array('jquery' ), $WCFMmp->version, true );
 				$WCFMmp->library->load_map_lib();
 				
-				// Default Map Location
+				 
 				$default_geolocation = isset( $WCFMmp->wcfmmp_marketplace_options['default_geolocation'] ) ? $WCFMmp->wcfmmp_marketplace_options['default_geolocation'] : array();
 				$store_location      = isset( $default_geolocation['location'] ) ? esc_attr( $default_geolocation['location'] ) : '';
 				$map_address         = isset( $default_geolocation['address'] ) ? esc_attr( $default_geolocation['address'] ) : '';

@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM Marketplace plugin core
- *
- * Plugin shortcode
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core 
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Shortcode {
 
@@ -15,46 +15,46 @@ class WCFMmp_Shortcode {
 
 	public function __construct() {
 		
-		// WCFM Markeptlace Store List
+		 
 		add_shortcode('wcfm_stores', array(&$this, 'wcfmmp_stores_shortcode'));
 		
-		// WCFM Markeptlace Store List Map
+		 
 		add_shortcode('wcfm_stores_map', array(&$this, 'wcfmmp_stores_map_shortcode'));
 		
-		// WCFM Marketplace Store Carousel
+		 
 		add_shortcode('wcfm_stores_carousel', array(&$this, 'wcfmmp_stores_carousel_shortcode'));
 		
-		// WCFM Markeplace Store Sold By
+		 
 		add_shortcode('wcfm_store_sold_by', array(&$this, 'wcfmmp_store_sold_by_shortcode'));
 		
-		// WCFM Markeplace Store Info
+		 
 		add_shortcode('wcfm_store_info', array(&$this, 'wcfmmp_store_info_shortcode'));
 		
-		// WCFM Markeplace Store Hours
+		 
 		add_shortcode('wcfm_store_hours', array(&$this, 'wcfmmp_store_hours_shortcode'));
 		
-		// WCFM Markeplace Shipping Time
+		 
 		add_shortcode('wcfm_shipping_time', array(&$this, 'wcfmmp_shipping_time_shortcode'));
 		
-		// WCFM Markeplace More Offers
+		 
 		add_shortcode('wcfm_more_offers', array(&$this, 'wcfmmp_more_offers_shortcode'));
 		
-		// WCFM Marketplace Store FB Widget
+		 
 		add_shortcode('wcfm_store_fb_feed', array(&$this, 'wcfmmp_store_fb_widget_shortcode'));
 		
-		// WCFM Marketplace Store Twitter Widget
+		 
 		add_shortcode('wcfm_store_twitter_feed', array(&$this, 'wcfmmp_store_twitter_widget_shortcode'));
 		
-		// WCFM Marketplace Store Instagram Widget
-		//add_shortcode('wcfm_store_instagram_feed', array(&$this, 'wcfmmp_store_instagram_widget_shortcode'));
+		 
+		 
 		
-		// Product List Vendor Filter
+		 
 		add_shortcode('wcfm_products_store_filter', array(&$this, 'wcfmmp_products_store_filter_shortcode'));
 	}
 
-	/**
-	 * WCFM Stores Short Code
-	 */
+	
+
+
 	public function wcfmmp_stores_shortcode( $atts ) {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query, $includes;
 		$WCFM->nocache();
@@ -110,7 +110,7 @@ class WCFMmp_Shortcode {
 		$search_country = isset( $attr['search_country'] ) ? $attr['search_country'] : '';
 		$search_state   = isset( $attr['search_state'] ) ? $attr['search_state'] : '';
 		
-		// GEO Locate Support
+		 
 		if( apply_filters( 'wcfmmp_is_allow_store_list_by_user_location', true ) ) {
 			if( is_user_logged_in() && !$search_country ) {
 				$user_location = get_user_meta( get_current_user_id(), 'wcfm_user_location', true );
@@ -207,7 +207,7 @@ class WCFMmp_Shortcode {
 			$search_data['orderby'] = $orderby;
 		}
 		
-		// Exclude Membership
+		 
 		$exclude_members = array();
 		$exclude_membership = isset( $attr['exclude_membership'] ) ? sanitize_text_field( $attr['exclude_membership'] ) : '';
 		if( $exclude_membership ) $exclude_membership = explode(",", $exclude_membership);
@@ -220,11 +220,11 @@ class WCFMmp_Shortcode {
 		if( $exclude_members ) $exclude_members = implode(",", $exclude_members);
 		else $exclude_members = '';
 		
-		// Excluded Stores from List
+		 
 		$excludes = !empty( $attr['excludes'] ) ? sanitize_text_field( $attr['excludes'] ) : $exclude_members;
 		$search_data['excludes'] = $excludes;
 		
-		// Include Membership
+		 
 		$include_members = array();
 		$include_membership = isset( $attr['include_membership'] ) ? sanitize_text_field( $attr['include_membership'] ) : '';
 		if( $include_membership ) $include_membership = explode(",", $include_membership);
@@ -237,12 +237,12 @@ class WCFMmp_Shortcode {
 		if( $include_members ) $include_members = implode(",", $include_members);
 		else $include_members = '';
 		
-		// Include Store List
+		 
 		$includes = !empty( $attr['includes'] ) ? sanitize_text_field( $attr['includes'] ) : $include_members;
 		if( $includes ) $includes = explode(",", $includes);
 		else $includes = array();
 		
-		// Radious Search
+		 
 		$enable_wcfm_storelist_radius  = isset( $WCFMmp->wcfmmp_marketplace_options['enable_wcfm_storelist_radius'] ) ? $WCFMmp->wcfmmp_marketplace_options['enable_wcfm_storelist_radius'] : 'no';
 		$has_radius = wc_string_to_bool( $has_radius);
 		if( ( $enable_wcfm_storelist_radius == 'yes' ) && $has_radius ) $has_radius = true;
@@ -257,7 +257,7 @@ class WCFMmp_Shortcode {
 			$has_city    = 'no';
 			$has_zipcode = 'no';
 		}
-		
+		$search_data['wcfmmp_query_context'] = 'store_list';
 		$search_data = apply_filters( 'wcfmmp_stores_search_data', $search_data );
 		
 		$stores = $WCFMmp->wcfmmp_vendor->wcfmmp_search_vendor_list( true, $offset, $length, $search_term, $search_category, $search_data, $has_product, $includes );
@@ -305,9 +305,9 @@ class WCFMmp_Shortcode {
 		return ob_get_clean();
 	}
 	
-		/**
-	 * WCFM Stores Map Short Code
-	 */
+		
+
+
 	public function wcfmmp_stores_map_shortcode( $atts ) {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query;
 		$WCFM->nocache();
@@ -423,7 +423,7 @@ class WCFMmp_Shortcode {
 			$search_data = wc_clean( wp_unslash( $search_data ) );
 		}
 		
-		// Exclude Membership
+		 
 		$exclude_members = array();
 		$exclude_membership = isset( $attr['exclude_membership'] ) ? sanitize_text_field( $attr['exclude_membership'] ) : '';
 		if( $exclude_membership ) $exclude_membership = explode(",", $exclude_membership);
@@ -436,11 +436,11 @@ class WCFMmp_Shortcode {
 		if( $exclude_members ) $exclude_members = implode(",", $exclude_members);
 		else $exclude_members = '';
 		
-		// Excluded Stores from List
+		 
 		$excludes = !empty( $attr['excludes'] ) ? sanitize_text_field( $attr['excludes'] ) : $exclude_members;
 		$search_data['excludes'] = $excludes;
 		
-		// Include Membership
+		 
 		$include_members = array();
 		$include_membership = isset( $attr['include_membership'] ) ? sanitize_text_field( $attr['include_membership'] ) : '';
 		if( $include_membership ) $include_membership = explode(",", $include_membership);
@@ -453,14 +453,14 @@ class WCFMmp_Shortcode {
 		if( $include_members ) $include_members = implode(",", $include_members);
 		else $include_members = '';
 		
-		// Include Store List
+		 
 		$includes = !empty( $attr['includes'] ) ? sanitize_text_field( $attr['includes'] ) : $include_members;
 		if( $includes ) $includes = explode(",", $includes);
 		else $includes = array();
 		
 		$pagination_base = '';
 		
-		// Radious Search
+		 
 		$enable_wcfm_storelist_radius  = isset( $WCFMmp->wcfmmp_marketplace_options['enable_wcfm_storelist_radius'] ) ? $WCFMmp->wcfmmp_marketplace_options['enable_wcfm_storelist_radius'] : 'no';
 		$has_radius = wc_string_to_bool( $has_radius);
 		if( ( $enable_wcfm_storelist_radius == 'yes' ) && $has_radius ) $has_radius = true;
@@ -475,7 +475,7 @@ class WCFMmp_Shortcode {
 			$has_city    = 'no';
 			$has_zipcode = 'no';
 		}
-		
+		$search_data['wcfmmp_query_context'] = 'store_list';
 		$stores = $WCFMmp->wcfmmp_vendor->wcfmmp_search_vendor_list( true, '', $attr['limit'], $search_term, $search_category, $search_data, $has_product, $includes );
 
 		$template_args = apply_filters( 'wcfmmp_stores_map_args', array(
@@ -527,9 +527,9 @@ class WCFMmp_Shortcode {
 	}
 	
 	
-	/**
-	 * WCFM Stores Carousal Short Code
-	 */
+	
+
+
 	public function wcfmmp_stores_carousel_shortcode( $atts ) {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query, $includes;
 		$WCFM->nocache();
@@ -569,7 +569,7 @@ class WCFMmp_Shortcode {
 		$search_country = '';
 		$search_state   = '';
 		
-		// GEO Locate Support
+		 
 		if( apply_filters( 'wcfmmp_is_allow_store_list_by_user_location', true ) ) {
 			if( is_user_logged_in() && !$search_country ) {
 				$user_location = get_user_meta( get_current_user_id(), 'wcfm_user_location', true );
@@ -633,7 +633,7 @@ class WCFMmp_Shortcode {
 			$search_data = wc_clean( wp_unslash( $search_data ) );
 		}
 		
-		// Exclude Membership
+		 
 		$exclude_members = array();
 		$exclude_membership = isset( $attr['exclude_membership'] ) ? sanitize_text_field( $attr['exclude_membership'] ) : '';
 		if( $exclude_membership ) $exclude_membership = explode(",", $exclude_membership);
@@ -646,11 +646,11 @@ class WCFMmp_Shortcode {
 		if( $exclude_members ) $exclude_members = implode(",", $exclude_members);
 		else $exclude_members = '';
 		
-		// Excluded Stores from List
+		 
 		$excludes = !empty( $attr['excludes'] ) ? sanitize_text_field( $attr['excludes'] ) : $exclude_members;
 		$search_data['excludes'] = $excludes;
 		
-		// Include Membership
+		 
 		$include_members = array();
 		$include_membership = isset( $attr['include_membership'] ) ? sanitize_text_field( $attr['include_membership'] ) : '';
 		if( $include_membership ) $include_membership = explode(",", $include_membership);
@@ -663,12 +663,12 @@ class WCFMmp_Shortcode {
 		if( $include_members ) $include_members = implode(",", $include_members);
 		else $include_members = '';
 		
-		// Include Store List
+		 
 		$includes = !empty( $attr['includes'] ) ? sanitize_text_field( $attr['includes'] ) : $include_members;
 		if( $includes ) $includes = explode(",", $includes);
 		else $includes = array();
 			
-
+		$search_data['wcfmmp_query_context'] = 'store_list';
 		$stores = $WCFMmp->wcfmmp_vendor->wcfmmp_search_vendor_list( true, $offset, $length, $search_term, $search_category, $search_data, $has_product, $includes );
 
 		$template_args = apply_filters( 'wcfmmp_stores_args', array(
@@ -703,9 +703,9 @@ class WCFMmp_Shortcode {
 		return ob_get_clean();
 	}
 	
-	/**
-	 * WCFM Marketplace Store Sold By Shortcode
-	 */
+	
+
+
 	public function wcfmmp_store_sold_by_shortcode( $attr ) {
 		global $WCFM, $WCFMmp, $post;
 
@@ -739,9 +739,9 @@ class WCFMmp_Shortcode {
 		return $content;
 	}
 	
-	/**
-	 * WCFM Marketplace Store Info Shortcode
-	 */
+	
+
+
 	public function wcfmmp_store_info_shortcode( $attr ) {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query, $post;
 		
@@ -900,9 +900,9 @@ class WCFMmp_Shortcode {
 		
 	}
 	
-	/**
-	 * WCFM Marketplace Store Hours Shortcode
-	 */
+	
+
+
 	public function wcfmmp_store_hours_shortcode( $attr ) {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query, $post;
 		
@@ -967,9 +967,9 @@ class WCFMmp_Shortcode {
 		return $content;
 	}
 	
-	/**
-	 * WCFM Marketplace Shipping Time Shortcode
-	 */
+	
+
+
 	function wcfmmp_shipping_time_shortcode() {
 		global $WCFM, $WCFMmp, $post;
   	
@@ -999,9 +999,9 @@ class WCFMmp_Shortcode {
     }
 	}
 	
-	/**
-	 * WCFM Marketplace Store Hours Shortcode
-	 */
+	
+
+
 	public function wcfmmp_more_offers_shortcode( $attr ) {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query, $post;
 		
@@ -1009,21 +1009,21 @@ class WCFMmp_Shortcode {
 		
 		if( !is_product() ) return;
 		
-		//$content = '<div class="wcfmmp_more_offers">';
-		//$content .= '<span class="wcfmmp-more-offers widget-title"><span class="wcfmfa fa-clock"></span>&nbsp;' . apply_filters( 'wcfm_store_hours_label', __( 'Store Hours', 'wc-multivendor-marketplace' ) ) . '</span><div class="wcfm_clearfix"></div>';
+		 
+		 
 		
 		ob_start();
 		$WCFMmp->template->get_template( 'product_multivendor/wcfmmp-view-more-offers.php' );
 		$content = ob_get_clean();
 		
-		//$content .= '</div>';
+		 
 		
 		return $content;
 	}
 	
-	/**
-	 * WCFM Marketplace Store FB Widget Shortcode
-	 */
+	
+
+
 	public function wcfmmp_store_fb_widget_shortcode( $attr ) {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query, $post;
 		
@@ -1083,9 +1083,9 @@ class WCFMmp_Shortcode {
 		return $content;
 	}
 	
-	/**
-	 * WCFM Marketplace Store Twitter Widget Shortcode
-	 */
+	
+
+
 	public function wcfmmp_store_twitter_widget_shortcode( $attr ) {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query, $post;
 		
@@ -1143,9 +1143,9 @@ class WCFMmp_Shortcode {
 		return $content;
 	}
 	
-	/**
-	 * WCFM Marketplace Store Instagram Widget Shortcode
-	 */
+	
+
+
 	public function wcfmmp_store_instagram_widget_shortcode( $attr ) {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query, $post;
 		
@@ -1183,9 +1183,9 @@ class WCFMmp_Shortcode {
 		return ob_get_clean();
 	}
 	
-	/**
-	 * WCFM Marketplace Product List Store Filter Widget Shortcode
-	 */
+	
+
+
 	function wcfmmp_products_store_filter_shortcode( $attr ) {
 		global $WCFM, $WCFMmp, $wp;
 
@@ -1193,38 +1193,38 @@ class WCFMmp_Shortcode {
 				return;
 		}
 		
-		$args = array(); // For future use
+		$args = array();  
 		
 		ob_start();
 		$WCFMmp->template->get_template( 'product-geolocate/wcfmmp-view-product-lists-vendor-filter.php', $args );
 		return ob_get_clean();
 	}
 	
-	/**
-	 * Helper Functions
-	 */
+	
 
-	/**
-	 * Shortcode Wrapper
-	 *
-	 * @access public
-	 * @param mixed $function
-	 * @param array $atts (default: array())
-	 * @return string
-	 */
+
+
+	
+
+
+
+
+
+
+
 	public function shortcode_wrapper($function, $atts = array()) {
 		ob_start();
 		call_user_func($function, $atts);
 		return ob_get_clean();
 	}
 
-	/**
-	 * Shortcode CLass Loader
-	 *
-	 * @access public
-	 * @param mixed $class_name
-	 * @return void
-	 */
+	
+
+
+
+
+
+
 	public function load_class($class_name = '') {
 		global $WCFM;
 		if ('' != $class_name && '' != $WCFM->token) {

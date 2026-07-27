@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin core
- *
- * Plugin Single Product Multi Vendor Controller
- *
- * @author 		WC Lovers
- * @package 	wcfma/core
- * @version   1.0.1
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Product_Multivendor {
 	
@@ -16,53 +16,53 @@ class WCFMmp_Product_Multivendor {
 		
 		if( apply_filters( 'wcfmmp_is_allow_single_product_multivendor', true ) ) {
 			if( apply_filters( 'wcfm_is_pref_sell_items_catalog', true ) ) {
-				// Sell Items Catalog Init
+				 
 				add_filter( 'wcfm_query_vars', array( &$this, 'wcfm_sell_items_catalog_query_vars' ), 20 );
 				add_filter( 'wcfm_endpoint_title', array( &$this, 'wcfm_sell_items_catalog_endpoint_title' ), 20, 2 );
 				add_action( 'init', array( &$this, 'wcfm_sell_items_catalog_init' ), 20 );
 				
-				// Sell Items Catalog Endpoint Edit
+				 
 				add_filter( 'wcfm_endpoints_slug', array( $this, 'sell_items_catalog_wcfm_endpoints_slug' ) );
 				
-				// Sell Items Catalog menu on WCfM dashboard
+				 
 				add_filter( 'wcfm_menus', array( &$this, 'wcfm_sell_items_catalog_menus' ), 30 );
 				
-				// Sell Items Catalog Load Scripts
+				 
 				add_action( 'wcfm_load_scripts', array( &$this, 'load_scripts' ), 30 );
 				add_action( 'after_wcfm_load_scripts', array( &$this, 'load_scripts' ), 30 );
 				
-				// Sell Items Catalog Load Styles
+				 
 				add_action( 'wcfm_load_styles', array( &$this, 'load_styles' ), 30 );
 				add_action( 'after_wcfm_load_styles', array( &$this, 'load_styles' ), 30 );
 				
-				// Sell Items Catalog Load views
+				 
 				add_action( 'wcfm_load_views', array( &$this, 'load_views' ), 30 );
 				
-				// Sell Items Catalog Ajax Controllers
+				 
 				add_action( 'after_wcfm_ajax_controller', array( &$this, 'ajax_controller' ) );
 			}
 		
-			// Single Product Multi seller button
+			 
 			add_action( 'woocommerce_single_product_summary',	array( &$this, 'wcfmmp_product_multivendor_button' ), 36 );
 		}
 		
-		// Disable Product Title Edit for Product Multivendor Products
+		 
 		add_filter( 'wcfm_product_manage_fields_general', array( &$this, 'wcfm_product_manage_title_edit_disable' ), 250, 3 );
 		
-		// Clone Multi selling product
+		 
 		add_action('wp_ajax_wcfmmp_product_multivendor_clone', array( &$this, 'wcfmmp_product_multivendor_clone' ) );
 		
-		// Clone Multi selling product - bulk
+		 
 		add_action('wp_ajax_wcfmmp_product_multivendor_bulk_clone', array( &$this, 'wcfmmp_product_multivendor_bulk_clone' ) );
 		
-		// Product More Offers Table Sorting
+		 
 		add_action('wp_ajax_wcfmmp_more_offers_sorting', array( &$this, 'wcfmmp_more_offers_sorted_table' ) );
 		add_action('wp_ajax_nopriv_wcfmmp_more_offers_sorting', array( &$this, 'wcfmmp_more_offers_sorted_table' ) );
 		
-		// Product Loop Duplicate Product Hide
+		 
 		add_action('woocommerce_product_query', array( &$this, 'wcfmmp_product_loop_duplicate_hide' ) );
 		
-		// Product Widget Duplicate Product Hide
+		 
 		add_filter( 'woocommerce_shortcode_products_query', array( &$this, 'wcfmmp_product_widget_duplicate_hide' ) );
 		add_filter( 'woocommerce_recently_viewed_products_widget_query_args', array( &$this, 'wcfmmp_product_widget_duplicate_hide' ) );
 		add_filter( 'woocommerce_products_widget_query_args', array( &$this, 'wcfmmp_product_widget_duplicate_hide' ) );
@@ -70,20 +70,20 @@ class WCFMmp_Product_Multivendor {
 		add_filter( 'electro_wc_live_search_query_args', array( &$this, 'wcfmmp_product_widget_duplicate_hide' ) );
 		add_filter( 'electro_get_top_rated_products_query_args', array( &$this, 'wcfmmp_product_widget_duplicate_hide' ) );
 		
-		// On Product Delete Reset Multi selling product
+		 
 		add_action( 'delete_post', array( &$this, 'wcfmmp_delete_product_association' ) );
 		add_action( 'wp_trash_post', array( &$this, 'wcfmmp_delete_product_association' ) );
 		add_action( 'before_delete_post', array( &$this, 'wcfmmp_delete_product_association' ) );
 		
-		//enqueue scripts
+		 
 		add_action('wp_enqueue_scripts', array(&$this, 'wcfmmp_product_multivendor_scripts'));
-		//enqueue styles
+		 
 		add_action('wp_enqueue_scripts', array(&$this, 'wcfmmp_product_multivendor_styles'));
 	}
 	
-	/**
-   * Sell Items Catalog Query Var
-   */
+	
+
+
   function wcfm_sell_items_catalog_query_vars( $query_vars ) {
   	$wcfm_modified_endpoints = wcfm_get_option( 'wcfm_endpoints', array() );
   	
@@ -98,9 +98,9 @@ class WCFMmp_Product_Multivendor {
 		return $query_vars;
   }
   
-  /**
-   * Sell Items Catalog End Point Title
-   */
+  
+
+
   function wcfm_sell_items_catalog_endpoint_title( $title, $endpoint ) {
   	global $wp;
   	switch ( $endpoint ) {
@@ -112,26 +112,26 @@ class WCFMmp_Product_Multivendor {
   	return $title;
   }
   
-  /**
-   * Sell Items Catalog Endpoint Intialize
-   */
+  
+
+
   function wcfm_sell_items_catalog_init() {
   	global $WCFM_Query;
 	
-		// Intialize WCFM End points
+		 
 		$WCFM_Query->init_query_vars();
 		$WCFM_Query->add_endpoints();
 		
 		if( !get_option( 'wcfm_updated_end_point_sell_items_catalog' ) ) {
-			// Flush rules after endpoint update
+			 
 			flush_rewrite_rules();
 			update_option( 'wcfm_updated_end_point_sell_items_catalog', 1 );
 		}
   }
   
-  /**
-	 * Sell Items Catalog Endpoiint Edit
-	 */
+  
+
+
 	function sell_items_catalog_wcfm_endpoints_slug( $endpoints ) {
 		
 		$sell_items_catalog_endpoints = array(
@@ -143,9 +143,9 @@ class WCFMmp_Product_Multivendor {
 		return $endpoints;
 	}
 	
-	/**
-   * WCFM Sell Items Catalog Menu
-   */
+	
+
+
   function wcfm_sell_items_catalog_menus( $menus ) {
   	global $WCFM;
   		
@@ -162,9 +162,9 @@ class WCFMmp_Product_Multivendor {
   	return $menus;
   }  
   
-  /**
-   * Refund Scripts
-   */
+  
+
+
   public function load_scripts( $end_point ) {
 	  global $WCFM, $WCFMmp;
     
@@ -184,9 +184,9 @@ class WCFMmp_Product_Multivendor {
 	  }
 	}
 	
-	/**
-   * Refund Styles
-   */
+	
+
+
 	public function load_styles( $end_point ) {
 	  global $WCFM, $WCFMmp;
 		
@@ -197,9 +197,9 @@ class WCFMmp_Product_Multivendor {
 	  }
 	}
 	
-	/**
-   * Refund Views
-   */
+	
+
+
   public function load_views( $end_point ) {
 	  global $WCFM, $WCFMmp;
 	  
@@ -210,9 +210,9 @@ class WCFMmp_Product_Multivendor {
 	  }
 	}
 	
-	/**
-   * Refund Ajax Controllers
-   */
+	
+
+
   public function ajax_controller() {
   	global $WCFM, $WCFMmp;
   	
@@ -241,9 +241,9 @@ class WCFMmp_Product_Multivendor {
   	}
   }
   
-  /**
-   * Product Title Edit Disable for Product Multivendor Products
-   */
+  
+
+
   function wcfm_product_manage_title_edit_disable( $product_fields, $product_id, $product_type ) {
   	global $WCFM, $WCFMmp, $product, $wpdb;
   	
@@ -261,7 +261,7 @@ class WCFMmp_Product_Multivendor {
   	return $product_fields;
   }
 	
-  // WCFM Single Product Multi seller button
+   
   function wcfmmp_product_multivendor_button() {
   	global $WCFM, $WCFMmp, $product, $post;
 		
@@ -328,9 +328,9 @@ class WCFMmp_Product_Multivendor {
 		<?php
   }
 
-	/**
-	 * Check whether vendor already selling this product or not
-	 */
+	
+
+
 	function is_already_selling($product_id, $vendor_id = 0) {
 		global $WCFM, $WCFMmp, $wpdb;
 
@@ -350,9 +350,9 @@ class WCFMmp_Product_Multivendor {
 		return false;
 	}
   
-  /**
-   * WCFM Product Multivendor Clone
-   */
+  
+
+
   function wcfmmp_product_multivendor_clone() {
   	global $WCFM, $WCFMmp, $wp, $WCFM_Query, $_POST, $wpdb;
   	
@@ -380,26 +380,26 @@ class WCFMmp_Product_Multivendor {
 		$product = wc_get_product( $product_id );
 
 		if ( false === $product ) {
-			/* translators: %s: product id */
+			 
 			echo '{"status": false, "message": "' . sprintf( esc_html__( 'Product creation failed, could not find original product: %s', 'woocommerce' ), $product_id ) . '" }';
 			die;
 		}
 
 		$duplicate = $this->wcfmmp_product_clone( $product_id );
 
-		// Hook rename to match other woocommerce_product_* hooks, and to move away from depending on a response from the wp_posts table.
+		 
 		do_action( 'woocommerce_product_duplicate', $duplicate, $product );
 		do_action( 'after_wcfmmp_product_multivendor_clone', $duplicate->get_id(), $product );
 
-		// Redirect to the edit screen for the new draft page
+		 
 		echo '{"status": true, "redirect": "' . esc_url(get_wcfm_edit_product_url( $duplicate->get_id() )) . '", "id": "' . esc_attr($duplicate->get_id()) . '"}';
 		
 		die;
   }
   
-  /**
-   * WCFM Product Multivendor Bulk Clone
-   */
+  
+
+
   function wcfmmp_product_multivendor_bulk_clone() {
   	global $WCFM, $WCFMmp, $wp, $WCFM_Query, $_POST, $wpdb;
   	
@@ -425,29 +425,29 @@ class WCFMmp_Product_Multivendor {
 					$product = wc_get_product( $product_id );
 	
 					if ( false === $product ) {
-						/* translators: %s: product id */
-						//echo '{"status": false, "message": "' . sprintf( __( 'Product creation failed, could not find original product: %s', 'woocommerce' ), $product_id ) . '" }';
+						 
+						 
 						continue;
 					}
 					
 					$duplicate = $this->wcfmmp_product_clone( $product_id );
 			
-					// Hook rename to match other woocommerce_product_* hooks, and to move away from depending on a response from the wp_posts table.
+					 
 					do_action( 'woocommerce_product_duplicate', $duplicate, $product );
 					do_action( 'after_wcfmmp_product_multivendor_clone', $duplicate->get_id(), $product );
 				}
 			}
 		}
 
-		// Redirect to the edit screen for the new draft page
+		 
 		echo '{"status": true}';
 		
 		die;
   }
   
-  /**
-   * WCFM Product Clone
-   */
+  
+
+
   function wcfmmp_product_clone( $product_id ) {
   	global $WCFM, $WCFMmp, $wp, $WCFM_Query, $_POST, $wpdb;
   	
@@ -459,7 +459,7 @@ class WCFMmp_Product_Multivendor {
 		$product = wc_get_product( $product_id );
 
 		if ( false === $product ) {
-			/* translators: %s: product id */
+			 
 			echo '{"status": false, "message": "' . sprintf( esc_html__( 'Product creation failed, could not find original product: %s', 'woocommerce' ), $product_id ) . '" }';
 		}
 
@@ -477,7 +477,7 @@ class WCFMmp_Product_Multivendor {
 				)
 		);
 		
-		// For Variations
+		 
 		$wcfm_variable_product_types = apply_filters( 'wcfm_variable_product_types', array( 'variable', 'variable-subscription', 'pw-gift-card' ) );
 		if( in_array( $duplicate->get_type(), $wcfm_variable_product_types ) ) {
 			foreach ( $duplicate->get_children() as $child_id ) {
@@ -489,7 +489,7 @@ class WCFMmp_Product_Multivendor {
 			}
 		}
 		
-		// Update WCFMmp Product Multi-vendor Table
+		 
 		$parent_product_id = 0;
 		$multi_selling = get_post_meta( $product_id, '_has_multi_selling', true );
   	$multi_parent  = get_post_meta( $product_id, '_is_multi_parent', true );
@@ -526,9 +526,9 @@ class WCFMmp_Product_Multivendor {
   	return $duplicate;
   }
   
-  /**
-   * WCFMmp More Offers Table Sorted
-   */
+  
+
+
   function wcfmmp_more_offers_sorted_table() {
   	global $WCFM, $WCFMmp, $wpdb;
   	
@@ -549,9 +549,9 @@ class WCFMmp_Product_Multivendor {
   	die;
   }
   
-  /**
-   * WC Product Loop Duplicate Product Hide
-   */
+  
+
+
   function wcfmmp_product_loop_duplicate_hide( $q ) {
   	global $WCFM, $wpdb;
 		
@@ -588,9 +588,9 @@ class WCFMmp_Product_Multivendor {
 		}
   }
   
-  /**
-   * WC Product Widget Duplicate Product Hide
-   */
+  
+
+
   function wcfmmp_product_widget_duplicate_hide( $query_args ) {
   	global $WCFM, $wpdb;
 		if( !wcfm_is_store_page() && apply_filters( 'wcfm_is_allow_product_loop_duplicate_hide', true ) ) {
@@ -631,9 +631,9 @@ class WCFMmp_Product_Multivendor {
   	return $query_args;
   }
   
-  /**
-   * WCFM Product Multivendor Refresh on Delete
-   */
+  
+
+
   public function wcfmmp_delete_product_association( $product_id ) {
   	global $WCFMmp, $wpdb, $WCFM;
   	
@@ -646,22 +646,22 @@ class WCFMmp_Product_Multivendor {
   	$wpdb->query( $wpdb->prepare( $sql, $product_id ) );
   }
   
-  /**
-   * Single Product Page More Offers Tab
-   */
+  
+
+
   function wcfmmp_product_multivendor_tab_content() {
   	global $WCFM, $WCFMmp, $product;
   	$WCFMmp->template->get_template( 'product_multivendor/wcfmmp-view-more-offers.php' );
   }
   
-  /**
-	 * WCFM Enquiry JS
-	 */
+  
+
+
 	function wcfmmp_product_multivendor_scripts() {
  		global $WCFM, $WCFMmp, $wp, $WCFM_Query;
  		
  		if( is_product() ) {
- 			//if( !wcfm_is_vendor() ) return;
+ 			 
  			
  			$WCFM->library->load_blockui_lib();
  			
@@ -669,9 +669,9 @@ class WCFMmp_Product_Multivendor {
  		}
  	}
  	
- 	/**
- 	 * WCFM Enquiry CSS
- 	 */
+ 	
+
+
  	function wcfmmp_product_multivendor_styles() {
  		global $WCFM, $WCFMmp, $wp, $WCFM_Query;
  		

@@ -1,52 +1,52 @@
 <?php
-/**
- * WCFMmp Shipping Gateway for shipping by zone
- *
- * Plugin Shipping Gateway
- *
- * @author    WC Lovers
- * @package   wcfmmp/includes
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
   
-  /*
-   * Table Rates from Database
-   */
+  
+
+
   protected $options_save_name;
 
-  /*
-   * Table Rates from Database
-   */
+  
+
+
   public $default;
 
   protected $fee_cost;
 
-  /**
-   * Cloning is forbidden. Will deactivate prior 'instances' users are running
-   *
-   * @since 4.0
-   */
+  
+
+
+
+
   public function __clone() {
       _doing_it_wrong( __FUNCTION__, __( 'Cloning this class could cause catastrophic disasters!', 'wc-multivendor-marketplace' ), '4.0' );
   }
 
-  /**
-   * Unserializing instances of this class is forbidden.
-   *
-   * @since 4.0
-   */
+  
+
+
+
+
   public function __wakeup() {
       _doing_it_wrong( __FUNCTION__, __( 'Unserializing is forbidden!', 'wc-multivendor-marketplace' ), '4.0' );
   }
 
-  /**
-   * __construct function.
-   *
-   * @access public
-   * @return void
-   */
+  
+
+
+
+
+
   function __construct( $instance_id = 0 ) {
 
       $this->id                   = 'wcfmmp_product_shipping_by_zone';
@@ -56,32 +56,32 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
       $this->supports             = array( 'shipping-zones', 'instance-settings', 'instance-settings-modal' );
       $this->default              = "";
 
-      // Initialize settings
+       
       $this->init();
 
-      // additional hooks for post-calculations settings
+       
       add_filter( 'woocommerce_shipping_chosen_method', array( $this, 'select_default_rate' ), 10, 2 );
       add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
 
   }
 
 
-  /**
-   * Evaluate a cost from a sum/string.
-   * @param  string $sum
-   * @param  array  $args
-   * @return string
-   */
+  
+
+
+
+
+
   protected function evaluate_cost( $sum, $args = array() ) {
       include_once( WC()->plugin_path() . '/includes/libraries/class-wc-eval-math.php' );
 
-      // Allow 3rd parties to process shipping cost arguments
+       
       $args           = apply_filters( 'woocommerce_evaluate_shipping_cost_args', $args, $sum, $this );
       $locale         = localeconv();
       $decimals       = array( wc_get_price_decimal_separator(), $locale['decimal_point'], $locale['mon_decimal_point'], ',' );
       $this->fee_cost = $args['cost'];
 
-      // Expand shortcodes
+       
       add_shortcode( 'fee', array( $this, 'fee' ) );
 
       $sum = do_shortcode( str_replace(
@@ -98,24 +98,24 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
 
       remove_shortcode( 'fee', array( $this, 'fee' ) );
 
-      // Remove whitespace from string
+       
       $sum = preg_replace( '/\s+/', '', $sum );
 
-      // Remove locale from string
+       
       $sum = str_replace( $decimals, '.', $sum );
 
-      // Trim invalid start/end characters
+       
       $sum = rtrim( ltrim( $sum, "\t\n\r\0\x0B+*/" ), "\t\n\r\0\x0B+-*/" );
 
-      // Do the math
+       
       return $sum ? WC_Eval_Math::evaluate( $sum ) : 0;
   }
 
-  /**
-   * Work out fee (shortcode).
-   * @param  array $atts
-   * @return string
-   */
+  
+
+
+
+
   public function fee( $atts ) {
       $atts = shortcode_atts( array(
           'percent' => '',
@@ -140,11 +140,11 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
       return $calculated_fee;
   }
 
-  /**
-   * Get items in package.
-   * @param  array $package
-   * @return int
-   */
+  
+
+
+
+
   public function get_package_item_qty( $package ) {
       $total_quantity = 0;
       foreach ( $package['contents'] as $item_id => $values ) {
@@ -155,13 +155,13 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
       return $total_quantity;
   }
 
-  /**
-   * Finds and returns shipping classes and the products with said class.
-   *
-   * @param mixed $package
-   *
-   * @return array
-   */
+  
+
+
+
+
+
+
   public function find_shipping_classes( $package ) {
       $found_shipping_classes = array();
 
@@ -180,13 +180,13 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
       return $found_shipping_classes;
   }
 
-  /**
-  * init function.
-  * initialize variables to be used
-  *
-  * @access public
-  * @return void
-  */
+  
+
+
+
+
+
+
   function init() {
     $this->instance_form_fields = array(
         'title' => array(
@@ -212,13 +212,13 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
     $this->tax_status           = $this->get_option( 'tax_status' );
   }
 
-  /**
-   * calculate_shipping function.
-   *
-   * @access public
-   * @param array $package (default: array())
-   * @return void
-   */
+  
+
+
+
+
+
+
   function calculate_shipping( $package = array() ) {
   	
   	if( !apply_filters( 'wcfm_is_allow_store_shipping', true ) ) return; 
@@ -271,7 +271,7 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
 					) );
 				}
 
-				// Add shipping class costs.
+				 
 				$shipping_classes = WC()->shipping->get_shipping_classes();
 
 				if ( ! empty( $shipping_classes ) ) {
@@ -279,7 +279,7 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
 					$highest_class_cost     = 0;
 					$calculation_type = ! empty( $method['settings']['calculation_type'] ) ? $method['settings']['calculation_type'] : 'class';
 					foreach ( $found_shipping_classes as $shipping_class => $products ) {
-						// Also handles BW compatibility when slugs were used instead of ids
+						 
 						$shipping_class_term = get_term_by( 'slug', $shipping_class, 'product_shipping_class' );
 						$class_cost_string   = $shipping_class_term && $shipping_class_term->term_id
 																		? ( ! empty( $method['settings']['class_cost_' . $shipping_class_term->term_id ] ) ? stripslashes_deep( $method['settings']['class_cost_' . $shipping_class_term->term_id] ) : '' )
@@ -342,12 +342,12 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
 			);
 		}
 		
-		//print_r($rates); die;
+		 
 
-		// send shipping rates to WooCommerce
+		 
 		if( is_array( $rates ) && count( $rates ) > 0 ) {
 
-				// cycle through rates to send and alter post-add settings
+				 
 				foreach( $rates as $key => $rate ) {
 
 						$this->add_rate( array(
@@ -355,7 +355,7 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
 								'label'     => apply_filters( 'wcfmmp_vendor_shipping_rate_label', $rate['label'], $rate ),
 								'cost'      => $rate['cost'],
 								'taxes'     => $rate['taxes'],
-								//'meta_data' => array( 'description' => $rate['description'] ),
+								 
 								'package'   => $package,
 						));
 
@@ -366,13 +366,13 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
 		}
   }
   
-  /**
-   * See if flat rate shipping is available based on the package and cart.
-   *
-   * @param array $package Shipping package.
-   *
-   * @return bool
-   */
+  
+
+
+
+
+
+
   public function flat_shipping_is_available( $package, $method ) {
   	add_filter( 'wcfmmp_is_allow_zone_shipping_overall_rule_check', function( $is_allow ) {
   	  return true;
@@ -381,13 +381,13 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
   }
 
 
-  /**
-   * See if free shipping is available based on the package and cart.
-   *
-   * @param array $package Shipping package.
-   *
-   * @return bool
-   */
+  
+
+
+
+
+
+
   public static function free_shipping_is_available( $package, $method ) {
   	
   	$vendor_id = $package['vendor_id'];
@@ -443,13 +443,13 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
   }
 
 
-  /**
-   * Is available in specific zone locations
-   *
-   * @since 1.0.0
-   *
-   * @return void
-   */
+  
+
+
+
+
+
+
   public function is_available( $package ) {
       $vendor_id = isset( $package['vendor_id'] ) ? $package['vendor_id'] : '';
 
@@ -477,7 +477,7 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
       foreach ( $locations as $location ) {
 				$location_group[$location['type']][] = $location;
       }
-      //print_r($locations); die;
+       
       $is_available = false;
 
       if ( isset( $location_group['country'] ) ) {
@@ -518,11 +518,11 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
 				$postcode_array = wp_list_pluck( $location_group['postcode'], 'code' );
 				$postcode_array = array_map( 'trim', $postcode_array );
 				
-				// Post Code Wildcard Rule check
+				 
 				if( !empty( $postcode_array ) ) {
 					$is_available = false;
 					foreach( $postcode_array as $compare_against ) {
-						// Handle postcodes containing ranges.
+						 
 						if ( strstr( $compare_against, '...' ) ) {
 							$range = array_map( 'trim', explode( '...', $compare_against ) );
 				
@@ -532,7 +532,7 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
 				
 							list( $min, $max ) = $range;
 				
-							// If the postcode is non-numeric, make it numeric.
+							 
 							if ( ! is_numeric( $min ) || ! is_numeric( $max ) ) {
 								$compare = wc_make_numeric_postcode( $destination_postcode );
 								$min     = str_pad( wc_make_numeric_postcode( $min ), strlen( $compare ), '0' );
@@ -545,7 +545,7 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
 								$is_available = true;
 							}
 						} elseif ( in_array( $compare_against, $wildcard_postcodes, true ) ) {
-							// Wildcard and standard comparison.
+							 
 							$is_available = true;
 						}
 						
@@ -566,30 +566,30 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
       return false;
   }
 
-  /**
-   * Split state code from country:state string
-   *
-   * @param string $value [like: BD:DHA]
-   *
-   * @return string [like: DHA ]
-   */
+  
+
+
+
+
+
+
   public function split_state_code( $value ) {
       $state_code = explode( ':', $value );
       return $state_code[1];
   }
 
-  /**
-   * alter the default rate if one is chosen in settings.
-   *
-   * @access public
-   *
-   *  @param mixed $package
-   *
-   * @return bool
-   */
+  
+
+
+
+
+
+
+
+
   function select_default_rate( $chosen_method, $_available_methods ) {
 
-      //Select the 'Default' method from WooCommerce settings
+       
       if( array_key_exists( $this->default, $_available_methods ) ) {
 
           return $this->default;
@@ -599,20 +599,20 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
   }
 
 
-  /**
-   * Hide shipping rates when free shipping is available.
-   * Updated to support WooCommerce 2.6 Shipping Zones.
-   *
-   * @access public
-   *
-   * @param array $rates Array of rates found for the package.
-   *
-   * @return array
-   */
+  
+
+
+
+
+
+
+
+
+
   function hide_shipping_when_free_is_available( $rates ) {
       if( $this->hide_method !== 'yes' ) return $rates;
 
-      // determine if free shipping is available
+       
       $free_shipping = false;
       foreach ( $rates as $rate_id => $rate ) {
           if ( 'free_shipping' === $rate->method_id ) {
@@ -620,7 +620,7 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
               break;
           }
       }
-      // if available, remove all options from this method
+       
       if( $free_shipping ) {
           foreach ( $rates as $rate_id => $rate ) {
               if ( $this->id === $rate->method_id && strpos( $rate_id, $this->id . ':' . $this->instance_id . '-') !== false ) {
@@ -633,23 +633,23 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
   }
 
 
-  /**
-   * Hide shipping rates when one has option enabled.
-   *
-   * @access public
-   *
-   * @param array $rates Array of rates found for the package.
-   *
-   * @return array
-   */
+  
+
+
+
+
+
+
+
+
   function hide_other_options( $rates ) {
       $hide_key = false;
 
-      // return if no rates have been added
+       
       if( ! isset( $rates ) || empty( $rates ) )
           return $rates;
 
-      // cycle through available rates
+       
       foreach( $rates as $key => $rate ) {
           if( $rate['hide_ops'] === 'on' ) {
               $hide_key = $key;
@@ -663,13 +663,13 @@ class WCFMmp_Shipping_By_Zone extends WC_Shipping_Method {
       return $rates;
   }
 
-  /**
-   * Get shipping method id
-   *
-   * @since 1.0.0
-   *
-   * @return void
-   */
+  
+
+
+
+
+
+
   public function get_method_rate_id( $method ) {
     return apply_filters( 'wcfmmp_get_vendor_shipping_method_id', $method['id'] . ':' . $method['instance_id'] );
   }

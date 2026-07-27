@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin view
- *
- * WCFM Marketplace Ledger List View
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/views/ledger/
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 global $WCFM, $WCFMmp;
 

@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying product list vendor filter form.
- *
- * @package WCfM Markeplace Views Product List Search Form
- *
- * For edit coping this to yourtheme/wcfm/product-geolocate
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp, $post, $wp, $wpdb;
 
@@ -20,7 +20,7 @@ if ( '' === get_option( 'permalink_structure' ) ) {
 
 $filter_vendor = isset( $_GET['filter_vendor'] ) ? absint( $_GET['filter_vendor'] ) : '';
 
-//$vendor_arr = $WCFM->wcfm_vendor_support->wcfm_get_vendor_list( true );
+ 
 $vendor_arr = array();
 $user_args = array(
 				'role__in'     => apply_filters( 'wcfmmp_allwoed_vendor_user_roles', array( 'wcfm_vendor' ) ),
@@ -28,7 +28,7 @@ $user_args = array(
 				'fields'       => array( 'ID', 'display_name' ),
 			 ); 
 			
-// For Taxonomy Page
+ 
 if( is_product_taxonomy() ) {
 	$term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) ); 
 	$term_id = $term->term_id;

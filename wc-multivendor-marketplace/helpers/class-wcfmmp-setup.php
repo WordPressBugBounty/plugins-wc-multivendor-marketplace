@@ -1,21 +1,21 @@
 <?php
-/**
- * WCFM Marketplace Setup Class
- * 
- * @since 1.0.0
- * @package wcfmmp/helpers
- * @author WC Lovers
- */
+
+
+
+
+
+
+
 if (!defined('ABSPATH')) {
     exit;
 }
 
 class WCFMmp_Marketplace_Setup {
 
-	/** @var string Currenct Step */
+	 
 	private $step = '';
 
-	/** @var array Steps for the setup wizard */
+	 
 	private $steps = array();
 
 	public function __construct() {
@@ -23,16 +23,16 @@ class WCFMmp_Marketplace_Setup {
 		add_action( 'admin_init', array( $this, 'wcfmmp_dashboard_setup' ) );
 	}
 
-	/**
-	 * Add admin menus/screens.
-	 */
+	
+
+
 	public function wcfm_admin_menus() {
 		add_dashboard_page( '', '', 'manage_options', 'wcfmmp-setup', '' );
 	}
 
-	/**
-	 * Show the setup wizard.
-	 */
+	
+
+
 	public function wcfmmp_dashboard_setup() {
 		global $WCFMmp;
 		if ( filter_input(INPUT_GET, 'page') != 'wcfmmp-setup') {
@@ -64,7 +64,7 @@ class WCFMmp_Marketplace_Setup {
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 		wp_enqueue_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', array(), WC_VERSION);
 		wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', array('dashicons', 'install'), WC_VERSION);
-		//wp_enqueue_style( 'wcfm-setup', $WCFMmp->plugin_url . '/assets/css/setup/wcfm-style-dashboard-setup.css', array('wc-setup'), $WCFMmp->version );
+		 
 		wp_register_script('wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup' . $suffix . '.js', array('jquery', 'wc-enhanced-select', 'jquery-blockui'), WC_VERSION);
 		wp_localize_script('wc-setup', 'wc_setup_params', array(
 				'locale_info' => json_encode(include( WC()->plugin_path() . '/i18n/locale-info.php' )),
@@ -74,9 +74,9 @@ class WCFMmp_Marketplace_Setup {
 		exit();
 	}
 
-	/**
-	 * Content for install woocommerce view
-	 */
+	
+
+
 	public function install_woocommerce_view() {
 		global $WCFMmp;
 		
@@ -169,10 +169,10 @@ class WCFMmp_Marketplace_Setup {
 			<?php
 	}
 
-	/**
-	 * Install woocommerce if not exist
-	 * @throws Exception
-	 */
+	
+
+
+
 	public function install_woocommerce() {
 		check_admin_referer('wcfmmp-install-woocommerce');
 		include_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -188,14 +188,14 @@ class WCFMmp_Marketplace_Setup {
 		$plugin = $plugin_slug . '/' . $plugin_slug . '.php';
 		$installed = false;
 		$activate = false;
-		// See if the plugin is installed already
+		 
 		if (in_array($plugin_slug, $installed_plugins)) {
 				$installed = true;
 				$activate = !is_plugin_active($plugin);
 		}
-		// Install this thing!
+		 
 		if (!$installed) {
-			// Suppress feedback
+			 
 			ob_start();
 	
 			try {
@@ -259,12 +259,12 @@ class WCFMmp_Marketplace_Setup {
 				exit();
 			}
 
-			// Discard feedback
+			 
 			ob_end_clean();
 		}
 
 		wp_clean_plugins_cache();
-		// Activate this thing
+		 
 		if ($activate) {
 			try {
 				$result = activate_plugin($plugin);
@@ -286,9 +286,9 @@ class WCFMmp_Marketplace_Setup {
 		}
 	}
 	
-	/**
-	 * Content for install wcfm membership view
-	 */
+	
+
+
 	public function install_wcfmvm_view() {
 		global $WCFMmp;
 		
@@ -381,10 +381,10 @@ class WCFMmp_Marketplace_Setup {
 			<?php
 	}
 
-	/**
-	 * Install wcfm if not exist
-	 * @throws Exception
-	 */
+	
+
+
+
 	public function install_wcfmvm() {
 		check_admin_referer('wcfmmp-install-wcfmvm');
 		include_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -400,14 +400,14 @@ class WCFMmp_Marketplace_Setup {
 		$plugin = 'wc-multivendor-membership/wc-multivendor-membership.php';
 		$installed = false;
 		$activate = false;
-		// See if the plugin is installed already
+		 
 		if (in_array($plugin_slug, $installed_plugins)) {
 				$installed = true;
 				$activate = !is_plugin_active($plugin);
 		}
-		// Install this thing!
+		 
 		if (!$installed) {
-			// Suppress feedback
+			 
 			ob_start();
 	
 			try {
@@ -471,12 +471,12 @@ class WCFMmp_Marketplace_Setup {
 				exit();
 			}
 
-			// Discard feedback
+			 
 			ob_end_clean();
 		}
 
 		wp_clean_plugins_cache();
-		// Activate this thing
+		 
 		if ($activate) {
 			try {
 				$result = activate_plugin($plugin);
@@ -498,9 +498,9 @@ class WCFMmp_Marketplace_Setup {
 		}
 	}
 	
-	/**
-	 * Content for install wcfm view
-	 */
+	
+
+
 	public function install_wcfm_view() {
 		global $WCFMmp;
 		
@@ -593,10 +593,10 @@ class WCFMmp_Marketplace_Setup {
 			<?php
 	}
 
-	/**
-	 * Install wcfm if not exist
-	 * @throws Exception
-	 */
+	
+
+
+
 	public function install_wcfm() {
 		check_admin_referer('wcfmmp-install-wcfm');
 		include_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -612,14 +612,14 @@ class WCFMmp_Marketplace_Setup {
 		$plugin = 'wc-frontend-manager/wc_frontend_manager.php';
 		$installed = false;
 		$activate = false;
-		// See if the plugin is installed already
+		 
 		if (in_array($plugin_slug, $installed_plugins)) {
 				$installed = true;
 				$activate = !is_plugin_active($plugin);
 		}
-		// Install this thing!
+		 
 		if (!$installed) {
-			// Suppress feedback
+			 
 			ob_start();
 	
 			try {
@@ -683,12 +683,12 @@ class WCFMmp_Marketplace_Setup {
 				exit();
 			}
 
-			// Discard feedback
+			 
 			ob_end_clean();
 		}
 
 		wp_clean_plugins_cache();
-		// Activate this thing
+		 
 		if ($activate) {
 				try {
 						$result = activate_plugin($plugin);
@@ -710,11 +710,11 @@ class WCFMmp_Marketplace_Setup {
 		}
 	}
 	
-	/**
-	 * Get slug from path
-	 * @param  string $key
-	 * @return string
-	 */
+	
+
+
+
+
 	private static function format_plugin_slug($key) {
 		$slug = explode('/', $key);
 		$slug = explode('.', end($slug));

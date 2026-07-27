@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin view
- *
- * WCFM Marketplace Media List View
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/views/media/
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 global $WCFM, $WCFMmp;
 

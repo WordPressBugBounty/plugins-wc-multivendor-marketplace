@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying product multivenor more offers.
- *
- * @package WCfM Markeplace Views More Offers
- *
- * For edit coping this to yourtheme/wcfm/product_multivendor 
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp, $product, $wpdb;
 

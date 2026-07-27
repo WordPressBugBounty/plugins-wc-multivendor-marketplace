@@ -1,14 +1,14 @@
 <?php
 
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Refund
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Refund {
 
@@ -19,48 +19,48 @@ class WCFMmp_Refund {
 		add_filter('wcfm_endpoint_title', array(&$this, 'wcfm_refund_endpoint_title'), 20, 2);
 		add_action('init', array(&$this, 'wcfm_refund_init'), 20);
 
-		// Refund Endpoint Edit
+		 
 		add_filter('wcfm_endpoints_slug', array($this, 'refund_wcfm_endpoints_slug'));
 
-		// Refund menu on WCfM dashboard
+		 
 		if (apply_filters('wcfm_is_allow_refund', true) && apply_filters('wcfm_is_allow_refund_requests', true)) {
 			add_filter('wcfm_menus', array(&$this, 'wcfm_refund_menus'), 30);
 		}
 
-		// Refund Load Scripts
+		 
 		add_action('wcfm_load_scripts', array(&$this, 'load_scripts'), 30);
 		add_action('after_wcfm_load_scripts', array(&$this, 'load_scripts'), 30);
 
-		// Refund Load Styles
+		 
 		add_action('wcfm_load_styles', array(&$this, 'load_styles'), 30);
 		add_action('after_wcfm_load_styles', array(&$this, 'load_styles'), 30);
 
-		// Refund Load views
+		 
 		add_action('wcfm_load_views', array(&$this, 'load_views'), 30);
 
-		// Refund Ajax Controllers
+		 
 		add_action('after_wcfm_ajax_controller', array(&$this, 'ajax_controller'));
 		add_action('wp_ajax_nopriv_wcfm_ajax_controller', array(&$this, 'ajax_controller'));
 
-		// Generate Refund Form Html
+		 
 		add_action('wp_ajax_wcfmmp_refund_requests_form_html', array(&$this, 'wcfmmp_refund_requests_form_html'));
 
 		if (wcfm_is_vendor()) {
 			add_filter('wcfmmarketplace_orders_actions', array(&$this, 'wcfmmp_refund_orders_actions'), 100, 4);
 		}
 
-		// WC My Account Order action - Refund
+		 
 		add_filter('woocommerce_my_account_my_orders_actions', array(&$this, 'wcfmmp_myaccount_refund_order_action'), 110, 2);
 
-		//enqueue scripts
+		 
 		add_action('wp_enqueue_scripts', array(&$this, 'wcfm_refund_scripts'));
-		//enqueue styles
+		 
 		add_action('wp_enqueue_scripts', array(&$this, 'wcfm_refund_styles'));
 	}
 
-	/**
-	 * Refund Query Var
-	 */
+	
+
+
 	function wcfm_refund_query_vars($query_vars) {
 		$wcfm_modified_endpoints = wcfm_get_option('wcfm_endpoints', array());
 
@@ -73,9 +73,9 @@ class WCFMmp_Refund {
 		return $query_vars;
 	}
 
-	/**
-	 * Refund End Point Title
-	 */
+	
+
+
 	function wcfm_refund_endpoint_title($title, $endpoint) {
 		global $wp;
 		switch ($endpoint) {
@@ -87,26 +87,26 @@ class WCFMmp_Refund {
 		return $title;
 	}
 
-	/**
-	 * Refund Endpoint Intialize
-	 */
+	
+
+
 	function wcfm_refund_init() {
 		global $WCFM_Query;
 
-		// Intialize WCFM End points
+		 
 		$WCFM_Query->init_query_vars();
 		$WCFM_Query->add_endpoints();
 
 		if (!get_option('wcfm_updated_end_point_refund')) {
-			// Flush rules after endpoint update
+			 
 			flush_rewrite_rules();
 			update_option('wcfm_updated_end_point_refund', 1);
 		}
 	}
 
-	/**
-	 * Refund Endpoiint Edit
-	 */
+	
+
+
 	function refund_wcfm_endpoints_slug($endpoints) {
 
 		$refund_endpoints = array(
@@ -118,13 +118,13 @@ class WCFMmp_Refund {
 		return $endpoints;
 	}
 
-	/**
-	 * WCFM Refund Menu
-	 */
+	
+
+
 	function wcfm_refund_menus($menus) {
 		global $WCFM;
 
-		//if( !wcfm_is_vendor() ) {
+		 
 		$menus = array_slice($menus, 0, 3, true) +
 			array('wcfm-refund-requests' => array(
 				'label'  => __('Refund', 'wc-multivendor-marketplace'),
@@ -134,13 +134,13 @@ class WCFMmp_Refund {
 				'priority'   => 69.5
 			))	 +
 			array_slice($menus, 3, count($menus) - 3, true);
-		//}
+		 
 		return $menus;
 	}
 
-	/**
-	 * Refund Scripts
-	 */
+	
+
+
 	public function load_scripts($end_point) {
 		global $WCFM, $WCFMmp;
 
@@ -167,16 +167,16 @@ class WCFMmp_Refund {
 
 			case 'wcfm-orders':
 				wp_enqueue_script('wcfmmp_refund_requests_form_js', $WCFMmp->library->js_lib_url . 'refund/wcfmmp-script-refund-requests-popup.js', array('jquery'), $WCFMmp->version, true);
-				// Localized Script
+				 
 				$wcfm_messages = get_wcfm_refund_requests_messages();
 				wp_localize_script('wcfmmp_refund_requests_form_js', 'wcfm_refund_requests_messages', $wcfm_messages);
 				break;
 		}
 	}
 
-	/**
-	 * Refund Styles
-	 */
+	
+
+
 	public function load_styles($end_point) {
 		global $WCFM, $WCFMmp;
 
@@ -191,9 +191,9 @@ class WCFMmp_Refund {
 		}
 	}
 
-	/**
-	 * Refund Views
-	 */
+	
+
+
 	public function load_views($end_point) {
 		global $WCFM, $WCFMmp;
 
@@ -204,9 +204,9 @@ class WCFMmp_Refund {
 		}
 	}
 
-	/**
-	 * Refund Ajax Controllers
-	 */
+	
+
+
 	public function ajax_controller() {
 		global $WCFM, $WCFMmp;
 
@@ -260,9 +260,9 @@ class WCFMmp_Refund {
 		}
 	}
 
-	/**
-	 * Refund Requests Form HTML
-	 */
+	
+
+
 	function wcfmmp_refund_requests_form_html() {
 		global $WCFM, $WCFMmp, $_POST;
 
@@ -287,12 +287,12 @@ class WCFMmp_Refund {
 		if (!apply_filters('wcfm_is_allow_paid_order_refund', false) && ($order->withdraw_status != 'pending') && !in_array($the_order->get_payment_method(), apply_filters('wcfm_enabled_payment_gateways_for_order_refund_action', array('wirecard', 'stripe_split')))) return $actions;
 
 		$refund_statuses = explode(",", $order->refund_statuses);
-		//if( in_array( 'requested', $refund_statuses ) ) return $actions;
+		 
 
 		$is_refundeds = explode(",", $order->is_refundeds);
 		if (!in_array(0, $is_refundeds)) return $actions;
 
-		// Refund Threshold check
+		 
 		$refund_threshold = isset($WCFMmp->wcfmmp_refund_options['refund_threshold']) ? $WCFMmp->wcfmmp_refund_options['refund_threshold'] : '';
 		if ($refund_threshold) {
 			$current_time = strtotime('midnight', current_time('timestamp'));
@@ -310,9 +310,9 @@ class WCFMmp_Refund {
 		return $actions;
 	}
 
-	/**
-	 * WCFM Refund action at My Account Order actions
-	 */
+	
+
+
 	function wcfmmp_myaccount_refund_order_action($actions, $order) {
 		global $WCFM, $WCFMmp, $wpdb;
 
@@ -349,11 +349,11 @@ class WCFMmp_Refund {
 			}
 		}
 
-		//if( $withdraw_status != 'pending' ) return $actions;
+		 
 		if ($refund_status == 'requested') return $actions;
 		if ($is_refunded) return $actions;
 
-		// Refund Threshold check
+		 
 		$refund_threshold = isset($WCFMmp->wcfmmp_refund_options['refund_threshold']) ? $WCFMmp->wcfmmp_refund_options['refund_threshold'] : '';
 		if ($refund_threshold) {
 			$current_time = strtotime('midnight', current_time('timestamp'));
@@ -425,7 +425,7 @@ class WCFMmp_Refund {
 		$this->wcfmmp_update_refund_meta($refund_request_id, 'refunded_qty', $refunded_qty);
 		$this->wcfmmp_update_refund_meta($refund_request_id, 'refunded_tax', serialize($refunded_tax));
 
-		// Set Order Meta
+		 
 		$order = wc_get_order( $order_id );
 		$order->update_meta_data( '_wcfm_refund_request', 'yes' );
 		$order->save();
@@ -434,9 +434,9 @@ class WCFMmp_Refund {
 		return $refund_request_id;
 	}
 
-	/**
-	 * Update Refund metas
-	 */
+	
+
+
 	public function wcfmmp_update_refund_meta($refund_id, $key, $value) {
 		global $WCFM, $WCFMmp, $wpdb;
 
@@ -459,9 +459,9 @@ class WCFMmp_Refund {
 		return $refund_meta_id;
 	}
 
-	/**
-	 * Get Refund metas
-	 */
+	
+
+
 	public function wcfmmp_get_refund_meta($refund_id, $key) {
 		global $WCFM, $WCFMmp, $wpdb;
 
@@ -479,9 +479,9 @@ class WCFMmp_Refund {
 		return $commission_meta;
 	}
 
-	/**
-	 * Refund status update by Refund ID
-	 */
+	
+
+
 	public function wcfmmp_refund_status_update_by_refund($refund_id, $status = 'completed', $refund_note = '') {
 		global $WCFM, $WCFMmp, $wpdb;
 
@@ -491,7 +491,7 @@ class WCFMmp_Refund {
 			$vendor_id = 0;
 			$order_id = 0;
 
-			// On complete Commission table update
+			 
 			$sql = 'SELECT item_id, commission_id, vendor_id, order_id, is_partially_refunded, refunded_amount, refund_reason FROM ' . $wpdb->prefix . 'wcfm_marketplace_refund_request';
 			$sql .= ' WHERE 1=1';
 			$sql .= " AND ID = %d";
@@ -511,7 +511,7 @@ class WCFMmp_Refund {
 
 					$wc_refund_processed = true;
 
-					// Create WC Refund Item
+					 
 					if ($order_id) {
 						$order = wc_get_order($order_id);
 
@@ -528,7 +528,7 @@ class WCFMmp_Refund {
 						if (!$is_partially_refunded) $is_refunded = 1;
 
 
-						// API Refund Check
+						 
 						$api_refund             = false;
 						if (WC()->payment_gateways()) {
 							$payment_gateways     = WC()->payment_gateways->payment_gateways();
@@ -546,20 +546,20 @@ class WCFMmp_Refund {
 						if ($is_refunded) {
 							$product         = $line_item->get_product();
 
-							/*$refund_tax      = $line_item->get_taxes();
-							$c_refunded_qty  = $line_item->get_quantity(); 
-							if( !empty( $refund_tax ) && is_array( $refund_tax ) ) {
-								if( isset( $refund_tax['total'] ) ) {
-									$refund_tax = $refund_tax['total'];
-								}
-								if( !empty( $refund_tax ) && is_array( $refund_tax ) ) {
-									foreach( $refund_tax as $refund_tax_id => $refund_tax_price ) {
-										$refunded_amount += (float) $refund_tax_price;
-									}
-								}
-							}*/
+							
 
-							// Item Shipping Refund
+
+
+
+
+
+
+
+
+
+
+
+							 
 							if (apply_filters('wcfmmp_is_allow_shipping_refund', true, $order_id, $vendor_id, $refund_id, $refund_info)) {
 								$vendor_shipping = $WCFMmp->wcfmmp_shipping->get_order_vendor_shipping($order_id);
 
@@ -605,9 +605,9 @@ class WCFMmp_Refund {
 								'refund_tax'   => $refund_tax,
 							);
 
-							//if( $is_refunded ) {
+							 
 							$line_items[$item_id]['qty'] = $c_refunded_qty;
-							//}
+							 
 
 							$wcfm_create_refund_args = apply_filters('wcfm_create_refund_args', array(
 								'amount'         => round($refunded_amount, 2),
@@ -618,9 +618,9 @@ class WCFMmp_Refund {
 								'restock_items'  => $restock_refunded_items,
 							), $refund_id, $order_id);
 
-							//print_r($wcfm_create_refund_args);
+							 
 
-							// Create the refund object.
+							 
 							$refund = wc_create_refund($wcfm_create_refund_args);
 
 							if (is_wp_error($refund)) {
@@ -633,7 +633,7 @@ class WCFMmp_Refund {
 						}
 					}
 
-					// Processing Vendor Commission Refund
+					 
 					if ($wc_refund_processed) {
 						$commission_amount = 0;
 						$total_commission = 0;
@@ -651,7 +651,7 @@ class WCFMmp_Refund {
 							$transaction_charge = (float) $WCFMmp->wcfmmp_commission->wcfmmp_get_commission_meta($commission_id, 'transaction_charge');
 							$aff_commission     = (float) $WCFMmp->wcfmmp_commission->wcfmmp_get_commission_meta($commission_id, '_wcfm_affiliate_commission');
 
-							// Fetch Commission details & recalculate commission
+							 
 							$sql = 'SELECT order_id, product_id, variation_id, item_id, item_sub_total, item_total, quantity, commission_amount, total_commission, refunded_amount, tax, shipping, shipping_tax_amount, commission_status FROM ' . $wpdb->prefix . 'wcfm_marketplace_orders';
 							$sql .= ' WHERE 1=1';
 							$sql .= " AND ID = %d";
@@ -687,13 +687,13 @@ class WCFMmp_Refund {
 										$total_commission += (float) $commission_amount;
 										$total_commission -= (float) $refunded_tax_amount;
 										$total_commission -= (float) $aff_commission;
-										$total_commission -= (float) $transaction_charge; // Not right, have to recalculate
+										$total_commission -= (float) $transaction_charge;  
 
 										$c_refunded_amount     = $refunded_amount;
 										$tax                   = (float)$tax - (float)$refunded_tax_amount;
 										$WCFMmp->wcfmmp_commission->wcfmmp_update_commission_meta($commission_id, 'gross_tax_cost', round($tax, 2));
 
-										// Commission Tax Calculation
+										 
 										if (isset($commission_rule['tax_enable']) && ($commission_rule['tax_enable'] == 'yes')) {
 											$commission_tax = $total_commission * ((float)$commission_rule['tax_percent'] / 100);
 											if ($WCFMmp->wcfmmp_vendor->is_vendor_get_tax($vendor_id)) {
@@ -707,7 +707,7 @@ class WCFMmp_Refund {
 											$WCFMmp->wcfmmp_commission->wcfmmp_update_commission_meta($commission_id, 'commission_tax', round($commission_tax, 2));
 										}
 									} else {
-										$c_refunded_amount = $refunded_amount; //(float) $commission_info->total_commission;
+										$c_refunded_amount = $refunded_amount;  
 										$commission_amount = 0;
 										$total_commission  = 0;
 										$remaining_tax_amount =
@@ -721,14 +721,14 @@ class WCFMmp_Refund {
 							}
 
 
-							// Update commission ledger status - not sure
+							 
 							if ($is_partially_refunded) {
 								$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update($commission_id, 'partial-refunded');
 							} else {
 								$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update($commission_id, 'refunded');
 							}
 
-							// Vendor Notification
+							 
 							if ($vendor_id) {
 								$wcfm_messages = sprintf(__('Your Refund Request approved for Order <b>%s</b>.', 'wc-multivendor-marketplace'), '<a target="_blank" class="wcfm_dashboard_item_title" href="' . get_wcfm_view_order_url($order_id) . '">#' . $order->get_order_number() . '</a>');
 
@@ -751,7 +751,7 @@ class WCFMmp_Refund {
 								$WCFM->wcfm_notification->wcfm_send_direct_message(-1, $vendor_id, 1, 0, $wcfm_messages, 'refund-request', true, $raw_message);
 							}
 
-							// Refund Item Meta
+							 
 							if (!is_wp_error($refund) && $vendor_id) {
 								$refund->set_refunded_by($vendor_id);
 								$refund->save();
@@ -760,10 +760,10 @@ class WCFMmp_Refund {
 							do_action('wcfmmp_commission_refund_status_completed', $refund_id, $commission_id, $order_id, $vendor_id, $refund);
 						}
 
-						// Refund Status Updated
+						 
 						$wpdb->update("{$wpdb->prefix}wcfm_marketplace_refund_request", array('refund_status' => $status, 'refunded_amount' => $c_refunded_amount, 'refund_paid_date' => date('Y-m-d H:i:s', current_time('timestamp', 0))), array('ID' => $refund_id), array('%s', '%s', '%s'), array('%d'));
 
-						// On refund complete ledge entry status update
+						 
 						if ($is_partially_refunded) {
 							$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update($refund_id, 'completed', 'partial-refund');
 						} else {
@@ -771,7 +771,7 @@ class WCFMmp_Refund {
 							$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update($refund_id, 'completed', 'refund');
 						}
 
-						// Order Not Added
+						 
 						$wcfm_refund_request_notified = $order->get_meta('_wcfm_refund_request_notified');
 						if ($is_partially_refunded) {
 							$wcfm_messages = sprintf(__('Partial Refund Request approved for Order <b>%s</b>.', 'wc-multivendor-marketplace'), '#' . $order->get_order_number());
@@ -791,7 +791,7 @@ class WCFMmp_Refund {
 							}
 						}
 
-						// Update Order Meta
+						 
 						$order->delete_meta_data('_wcfm_refund_request');
 						$order->save();
 
@@ -802,7 +802,7 @@ class WCFMmp_Refund {
 				}
 			}
 		} else {
-			// Order Status Updated
+			 
 			$sql = 'SELECT commission_id, vendor_id, order_id FROM ' . $wpdb->prefix . 'wcfm_marketplace_refund_request';
 			$sql .= ' WHERE 1=1';
 			$sql .= " AND ID = %d";
@@ -817,7 +817,7 @@ class WCFMmp_Refund {
 
 					$wpdb->update("{$wpdb->prefix}wcfm_marketplace_orders", array('refund_status' => $status), array('ID' => $commission_id), array('%s'), array('%d'));
 
-					// Vendor Notification
+					 
 					if ($vendor_id) {
 						$wcfm_messages = sprintf(__('Your Refund Request cancelled for Order <b>%s</b>.', 'wc-multivendor-marketplace'), '<a target="_blank" class="wcfm_dashboard_item_title" href="' . get_wcfm_view_order_url($order_id) . '">#' . $order->get_order_number() . '</a>');
 
@@ -842,14 +842,14 @@ class WCFMmp_Refund {
 
 					do_action('wcfmmp_commission_refund_status_' . $status, $refund_id, $commission_id, $order_id);
 
-					// Refund Status Updated
+					 
 					$wpdb->update("{$wpdb->prefix}wcfm_marketplace_refund_request", array('refund_status' => $status, 'refund_paid_date' => date('Y-m-d H:i:s', current_time('timestamp', 0))), array('ID' => $refund_id), array('%s', '%s'), array('%d'));
 
-					// Ledger Status Update
+					 
 					$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update($refund_id, $status, 'refund');
 					$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update($refund_id, $status, 'partial-refund');
 
-					// Order Not Added
+					 
 					$wcfm_messages = sprintf(__('Refund Request cancelled for Order <b>%s</b>.', 'wc-multivendor-marketplace'), '#' . $order->get_order_number());
 					if ($refund_note) {
 						$wcfm_messages .= "<br /><b>" . __('Note', 'wc-multivendor-marketplace') . "</b>: " . $refund_note;
@@ -859,7 +859,7 @@ class WCFMmp_Refund {
 						add_comment_meta($comment_id, '_vendor_id', $vendor_id);
 					}
 
-					// Update Order Meta
+					 
 					$order->delete_meta_data('_wcfm_refund_request');
 					$order->save();
 
@@ -872,15 +872,15 @@ class WCFMmp_Refund {
 		return false;
 	}
 
-	/**
-	 * Withdraw status update by commission status change
-	 */
+	
+
+
 	public function wcfmmp_refund_status_update_by_commission($commission_id, $status = 'cancelled') {
 		global $WCFM, $WCFMmp, $wpdb;
 
 		if (!$commission_id) return;
 
-		// Order Status Updated
+		 
 		$sql = 'SELECT ID, vendor_id, order_id FROM ' . $wpdb->prefix . 'wcfm_marketplace_refund_request';
 		$sql .= ' WHERE 1=1';
 		$sql .= " AND commission_id = %d";
@@ -893,11 +893,11 @@ class WCFMmp_Refund {
 
 				$wpdb->update("{$wpdb->prefix}wcfm_marketplace_refund_request", array('refund_status' => $status, 'refund_paid_date' => date('Y-m-d H:i:s', current_time('timestamp', 0))), array('ID' => $refund_id), array('%s', '%s'), array('%d'));
 
-				// Ledger Status Update
+				 
 				$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update($refund_id, $status, 'refund');
 				$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update($refund_id, $status, 'partial-refund');
 
-				// Vendor Notification
+				 
 				$wcfm_messages = sprintf(__('Your Refund Request cancelled for Order <b>%s</b>.', 'wc-multivendor-marketplace'), '<a target="_blank" class="wcfm_dashboard_item_title" href="' . get_wcfm_view_order_url($order_id) . '">#' . $order_id . '</a>');
 
 				$raw_message = [
@@ -915,7 +915,7 @@ class WCFMmp_Refund {
 
 				$WCFM->wcfm_notification->wcfm_send_direct_message(-1, $vendor_id, 1, 0, $wcfm_messages, 'refund-request', true, $raw_message);
 
-				// Update Order Meta
+				 
 				$order = wc_get_order( $order_id );
 				$order->delete_meta_data('_wcfm_refund_request');
 				$order->save();
@@ -925,9 +925,9 @@ class WCFMmp_Refund {
 		}
 	}
 
-	/**
-	 * Get Refund amount by Vendor
-	 */
+	
+
+
 	public function wcfm_get_refund_by_vendor($vendor_id, $interval = '7day') {
 		global $wpdb, $WCFM, $WCFMmp;
 
@@ -946,9 +946,9 @@ class WCFMmp_Refund {
 		return $refunded_amount;
 	}
 
-	/**
-	 * WCFM My Account Refund JS
-	 */
+	
+
+
 	function wcfm_refund_scripts() {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query;
 
@@ -956,16 +956,16 @@ class WCFMmp_Refund {
 			if (is_user_logged_in()) {
 				$WCFM->library->load_blockui_lib();
 				wp_enqueue_script('wcfmmp_refund_requests_form_js', $WCFMmp->library->js_lib_url . 'refund/wcfmmp-script-refund-requests-popup.js', array('jquery'), $WCFMmp->version, true);
-				// Localized Script
+				 
 				$wcfm_messages = get_wcfm_refund_requests_messages();
 				wp_localize_script('wcfmmp_refund_requests_form_js', 'wcfm_refund_requests_messages', $wcfm_messages);
 			}
 		}
 	}
 
-	/**
-	 * WCFM My Account Refund CSS
-	 */
+	
+
+
 	function wcfm_refund_styles() {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query;
 

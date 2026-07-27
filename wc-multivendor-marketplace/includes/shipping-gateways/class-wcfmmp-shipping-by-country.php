@@ -1,25 +1,25 @@
 <?php
-/**
- * WCFMmp Shipping Gateway for shipping by country
- *
- * Plugin Shipping Gateway
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/includes
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 if (!defined('ABSPATH')) {
     exit;
 }
 
 class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
-  /**
-  * Constructor for your shipping class
-  *
-  * @access public
-  *
-  * @return void
-  */
+  
+
+
+
+
+
+
   public function __construct() {
     $this->id                 = 'wcfmmp_product_shipping_by_country';
     $this->method_title       = __( 'Marketplace Shipping by Country', 'wc-multivendor-marketplace' );
@@ -35,36 +35,36 @@ class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
   }
 
 
-  /**
-  * Init your settings
-  *
-  * @access public
-  * @return void
-  */
+  
+
+
+
+
+
   function init() {
-     // Load the settings API
+      
      $this->init_form_fields();
      $this->init_settings();
 
-     // Save settings in admin if you have any defined
+      
      add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
   }
 
-  /**
-  * Checking is gateway enabled or not
-  *
-  * @return boolean [description]
-  */
+  
+
+
+
+
   public function is_method_enabled() {
      return $this->enabled == 'yes';
   }
 
-  /**
-  * Initialise Gateway Settings Form Fields
-  *
-  * @access public
-  * @return void
-  */
+  
+
+
+
+
+
   function init_form_fields() {
 
      $this->form_fields = array(
@@ -94,17 +94,17 @@ class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
      );
   }
 
-  /**
-  * calculate_shipping function.
-  *
-  * @access public
-  *
-  * @param mixed $package
-  *
-  * @return void
-  */
+  
+
+
+
+
+
+
+
+
   public function calculate_shipping( $package = array() ) {
-   //print_r($package); die;
+    
    
     if( !apply_filters( 'wcfm_is_allow_store_shipping', true ) ) return; 
 		
@@ -123,15 +123,15 @@ class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
     }
     $vendor_id = isset($package['vendor_id']) ? $package['vendor_id'] : '';
     if ( !self::is_shipping_enabled_for_seller( $vendor_id ) ) {
-  //          $tax_rate = false;
-  //          
-  //          $rate = array(
-  //            'id'    => $this->id,
-  //            'label' => $this->title,
-  //            'cost'  => $amount,
-  //            'taxes' => $tax_rate
-  //          );
-  //          $this->add_rate( $rate );  
+   
+   
+   
+   
+   
+   
+   
+   
+   
        return;
     }
 
@@ -168,10 +168,10 @@ class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
 					 'taxes' => $tax_rate
 			 );
 	
-			 // Register the rate
+			  
 			 $this->add_rate( $rate );
 			 
-			 // Local Pickup Method Check
+			  
 			 $wcfmmp_shipping_by_country = get_user_meta( $vendor_id, '_wcfmmp_shipping_by_country', true );
 			 $enable_local_pickup = isset($wcfmmp_shipping_by_country['_enable_local_pickup']) ? 'yes' : '';
 			 $local_pickup_cost = isset($wcfmmp_shipping_by_country['_local_pickup_cost']) ? $wcfmmp_shipping_by_country['_local_pickup_cost'] : '';
@@ -184,11 +184,11 @@ class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
 						 'taxes' => $tax_rate
 				 );
 		
-				 // Register the rate
+				  
 				 $this->add_rate( $rate );
 			 }
 			 
-			 // Free Shipping Method Check
+			  
 			 if( $amount ) {
 			 	 $amount = $this->calculate_per_seller( $products, $destination_country, $destination_state, true );
 			 	 
@@ -200,7 +200,7 @@ class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
 							 'taxes' => $tax_rate
 					 );
 			
-					 // Register the rate
+					  
 					 $this->add_rate( $rate );
 			 	 }
 			 }
@@ -208,13 +208,13 @@ class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
   }
 
 
-  /**
-  * Check if shipping for this product is enabled
-  *
-  * @param  integet  $product_id
-  *
-  * @return boolean
-  */
+  
+
+
+
+
+
+
   public static function is_shipping_enabled_for_seller( $vendor_id ) {
     global  $WCFMmp;
     $vendor_shipping_details = get_user_meta( $vendor_id, '_wcfmmp_shipping', true );
@@ -228,15 +228,15 @@ class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
     return false;
   }
 
-  /**
-  * Check if seller has any shipping enable product in this order
-  *
-  * @since  2.4.11
-  *
-  * @param  array $products
-  *
-  * @return boolean
-  */
+  
+
+
+
+
+
+
+
+
   public function has_shipping_enabled_product( $products ) {
     foreach ( $products as $product ) {
         if ( !self::is_product_disable_shipping( $product['product_id'] ) ) {
@@ -248,13 +248,13 @@ class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
   }
 
 
-  /**
-  * Get product shipping costs
-  *
-  * @param  integer $product_id
-  *
-  * @return array
-  */
+  
+
+
+
+
+
+
   public static function get_seller_country_shipping_costs( $vendor_id ) {
     $country_cost = get_user_meta( $vendor_id, '_wcfmmp_country_rates', true );
     $country_cost = is_array( $country_cost ) ? $country_cost : array();
@@ -263,14 +263,14 @@ class WCFMmp_Shipping_By_Country extends WC_Shipping_Method {
   }
 
 
-  /**
-  * Calculate shipping per seller
-  *
-  * @param  array $products
-  * @param  array $destination
-  *
-  * @return float
-  */
+  
+
+
+
+
+
+
+
   public function calculate_per_seller( $products, $destination_country, $destination_state, $is_consider_free_threshold = false  ) {
      $amount = 0.0;
      $price = array();

@@ -1,27 +1,27 @@
 <?php
 
-/**
- * WCFMmp Shipping Gateway for shipping by country
- *
- * Plugin Shipping Gateway
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/includes
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 if (!defined('ABSPATH')) {
 	exit;
 }
 
 class WCFMmp_Shipping_By_Weight extends WC_Shipping_Method
 {
-	/**
-	 * Constructor for your shipping class
-	 *
-	 * @access public
-	 *
-	 * @return void
-	 */
+	
+
+
+
+
+
+
 	public function __construct()
 	{
 		$this->id                 = 'wcfmmp_product_shipping_by_weight';
@@ -38,19 +38,19 @@ class WCFMmp_Shipping_By_Weight extends WC_Shipping_Method
 	}
 
 
-	/**
-	 * Init your settings
-	 *
-	 * @access public
-	 * @return void
-	 */
+	
+
+
+
+
+
 	function init()
 	{
-		// Load the settings API
+		 
 		$this->init_form_fields();
 		$this->init_settings();
 
-		// Save settings in admin if you have any defined
+		 
 		add_action('woocommerce_update_options_shipping_' . $this->id, array($this, 'process_admin_options'));
 	}
 
@@ -91,7 +91,7 @@ class WCFMmp_Shipping_By_Weight extends WC_Shipping_Method
 		$wcfmmp_country_weight_default_costs  = get_user_meta($vendor_id, '_wcfmmp_country_weight_default_costs', true);
 		if (!$wcfmmp_country_weight_default_costs) $wcfmmp_country_weight_default_costs = array();
 
-		//print_r($wcfmmp_country_weight_rates); die;
+		 
 
 		if (array_key_exists($destination_country, $wcfmmp_country_weight_rates)) {
 			$weight_array_for_country = $wcfmmp_country_weight_rates[$destination_country];
@@ -125,10 +125,10 @@ class WCFMmp_Shipping_By_Weight extends WC_Shipping_Method
 				'taxes' => $tax_rate
 			);
 
-			// Register the rate
+			 
 			$this->add_rate($rate);
 
-			// Local Pickup Method Check
+			 
 			$wcfmmp_shipping_by_weight = get_user_meta($vendor_id, '_wcfmmp_shipping_by_weight', true);
 			$enable_local_pickup = isset($wcfmmp_shipping_by_weight['_enable_local_pickup']) ? 'yes' : '';
 			$local_pickup_cost = isset($wcfmmp_shipping_by_weight['_local_pickup_cost']) ? $wcfmmp_shipping_by_weight['_local_pickup_cost'] : '';
@@ -141,11 +141,11 @@ class WCFMmp_Shipping_By_Weight extends WC_Shipping_Method
 					'taxes' => $tax_rate
 				);
 
-				// Register the rate
+				 
 				$this->add_rate($rate);
 			}
 
-			// Free Shipping Method Check
+			 
 			if ($amount) {
 				$amount = $this->calculate_per_seller($products, $destination_country, $destination_state, $weight_array_for_country, $default_cost_for_country, $weight_mode_for_country, $unit_cost_for_country, $wcfmmp_free_shipping_amount, true);
 
@@ -157,29 +157,29 @@ class WCFMmp_Shipping_By_Weight extends WC_Shipping_Method
 						'taxes' => $tax_rate
 					);
 
-					// Register the rate
+					 
 					$this->add_rate($rate);
 				}
 			}
 		}
 	}
 
-	/**
-	 * Checking is gateway enabled or not
-	 *
-	 * @return boolean [description]
-	 */
+	
+
+
+
+
 	public function is_method_enabled()
 	{
 		return $this->enabled == 'yes';
 	}
 
-	/**
-	 * Initialise Gateway Settings Form Fields
-	 *
-	 * @access public
-	 * @return void
-	 */
+	
+
+
+
+
+
 	function init_form_fields()
 	{
 
@@ -210,13 +210,13 @@ class WCFMmp_Shipping_By_Weight extends WC_Shipping_Method
 		);
 	}
 
-	/**
-	 * Check if shipping for this product is enabled
-	 *
-	 * @param  integet  $product_id
-	 *
-	 * @return boolean
-	 */
+	
+
+
+
+
+
+
 	public static function is_shipping_enabled_for_seller($vendor_id)
 	{
 		global  $WCFMmp;
@@ -231,14 +231,14 @@ class WCFMmp_Shipping_By_Weight extends WC_Shipping_Method
 		return false;
 	}
 
-	/**
-	 * Calculate shipping per seller
-	 *
-	 * @param  array $products
-	 * @param  array $destination
-	 *
-	 * @return float
-	 */
+	
+
+
+
+
+
+
+
 	public function calculate_per_seller($products, $destination_country, $destination_state, $weight_array_for_country, $default_cost_for_country, $weight_mode_for_country, $unit_cost_for_country, $wcfmmp_free_shipping_amount = '', $is_consider_free_threshold = false)
 	{
 		$amount = $default_cost_for_country;

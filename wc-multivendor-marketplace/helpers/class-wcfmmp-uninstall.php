@@ -1,14 +1,14 @@
 <?php
 
-/**
- * WCFMmp plugin Un-Install
- *
- * Plugin uninstall script which delete default pages, taxonomies, and database tables to WordPress. Runs on deactivation. Data can not be retrieve if once deleted
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/helpers
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Uninstall {
 
@@ -39,11 +39,11 @@ class WCFMmp_Uninstall {
 		}
 	}
 	
-	/**
-	 * Create WCFMmp Delete tables
-	 * @global object $wpdb
-	 * From Version 1.0.0
-	 */
+	
+
+
+
+
 	function wcfmmp_delete_tables() {
 		global $wpdb;
 		$collate = '';
@@ -51,7 +51,7 @@ class WCFMmp_Uninstall {
 			$collate = $wpdb->get_charset_collate();
 		}
 		
-		// WCFM Marketplace Tables
+		 
 		$create_tables_query = array();
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_marketplace_orders`";
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_marketplace_orders_meta`";
@@ -71,7 +71,7 @@ class WCFMmp_Uninstall {
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_marketplace_shipping_zone_methods`";
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_marketplace_shipping_zone_locations`";
 		
-		// WCFM Tables
+		 
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_daily_analysis`";
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_detailed_analysis`";
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_messages`";
@@ -87,11 +87,11 @@ class WCFMmp_Uninstall {
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_support_response_meta`";
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_following_followers`";
 		
-		// Affiliate
+		 
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_affiliate_orders`";
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_affiliate_orders_meta`";
 		
-		// Delivery
+		 
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_delivery_orders`";
 		$delete_tables_query[] = "DROP TABLE IF EXISTS `" . $wpdb->prefix . "wcfm_delivery_orders_meta`";
 		

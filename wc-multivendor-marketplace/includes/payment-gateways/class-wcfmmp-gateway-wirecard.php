@@ -42,17 +42,17 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		$this->has_fields         = true;
 		$this->supports           = array( 'products', 'refunds' );
 
-		// load form fields
+		 
 		$this->init_form_fields();
 
-		// load settings
+		 
 		$this->init_settings();
 
-		// get settings value
+		 
 		$this->title           = $this->get_option( 'title' );
 		$this->description     = $this->get_option( 'description' );
 		$this->enabled         = $this->get_option( 'enabled' );
-		//$$this->is_testmode        = $this->get_option( 'testmode' );
+		 
 		$this->wirecard_fee    = $this->get_option( 'wirecard_fee' );
 		
 		$withdrawal_test_mode = isset( $WCFMmp->wcfmmp_withdrawal_options['test_mode'] ) ? 'yes' : 'no';
@@ -70,21 +70,21 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		
 		$this->api_endpoint   = ( $this->is_testmode ) ? 'https://sandbox.moip.com.br' : 'https://api.moip.com.br';
 		
-		// Register the Wirecard gateway
+		 
 		add_filter( 'woocommerce_payment_gateways', array( $this, 'add_wirecard_gateway' ) );
 		
-		// De-register WCFMmp Auto-withdrawal Gateway
+		 
 		add_filter( 'wcfm_marketplace_disallow_active_order_payment_methods', array( $this, 'wcfmmp_auto_withdrawal_wirecard' ), 750 );
 		
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
-		//add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'get_wirecard_access_token' ) );
+		 
 		
-		// Process Refund
+		 
 		add_action( 'wcfmmp_refund_status_completed', array( &$this, 'wcfmmp_wirecard_process_refund' ), 50, 3 );
 		
 		add_filter( 'woocommerce_credit_card_form_fields', array( $this, 'add_cpf_field' ), 10, 2 );
 		
-		// include js
+		 
 		add_action( 'wp_enqueue_scripts', array( $this, 'include_wirecard_js' ) );
 		
 		add_action( 'wcfm_vendor_end_settings_payment', array( $this, 'wcfm_vendor_wirecard_settings_payment' ) );
@@ -101,20 +101,20 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		return $auto_withdrawal_methods;
 	}
 
-	/**
-	 * Set form fields
-	 *
-	 * @return void;
-	 */
+	
+
+
+
+
 	public function init_form_fields() {
 			$this->form_fields = $this->load_form_fields();
 	}
 
-	/**
-	 * Get form filds
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
 	public function load_form_fields() {
 			$test_url       = 'https://conta-sandbox.moip.com.br/configurations/api_credentials';
 			$production_url = 'https://conta.moip.com.br/configurations/api_credentials';
@@ -152,11 +152,11 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 			);
 	}
 
-	/**
-	 * Get moip access token
-	 *
-	 * @return void
-	 */
+	
+
+
+
+
 	public function get_wirecard_access_token() {
 		$post_data = wc_clean( wp_unslash( $_POST ) );
 		$field_key = "woocommerce_{$this->id}_";
@@ -203,7 +203,7 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 
 		if ( isset( $response->ERROR ) ) {
 			wcfm_wirecard_log( 'Wirecard APP: Access Token Generate - ' . $response->ERROR, 'error' );
-			//return wp_send_json_error( $response->ERROR );
+			 
 		}
 
 		if ( ! isset( $response->id, $response->secret, $response->accessToken ) ) {
@@ -217,13 +217,13 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		update_option( 'wcfmmp_wirecard_access_token', $response->accessToken );
 	}
 	
-	/**
-	 * Process the payment and return the result.
-	 *
-	 * @param  int $order_id
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
+
+
 	public function process_payment($order_id) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -252,14 +252,14 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		
 		$all_success = array();
 		
-		// get access token
+		 
 		if ( $this->is_testmode ) {
 			$wirecard = new Moip( new OAuth( $access_token ), Moip::ENDPOINT_SANDBOX );
 		} else {
 			$wirecard = new Moip( new OAuth( $access_token ), Moip::ENDPOINT_PRODUCTION );
 		}
 		
-		// Wirecard customer holder data
+		 
 		$wirecard_data = $this->set_wirecard_customer_holder( $wirecard, $order );
 		
 		if ( empty( $wirecard_data ) ) {
@@ -288,12 +288,12 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 			);
 		}
 
-		// customer hashed credit card number
+		 
 		$card_number = wc_clean( $_POST['wirecard_hash'] );
 		
 		wcfm_wirecard_log( "Wirecard Hash :: " . $card_number, 'info' );
 		
-		// Split Pay Vendors List
+		 
 		$wcfmmp_wirecard_pay_list = $WCFMmp->wcfmmp_commission->wcfmmp_split_pay_vendor_list( $order, $_POST, 'wirecard' );
 		
 		wcfm_wirecard_log( "Wirecard Split List :: " . json_encode( $wcfmmp_wirecard_pay_list ), 'info' );
@@ -302,25 +302,25 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 			
 			$wirecard_order = $wirecard->orders()->setOwnId( uniqid() );
 			
-			// Add Order Items
+			 
 			$items = $order->get_items();
 			foreach ( $items as $item ) {
 				$wirecard_order->addItem( $item->get_product_id(), 1, 'sku1', wc_format_decimal( $item->get_subtotal() ) * 100 );
 			}
 			
-			// Add Shipping Cost
+			 
 			$wirecard_order->setShippingAmount( wc_format_decimal( $order->get_shipping_total() ) * 100 );
 				
-			// Add Tax Cost
+			 
 			$wirecard_order->setAddition( wc_format_decimal( $order->get_total_tax() ) * 100 );
 				
-			// Add Discount Cost
+			 
 			$wirecard_order->setDiscount( wc_format_decimal( $order->get_discount_total() ) * 100 );
 			
-			// Set Customer
+			 
 			$wirecard_order->setCustomer( $wirecard_data['customer'] );
 			
-			// Set Split Pay Receivers
+			 
 			if( isset( $wcfmmp_wirecard_pay_list['distribution_list'] ) && is_array( $wcfmmp_wirecard_pay_list['distribution_list'] ) && count( $wcfmmp_wirecard_pay_list['distribution_list'] ) > 0 ) {
 				foreach( $wcfmmp_wirecard_pay_list['distribution_list'] as $vendor_id => $distribution_info ) {
 					$wirecard_order->addReceiver( $distribution_info['destination'], 'SECONDARY', wc_format_decimal( $distribution_info['commission'] ) * 100, null, $fee_bearer );
@@ -380,7 +380,7 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 			foreach( $wcfmmp_wirecard_pay_list['distribution_list'] as $vendor_id => $distribution_info ) {
 				$store_name = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_name_by_vendor( absint($vendor_id) );
 				
-				// Dristribute among vendors
+				 
 				$source_transaction = apply_filters( 'wcfmmp_wirecard_pay_source_transaction_enabled', true, $vendor_id );
 				try {
 					$transfer_data = array(
@@ -396,16 +396,16 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 					
 					$commission_id_list = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM `{$wpdb->prefix}wcfm_marketplace_orders` WHERE order_id = %d AND vendor_id = %d", $order_id, $vendor_id ) );
 					
-					// Creating Withdrawal Instance
+					 
 					$withdrawal_id = $WCFMmp->wcfmmp_withdraw->wcfmmp_withdrawal_processed( $vendor_id, $order_id, implode( ',', $commission_id_list ), 'wirecard', $distribution_info['gross_sales'], $distribution_info['commission'], 0, 'pending', 'by_wirecard', 0 );
 					
-					// Vendor Transaction ID Store at Order Meta
+					 
 					$order->update_meta_data( 'wcfmmp_stripe_split_pay_transaction_id_'.$vendor_id, $payment_id );
 					
-					// Withdrawal Processing
+					 
 					$WCFMmp->wcfmmp_withdraw->wcfmmp_withdraw_status_update_by_withdrawal( $withdrawal_id, 'completed', __( 'Wirecard Pay', 'wc-multivendor-marketplace' ) );
 					
-					// Withdrawal Meta
+					 
 					$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $withdrawal_id, 'transaction_id', $payment_id );
 					$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $withdrawal_id, 'transaction_ref', $wirecard_created_order->getId() );
 					
@@ -448,16 +448,16 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		}
 	}
 	
-	/**
-	 * Format Wirecard customer and holder data
-	 *
-	 * @param object $moip
-	 * @param object $order
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
+
+
+
 	public function set_wirecard_customer_holder( $wirecard, $order ) {
-		// create customer info
+		 
 		$customer_info = array();
 		$customer_info['full_name']    = $order->get_formatted_billing_full_name();
 		$customer_info['email']        = $order->get_billing_email();
@@ -495,9 +495,9 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		return $wirecard_data;
 	}
 	
-	/**
-	 * Stripe Split Charges Refund
-	 */
+	
+
+
 	public function wcfmmp_wirecard_process_refund( $refund_id, $order_id, $vendor_id ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -505,7 +505,7 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		
 		if( !$refund_id ) return;
 		if( !$order_id ) return;
-		//if( !$vendor_id ) return;
+		 
 		
 		$order = wc_get_order( $order_id );
 		if( !is_a( $order, 'WC_Order' ) ) return;
@@ -529,7 +529,7 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 				$refund_reason         = $refund_info->refund_reason;
 				$is_partially_refunded = $refund_info->is_partially_refunded;
 				
-				$wireard_refund_id = $order->get_meta( '_wirecard_refund_id' ); //$this->process_refund( $refund_info->order_id, $refunded_amount, $refund_reason );
+				$wireard_refund_id = $order->get_meta( '_wirecard_refund_id' );  
 					
 				if ( $wireard_refund_id ) {
 					wcfm_wirecard_log( "Wirecard Pay refund successful for #{$refund_id}. Wirecard refund ID => " . $wireard_refund_id );
@@ -543,14 +543,14 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		}
 	}
 	
-	/**
-	 * Refund a charge.
-	 *
-	 * @since 3.2.2
-	 * @param  int $order_id
-	 * @param  float $amount
-	 * @return bool
-	 */
+	
+
+
+
+
+
+
+
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		$order = wc_get_order( $order_id );
 
@@ -571,7 +571,7 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 			return false;
 		}
 
-		// get access token
+		 
 		if ( $this->is_testmode ) {
 			$wirecard = new Moip( new OAuth( $access_token ), Moip::ENDPOINT_SANDBOX );
 		} else {
@@ -600,7 +600,7 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 				$order->save();
 			}
 			
-			/* translators: 1) dollar amount 2) transaction id 3) refund message */
+			 
 			$refund_message = sprintf( __( 'Refunded %1$s - Refund ID: %2$s - Reason: %3$s', 'wc-multivendor-marketplace' ), $amount, $refund->getId(), $reason );
 
 			$order->add_order_note( $refund_message );
@@ -618,14 +618,14 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 	}
 
 	
-	/**
-	 * Add cpf field in the checkout page
-	 *
-	 * @param array $fileds
-	 * @param string $id
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
+
+
+
 	public function add_cpf_field( $fields, $id ) {
 		if ( $this->id == $id ) {
 				$fields['cpf_field'] = '<p class="form-row form-row-wide">
@@ -638,11 +638,11 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		return $fields;
 	}
 
-	/**
-	 * Include all the scripts
-	 *
-	 * @return void
-	 */
+	
+
+
+
+
 	public function include_wirecard_js() {
 		global $WCFM, $WCFMmp, $woocommerce, $wp;
 		
@@ -666,11 +666,11 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 		wp_localize_script( 'wcfmmp-wirecard', 'wcfmmp_wirecard_params', $wcfmmp_wirecard_params );
 	}
 
-	/**
-	 * Payment form on checkout page
-	 *
-	 * @return void
-	 */
+	
+
+
+
+
 	public function payment_fields() {
 		?>
 		<fieldset>
@@ -769,7 +769,7 @@ class WCFMmp_Gateway_Wirecard extends WC_Payment_Gateway {
 							$wirecard = new Moip( new BasicAuth( $wirecard_token, $wirecard_key ), Moip::ENDPOINT_PRODUCTION );
 						}
 
-						// Now it's time to create a URL then redirect your user to ask him permissions to create projects in his name
+						 
 						if ( $testmode ) {
 							$connect = new Connect( $redirect_uri, $wirecard_app_id, true, Connect::ENDPOINT_SANDBOX );
 						} else {

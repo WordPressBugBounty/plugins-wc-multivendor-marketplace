@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying store sidebar category.
- *
- * @package WCfM Markeplace Views Store List Loop
- *
- * For edit coping this to yourtheme/wcfm/store-lists
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 
@@ -54,7 +54,7 @@ $carousel_args 	= apply_filters( 'wcfmmp_stores_carousel_args', array(
 	'autoplayHoverPause'=> true,
 	'nav'				      => $has_nav,
 	'dots'				    => false,
-	//'slideTransition' => 'linear',
+	 
 	'rtl'				      => is_rtl() ? true : false,
 	'paginationSpeed'	=> 400,
 	'navText'			    => is_rtl() ? array( '<i class="wcfmfa fa-chevron-right"></i>', '<i class="wcfmfa fa-chevron-left"></i>' ) : array( '<i class="wcfmfa fa-chevron-left"></i>', '<i class="wcfmfa fa-chevron-right"></i>' ),
@@ -102,7 +102,7 @@ $carousel_args 	= apply_filters( 'wcfmmp_stores_carousel_args', array(
 			}
 		}
 		
-		// WCFMmp Custom CSS
+		 
 		$upload_dir      = wp_upload_dir();
 		$wcfmmp_style_custom = get_option( 'wcfmmp_style_custom' );
 		if( $wcfmmp_style_custom && file_exists( trailingslashit( $upload_dir['basedir'] ) . 'wcfm/' . $wcfmmp_style_custom ) ) {

@@ -1,105 +1,111 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Admin
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 class WCFMmp_Admin {
 	
 	public function __construct() {
  		global $WCFM, $WCFMmp;
  		
- 		// Browse WCFM Marketplace setup page
+ 		 
  		add_action( 'admin_init', array( &$this, 'wcfmmp_redirect_to_setup' ), 5 );
  		
- 		// WCFM - Membership inactive notice 
+ 		 
 		if(!WCFMmp_Dependencies::wcfm_plugin_active_check()) {
 			add_action( 'admin_notices', array( &$this, 'wcfmmp_wcfm_inactive_notice' ) );
 		}
  		
  		if(WCFMmp_Dependencies::woocommerce_plugin_active_check() && WCFMmp_Dependencies::wcfm_plugin_active_check()) {
  			
- 			// Multi-vendor Conflict check
+ 			 
  			if( wcfmmp_has_marketplace() ) {
  				if( apply_filters( 'wcfmmp_has_marketplace_notice_show', true ) ) {
  					add_action( 'admin_notices', array( &$this, 'wcfmmp_has_marketplace_notice' ) );
  				}
  			}
  			
- 			// WCFM - Membership inactive notice 
+ 			 
 			if(!WCFM_Dependencies::wcfmvm_plugin_active_check()) {
 				if( apply_filters( 'wcfmmp_wcfmvm_inactive_notice_show', true ) ) {
 					add_action( 'admin_notices', array( &$this, 'wcfmmp_wcfmvm_inactive_notice' ) );
 				}
 			}
- 			
-			/**
-			 * Register our WCFM Marketplace to the admin_menu action hook
-			 */
+
+			 
+			if( apply_filters( 'wcfmmp_store_template_override_notice_show', true ) ) {
+				add_action( 'admin_notices', array( &$this, 'wcfmmp_store_template_override_notice' ) );
+				add_action( 'admin_init', array( &$this, 'wcfmmp_dismiss_store_template_override_notice' ) );
+			}
+
+			
+
+
 			if( apply_filters( 'wcfmmp_is_allow_admin_menu', true ) ) {
 				add_action( 'admin_menu', array( &$this, 'wcfmmp_options_page' ) );
 			}
 			
-			// Vendor Column in Post List
+			 
 			add_filter( 'manage_edit-post_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
 			add_filter( 'manage_edit-product_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
 			add_filter( 'manage_edit-shop_coupon_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
 			add_filter( 'manage_edit-job_listing_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
-			//legacy – for CPT-based orders
+			 
 			add_filter( 'manage_edit-shop_order_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
-			// for HPOS-based orders
+			 
 			add_filter( 'manage_woocommerce_page_wc-orders_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
 			add_filter( 'manage_edit-shop_subscription_columns', array( &$this, 'wcfmmp_store_post_columns' ) );
 			add_filter( 'manage_edit-wc_booking_columns', array( &$this, 'wcfmmp_store_post_columns' ), 99 );
 			add_filter( 'manage_edit-wc_appointment_columns', array( &$this, 'wcfmmp_store_post_columns' ), 99 );
 			
-			// Vendor Column Data Under Post List
+			 
 			add_action( 'manage_post_posts_custom_column' , array( &$this, 'wcfmmp_store_post_custom_column' ), 10, 2 );
 			add_action( 'manage_product_posts_custom_column' , array( &$this, 'wcfmmp_store_post_custom_column' ), 10, 2 );
 			add_action( 'manage_shop_coupon_posts_custom_column' , array( &$this, 'wcfmmp_store_post_custom_column' ), 10, 2 );
 			add_action( 'manage_job_listing_posts_custom_column' , array( &$this, 'wcfmmp_store_post_custom_column' ), 10, 2 );
-			//legacy – for CPT-based orders
+			 
 			add_action( 'manage_shop_order_posts_custom_column' , array( &$this, 'wcfmmp_store_shop_order_custom_column' ), 10, 2 );
-			// for HPOS-based orders
+			 
 			add_action( 'manage_woocommerce_page_wc-orders_custom_column' , array( &$this, 'wcfmmp_store_shop_order_custom_column' ), 10, 2 );
 			add_action( 'manage_shop_subscription_posts_custom_column' , array( &$this, 'wcfmmp_store_shop_subscription_custom_column' ), 10, 2 );
 			add_action( 'manage_wc_booking_posts_custom_column' , array( &$this, 'wcfmmp_store_wc_booking_custom_column' ), 10, 2 );
 			add_action( 'manage_wc_appointment_posts_custom_column' , array( &$this, 'wcfmmp_store_wc_appointment_custom_column' ), 10, 2 );
 			
-			// Vendor data tab at Product Page
+			 
 			add_action( 'admin_head', array( &$this, 'wcfmmp_store_tab_style' ) );
 			add_filter( 'woocommerce_product_data_tabs', array( &$this, 'wcfmmp_store_product_data_tab' ), 500 );
 			add_action( 'woocommerce_product_data_panels', array( &$this, 'wcfmmp_store_product_data_fields' ) );
 			
-			// Product Commission
+			 
 			add_action( 'woocommerce_product_data_panels', array( &$this, 'wcfmmp_store_commission_product_data_fields' ) );
 			add_action( 'woocommerce_process_product_meta', array( &$this, 'wcfmmp_store_product_data_save' ), 500 );
 			
-			// Variation Commission
+			 
 			add_action( 'woocommerce_product_after_variable_attributes', array( &$this, 'wcfmmp_store_variation_settings_fields' ), 500, 3 );
 			add_action( 'woocommerce_save_product_variation', array( &$this, 'wcfmmp_store_save_variation_settings_fields' ), 10, 2 );
 			
-			// Category Commission
+			 
 			add_action( 'product_cat_add_form_fields', array( &$this, 'wcfmmp_add_product_cat_commission_fields' ) );
 			add_action( 'product_cat_edit_form_fields', array( &$this, 'wcfmmp_edit_product_cat_commission_fields' ), 100 );
 			add_action( 'created_term', array( &$this, 'wcfmmp_save_product_cat_commission_fields' ), 100, 3 );
 			add_action( 'edit_term', array( &$this, 'wcfmmp_save_product_cat_commission_fields' ), 100, 3 );
 			
-			// Remove Stripe WC Setting Fields
-			//add_action( 'load-woocommerce_page_wc-settings', array( &$this, 'wcfmmp_disable_stripe_split_settings_admin_option' ), 500 );
+			 
+			 
 		}
 		
-		// WCFM Admin Style
+		 
 		add_action( 'admin_enqueue_scripts', array( &$this, 'wcfmmp_admin_script' ), 25 );
  	}
  	
- 	/**
-	 * WCFM Marketplace activation redirect transient
-	 */
+ 	
+
+
 	function wcfmmp_redirect_to_setup(){
 		if ( get_transient( '_wc_activation_redirect' ) ) {
 			delete_transient( '_wc_activation_redirect' );
@@ -115,9 +121,9 @@ class WCFMmp_Admin {
 		}
 	}
 	
-	/**
-	 * WCFM Marketplace detect other multi-vendor in site notice
-	 */
+	
+
+
 	function wcfmmp_has_marketplace_notice() {
 		global $WCFM, $WCFMmp;
 		$offer_msg = __( '<h2>
@@ -132,13 +138,13 @@ class WCFMmp_Admin {
 		<?php
 	}
 	
-	/**
-	 * WCFM - Missing notice
-	 *
-	 * @since  1.1.5
-	 *
-	 * @return void
-	 */
+	
+
+
+
+
+
+
 	public function wcfmmp_wcfm_inactive_notice() {
 		global $WCFM, $WCFMmp;
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -153,18 +159,18 @@ class WCFMmp_Admin {
 			<div class="notice wcfm_addon_inactive_notice_box wcfmmp_addon_inactive_notice_box" id="wcfm-groups-sttafs-notice">
 				<img src="<?php echo esc_url($WCFMmp->plugin_url) . 'assets/images/'; ?>wcfm_marketplace_white_ogo.png" alt="">
 				<?php echo wp_kses_post($offer_msg); ?>
-				<a href="<?php echo 'https://downloads.wordpress.org/plugin/wc-frontend-manager.zip'; //admin_url( 'plugin-install.php?tab=search&s=wc+frontend+manager' ); ?>" class="button button-primary promo-btn" target="_blank"><?php _e( 'GET IT NOW', 'wc-multivendor-marketplace' ); ?></a>
+				<a href="<?php echo 'https://downloads.wordpress.org/plugin/wc-frontend-manager.zip';  ?>" class="button button-primary promo-btn" target="_blank"><?php _e( 'GET IT NOW', 'wc-multivendor-marketplace' ); ?></a>
 			</div>
 		<?php
 	}
 	
-	/**
-	 * WCFM - Membership notice
-	 *
-	 * @since  1.1.5
-	 *
-	 * @return void
-	 */
+	
+
+
+
+
+
+
 	public function wcfmmp_wcfmvm_inactive_notice() {
 		global $WCFM, $WCFMmp;
 		if ( ! current_user_can( 'manage_options' ) || !apply_filters( 'wcfmmp_is_allow_membership_notice', true ) ) {
@@ -184,9 +190,112 @@ class WCFMmp_Admin {
 		<?php
 	}
 	
-	/**
-	 * WCFM Marketplace Menu at WP Menu
-	 */
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public function wcfmmp_store_template_override_notice() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$override = get_option( 'wcfmmp_store_template_override', array() );
+
+		if ( empty( $override['template'] ) ) {
+			return;
+		}
+
+		if ( isset( $override['acknowledged'] ) && $override['acknowledged'] === $override['template'] ) {
+			return;
+		}
+
+		$dismiss_url = wp_nonce_url(
+			add_query_arg( 'wcfmmp_dismiss_store_template_override', '1' ),
+			'wcfmmp_dismiss_store_template_override'
+		);
+		?>
+		<div class="notice notice-info">
+			<p>
+				<strong><?php esc_html_e( 'WCFM Marketplace: your vendor store pages are being rendered by another template.', 'wc-multivendor-marketplace' ); ?></strong>
+			</p>
+			<p>
+				<?php
+				printf(
+					 
+					esc_html__( 'A theme or plugin is loading %1$s for store pages instead of WCFM\'s %2$s. If your theme provides its own vendor store layout this is expected and nothing needs doing. If not, the store page is being changed unintentionally.', 'wc-multivendor-marketplace' ),
+					'<code>' . esc_html( $this->wcfmmp_relative_template_path( $override['template'] ) ) . '</code>',
+					'<code>' . esc_html( $this->wcfmmp_relative_template_path( isset( $override['ours'] ) ? $override['ours'] : '' ) ) . '</code>'
+				);
+				?>
+			</p>
+			<p>
+				<a href="<?php echo esc_url( $dismiss_url ); ?>" class="button"><?php esc_html_e( 'This is intentional, dismiss', 'wc-multivendor-marketplace' ); ?></a>
+			</p>
+		</div>
+		<?php
+	}
+
+	
+
+
+
+
+
+
+	public function wcfmmp_dismiss_store_template_override_notice() {
+		if ( ! isset( $_GET['wcfmmp_dismiss_store_template_override'] ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		check_admin_referer( 'wcfmmp_dismiss_store_template_override' );
+
+		$override = get_option( 'wcfmmp_store_template_override', array() );
+
+		if ( ! empty( $override['template'] ) ) {
+			$override['acknowledged'] = $override['template'];
+			update_option( 'wcfmmp_store_template_override', $override, false );
+		}
+
+		wp_safe_redirect( remove_query_arg( array( 'wcfmmp_dismiss_store_template_override', '_wpnonce' ) ) );
+		exit;
+	}
+
+	
+
+
+
+
+
+
+	public function wcfmmp_relative_template_path( $path ) {
+		if ( ! $path ) {
+			return '';
+		}
+
+		if ( defined( 'WP_CONTENT_DIR' ) && 0 === strpos( $path, WP_CONTENT_DIR ) ) {
+			return ltrim( substr( $path, strlen( WP_CONTENT_DIR ) ), '/' );
+		}
+
+		return basename( $path );
+	}
+
+	
+
+
 	function wcfmmp_options_page() {
     global $menu, $WCFMmp;
     
@@ -494,7 +603,7 @@ class WCFMmp_Admin {
 			
 			$WCFMmp->wcfmmp_vendor->wcfmmp_reset_vendor_taxonomy( $wcfmmp_store, $product_id );
 			
-			// Update vendor category list
+			 
 			$pcategories = get_the_terms( $product_id, 'product_cat' );
 			if( !empty($pcategories) ) {
 				foreach($pcategories as $pkey => $pcategory) {
@@ -502,7 +611,7 @@ class WCFMmp_Admin {
 				}
 			}
 			
-			// For Variations
+			 
 			$product = wc_get_product( $product_id );
 			$wcfm_variable_product_types = apply_filters( 'wcfm_variable_product_types', array( 'variable', 'variable-subscription', 'pw-gift-card' ) );
 			if( in_array( $product->get_type(), $wcfm_variable_product_types ) ) {
@@ -525,7 +634,7 @@ class WCFMmp_Admin {
 			}
 		}
 		
-		// Update Product Commission
+		 
 		if( isset( $_POST['commission'] ) && !empty( $_POST['commission'] ) ) {
 			update_post_meta( $product_id, '_wcfmmp_commission', wc_clean( wp_unslash( $_POST['commission'] ) ) );
 		}
@@ -550,7 +659,7 @@ class WCFMmp_Admin {
 		$vendor_commission_fixed = isset( $variation_commission_data['commission_fixed'] ) ? $variation_commission_data['commission_fixed'] : '';
 		$vendor_commission_percent = isset( $variation_commission_data['commission_percent'] ) ? $variation_commission_data['commission_percent'] : '90';
 		
-  	// Commission Mode
+  	 
 		woocommerce_wp_select( 
 		array( 
 			'id'            => 'vendor_commission_mode[' . $variation->ID . ']', 
@@ -564,7 +673,7 @@ class WCFMmp_Admin {
 			)
 		);
   	
-		// Commission Percent
+		 
 		woocommerce_wp_text_input( 
 			array( 
 				'id'                => 'vendor_commission_percent[' . $variation->ID . ']', 
@@ -578,7 +687,7 @@ class WCFMmp_Admin {
 			)
 		);
 		
-		// Commission Fixed
+		 
 		woocommerce_wp_text_input( 
 			array( 
 				'id'                => 'vendor_commission_fixed[' . $variation->ID . ']', 
@@ -613,9 +722,9 @@ class WCFMmp_Admin {
 		update_post_meta( $variation_id, '_wcfmmp_commission', $variation_commission_data );
 	}
 	
-	/**
-	 * Add commission field in create new category page
-	 */
+	
+
+
 	public function wcfmmp_add_product_cat_commission_fields() {
 		global $WCFM, $WCFMmp;
 		
@@ -685,10 +794,10 @@ class WCFMmp_Admin {
 		echo '</p>';
 	}
 
-	/**
-	 * Add commission field in edit category page
-	 * @param Object $term
-	 */
+	
+
+
+
 	public function wcfmmp_edit_product_cat_commission_fields( $term ) {
 		global $WCFM, $WCFMmp;
 		
@@ -746,12 +855,12 @@ class WCFMmp_Admin {
 		echo '</p>';
 	}
 
-	/**
-	 * Save commission settings for product category
-	 * @param int $term_id
-	 * @param int $tt_id
-	 * @param string $taxonomy
-	 */
+	
+
+
+
+
+
 	public function wcfmmp_save_product_cat_commission_fields( $term_id, $tt_id = '', $taxonomy = '' ) {
 		if( isset( $_POST['commission'] ) && 'product_cat' === $taxonomy ) {
 			if( function_exists( 'update_term_meta' ) ) {
@@ -776,9 +885,9 @@ class WCFMmp_Admin {
 	function wcfmmp_admin_script() {
   	global $WCFMmp;
   	
- 	  //$screen = get_current_screen(); 
+ 	   
  	 
-	  // Admin Bar CSS
+	   
 	  wp_enqueue_style( 'wcfmmp_admin_css',  $WCFMmp->plugin_url . 'assets/css/admin/wcfmmp-style-admin.css', array(), $WCFMmp->version );
   }
 }

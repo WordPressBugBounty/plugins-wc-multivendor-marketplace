@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying all single posts.
- *
- * @package WCfM Markeplace Views Store new review form
- *
- * For edit coping this to yourtheme/wcfm/reviews 
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 

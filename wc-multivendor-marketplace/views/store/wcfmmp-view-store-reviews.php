@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying all store reviews.
- *
- * @package WCfM Markeplace Views Store
- *
- * For edit coping this to yourtheme/wcfm/store 
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp, $post;
 
@@ -35,7 +35,7 @@ $latest_reviews     = $store_user->get_lastest_reviews( $offset, $length );
   <?php do_action( 'wcfmmp_store_before_new_review', $store_user->get_id() ); ?>
 
   <?php
-  // New Review form
+   
   if( apply_filters( 'wcfm_is_allow_new_review', true, $store_user->get_id() ) ) {
   	$WCFMmp->template->get_template( 'reviews/wcfmmp-view-reviews-new.php', array( 'store_user' => $store_user, 'store_info' => $store_info, 'wcfm_review_categories' => $wcfm_review_categories ) );
   }
@@ -51,7 +51,7 @@ $latest_reviews     = $store_user->get_lastest_reviews( $offset, $length );
 		  <?php do_action( 'wcfmmp_store_before_review_stat', $store_user->get_id() ); ?>
 			
 			<?php
-			// Reviews latest stat
+			 
 			$WCFMmp->template->get_template( 'reviews/wcfmmp-view-reviews-latest-stat.php', array( 'store_user' => $store_user, 'store_info' => $store_info, 'total_review_count' => $total_review_count, 'latest_reviews' => $latest_reviews ) );
 			?>
 			
@@ -62,12 +62,12 @@ $latest_reviews     = $store_user->get_lastest_reviews( $offset, $length );
 				<?php do_action( 'wcfmmp_store_before_rating', $store_user->get_id() ); ?>
 				
 				<?php
-				// Review category ratings
+				 
 				$WCFMmp->template->get_template( 'reviews/wcfmmp-view-reviews-category-ratings.php', array( 'store_user' => $store_user, 'store_info' => $store_info, 'wcfm_review_categories' => $wcfm_review_categories ) );
 				?>
 				
 				<?php
-				// Review total rating
+				 
 				$WCFMmp->template->get_template( 'reviews/wcfmmp-view-reviews-ratings.php', array( 'store_user' => $store_user, 'store_info' => $store_info ) );
 				?>
 				
@@ -80,7 +80,7 @@ $latest_reviews     = $store_user->get_lastest_reviews( $offset, $length );
 			  <?php do_action( 'wcfmmp_store_before_latest_reviews', $store_user->get_id() ); ?>
 			  
 			  <?php
-				// Reviews latest review
+				 
 				$WCFMmp->template->get_template( 'reviews/wcfmmp-view-reviews-latest-review.php', array( 'store_user' => $store_user, 'store_info' => $store_info, 'total_review_count' => $total_review_count, 'latest_reviews' => $latest_reviews ) );
 				
 				if( $total_review_count > $length ) {

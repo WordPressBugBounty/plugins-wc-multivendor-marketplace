@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('ABSPATH'))
-    exit; // Exit if accessed directly
+    exit;  
 
 if (!class_exists('WCFMmp_Email_Store_New_Order')) :
 
@@ -11,52 +11,52 @@ if (!class_exists('WCFMmp_Email_Store_New_Order')) :
 		public $vendor_id;
 		public $vendor_email;
 
-		/**
-		 * Constructor
-		 */
+		
+
+
 		function __construct() {
 			global $WCFM, $WCFMmp;
 			$this->id = 'store-new-order';
 			$this->title = __( 'Store New Order', 'wc-multivendor-marketplace' );
 			$this->description = __('New order notification emails are sent when order is processing.', 'wc-multivendor-marketplace');
 
-			//$this->heading = __('New Vendor Order', 'wc-multivendor-marketplace');
-			//$this->subject = __('[{site_title}] New vendor order ({order_number}) - {order_date}', 'wc-multivendor-marketplace');
+			 
+			 
 
 			$this->template_html = 'emails/store-new-order.php';
 			$this->template_plain = 'emails/plain/store-new-order.php';
 			$this->template_base = $WCFMmp->plugin_path . 'views/';
 			
-			// Call parent constructor
+			 
 			parent::__construct();
 		}
 
-		/**
-		 * Get email subject.
-		 *
-		 * @since  3.1.0
-		 * @return string
-		 */
+		
+
+
+
+
+
 		public function get_default_subject() {
 			return apply_filters('wcfmmp_store_new_order_email_subject', __('[{site_title}] New Store Order ({order_number}) - {order_date}', 'wc-multivendor-marketplace'), $this->object);
 		}
 
-		/**
-		 * Get email heading.
-		 *
-		 * @since  3.1.0
-		 * @return string
-		 */
+		
+
+
+
+
+
 		public function get_default_heading() {
 			return apply_filters('wcfmmp_store_new_order_email_heading', __('New Store Order', 'wc-multivendor-marketplace'), $this->object);
 		}
 
-		/**
-		 * trigger function.
-		 *
-		 * @access public
-		 * @return void
-		 */
+		
+
+
+
+
+
 		function trigger( $order_id ) {
 			global $WCFM, $WCFMmp;
 			
@@ -116,32 +116,32 @@ if (!class_exists('WCFMmp_Email_Store_New_Order')) :
 						return;
 					}
 
-					// Switch language context…
+					 
 					do_action('wpml_switch_language_for_email', $this->get_recipient());
 					
 					$WCFM->wcfm_marketplace->vendor_id = $vendor_id;
 					
 					$headers = $this->get_headers();
 					
-					// Filter to add Group Managers in CC
+					 
 					$headers = apply_filters( 'wcfmmp_store_new_order_email_header', $headers, $vendor_id );
 					
 					$subject = apply_filters( 'wcfmmp_store_new_order_email_subject', $this->get_subject(), $vendor_id );
 
 					$this->send( $this->get_recipient(), $subject, $this->get_content(), $headers, $this->get_attachments() );
 
-					// switch language back
+					 
 					do_action('wpml_restore_language_from_email');
 				}
 			}
 		}
 
-		/**
-		 * get_content_html function.
-		 *
-		 * @access public
-		 * @return string
-		 */
+		
+
+
+
+
+
 		function get_content_html() {
 			return wc_get_template_html($this->template_html, array(
 																															'email_heading' => $this->get_heading(),
@@ -154,12 +154,12 @@ if (!class_exists('WCFMmp_Email_Store_New_Order')) :
 																															), 'wcfm/', $this->template_base);
 		}
 
-		/**
-		 * get_content_plain function.
-		 *
-		 * @access public
-		 * @return string
-		 */
+		
+
+
+
+
+
 		function get_content_plain() {
 			return wc_get_template_html($this->template_plain, array(
 																															'email_heading' => $this->get_heading(),
@@ -172,12 +172,12 @@ if (!class_exists('WCFMmp_Email_Store_New_Order')) :
 																															), 'wcfm/', $this->template_base);
 		}
 
-		/**
-		 * Initialise Settings Form Fields
-		 *
-		 * @access public
-		 * @return void
-		 */
+		
+
+
+
+
+
 		function init_form_fields() {
 				global $WCFM, $WCFMmp;
 				$this->form_fields = array(

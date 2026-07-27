@@ -3,11 +3,11 @@ Contributors: wclovers
 Tags: woocommerce marketplace, multivendor marketplace, ai marketplace, vendor dashboard, multi vendor, multi seller, woocommerce product vendors
 Donate link: https://www.paypal.me/wclovers/25usd
 Requires at least: 5.5
-Tested up to: 7.0
+Tested up to: 7.0.2
 WC requires at least: 7.0
 WC tested up to: 10.9
 Requires PHP: 7.4
-Stable tag: 3.7.4
+Stable tag: 3.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -253,14 +253,32 @@ Explore the frontend interfaces and management screens included in WCFM Marketpl
 
 Below is a record of updates, features, and fixes across all releases.
 
+= 3.8.0 =
+*Updated - 27/07/2026*
+
+* Feature - Stripe Split Pay: brand-new payment engine built on Stripe's Payment Element and PaymentIntents, with up-to-date SCA / 3D Secure authentication for marketplace split payments.
+* Feature - Stripe Split Pay: full multi-vendor cart support, including Direct and Destination charge flows across sellers within a single order.
+* Feature - Stripe Split Pay: order-pay support for pay-for-order links and customer payment retries on the modern engine.
+* Feature - Stripe Split Pay: new "Stripe Split Pay Status" diagnostics panel to verify connection and configuration from the dashboard.
+* Enhance - Stripe Split Pay: bundled Stripe PHP SDK updated to v20.2.1 with a pinned API version for consistent, predictable behaviour.
+* Enhance - Stripe Split Pay: hardened the existing (legacy) payment path with typed error handling, idempotency keys, and a kill-switch to force the legacy engine when required.
+* Enhance - Stripe Split Pay: checkout pre-flight validation now flags vendor onboarding or connection issues before an order is placed.
+* Enhance - Added a developer filter to customise the store-list card output.
+* Enhance - Tagged store-list vendor queries with a context marker for more reliable third-party query targeting.
+* Enhance - Themes and page builders can still supply their own vendor store layout, and WCFM now points it out in the admin when something takes the store page over, so an unintended change does not go unnoticed. Integrations should use the new "wcfmmp_store_template" filter; "wcfmmp_enforce_store_template" keeps WCFM's own template where a takeover is unwanted.
+* Fix - Stripe Split Pay: corrected application-fee and refund handling for Direct and Destination charges so vendor and admin shares always reconcile.
+* Fix - Vendor store pages triggered a fatal error alongside Divi ("Argument #1 ($template) must be of type string, null given"), because the store page was rendered without handing a template path back to WordPress.
+* Fix - Divi Theme Builder support on store pages now verifies each Divi function before calling it, so Divi releases that move or rename them no longer break the store page.
+* Fix - Store URLs that do not resolve to a visitable store (unknown slug, non-vendor user, or an offline store) now return a proper HTTP 404 with the theme's 404 page, instead of a blank page.
+
 = 3.7.4 =
-*Updated - 28/06/2026*
+*Updated - 27/06/2026*
 
 * Security - Patched a Stored XSS vulnerability in the Media Manager.
 * Security - Strengthened vendor shipping zone authorization to prevent cross-vendor shipping setting manipulation.
-* Enhance  - WordPress 7.0+ compatibility check added.
-* Enhance  - WooCommerce 10.9+ compatibility check added.
-* Fix      - Store Featured Products widget: "Hide out of stock items" no longer overrides the widget's product visibility query.
+* Enhance - WordPress 7.0 compatibility check added.
+* Enhance - WooCommerce 10.9.1 compatibility check added.
+* Fix - Store Featured Products widget: "Hide out of stock items" no longer overrides the widget's product visibility query.
 
 = 3.7.3 =
 *Updated - 07/05/2026*
@@ -1786,10 +1804,6 @@ Below is a record of updates, features, and fixes across all releases.
 
 == Upgrade Notice ==
 
-= 3.7.4 =
+= 3.8.0 =
 
-* Security - Patched a Stored XSS vulnerability in the Media Manager.
-* Security - Strengthened vendor shipping zone authorization to prevent cross-vendor shipping setting manipulation.
-* Enhance  - WordPress 7.0+ compatibility check added.
-* Enhance  - WooCommerce 10.9+ compatibility check added.
-* Fix      - Store Featured Products widget: "Hide out of stock items" no longer overrides the widget's product visibility query.
+* Major update to Stripe Split Pay: a new Payment Element / PaymentIntents engine with modern SCA / 3D Secure and multi-vendor Direct & Destination charges. Existing installs continue on the current (legacy) engine by default — review and test your Stripe Split Pay checkout after updating.

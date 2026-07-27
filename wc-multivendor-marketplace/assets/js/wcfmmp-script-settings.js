@@ -97,19 +97,24 @@ jQuery(document).ready(function($) {
 		}
 	}).change();
 	
-	// Stripe 3D and SCA
-	$('#withdrawal_stripe_is_3d_secure').click(function() {
-		if( $(this).is(':checked') ) {
+	// Stripe 3D and SCA: the legacy 3DS flow forces Transfer Charges, so the mode
+	// choice is hidden; the modern engine keeps the mode choice in play.
+	var wcfmmp_stripe_split_mode_visibility = function() {
+		var wcfmmp_stripe_engine_modern = $('#withdrawal_stripe_split_pay_engine').val() == 'modern';
+		if( !wcfmmp_stripe_engine_modern && $('#withdrawal_stripe_is_3d_secure').is(':checked') ) {
 			$('.withdrawal_charge_type_ele').addClass('wcfm_wpml_hide');
 		} else {
 			$('.withdrawal_charge_type_ele').removeClass('wcfm_wpml_hide');
 		}
-	});
-	if( $('#withdrawal_stripe_is_3d_secure').is(':checked') ) {
-		$('.withdrawal_charge_type_ele').addClass('wcfm_wpml_hide');
-	} else {
-		$('.withdrawal_charge_type_ele').removeClass('wcfm_wpml_hide');
-	}
+		// Modern engine: SCA runs automatically, so the 3DS toggle only affects the
+		// legacy engine. Dimmed, not disabled - a disabled checkbox would not POST
+		// and the bulk settings save would wipe the stored value.
+		$('#withdrawal_stripe_is_3d_secure').css('opacity', wcfmmp_stripe_engine_modern ? '0.4' : '1')
+			.attr('title', wcfmmp_stripe_engine_modern ? 'SCA is automatic under the modern engine; this setting only affects the legacy engine.' : '');
+	};
+	$('#withdrawal_stripe_is_3d_secure').click(wcfmmp_stripe_split_mode_visibility);
+	$('#withdrawal_stripe_split_pay_engine').change(wcfmmp_stripe_split_mode_visibility);
+	wcfmmp_stripe_split_mode_visibility();
 	
 	$('#withdrawal_charge_type').change(function() {
 		$withdrawal_charge_type = $(this).val();

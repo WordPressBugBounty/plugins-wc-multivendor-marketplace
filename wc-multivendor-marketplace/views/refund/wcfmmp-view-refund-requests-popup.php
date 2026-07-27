@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin view
- *
- * WCfM Refund popup View
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/views/refund
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 global $wp, $WCFM, $WCFMmp, $_POST, $wpdb;
 
@@ -52,8 +52,8 @@ foreach ( $line_items as $item_id => $item ) {
 	$sql  = "SELECT ID, withdraw_status, vendor_id, refund_status, is_partially_refunded, is_refunded FROM {$wpdb->prefix}wcfm_marketplace_orders AS commission";
 	$sql .= " WHERE 1=1";
 	$sql .= " AND `item_id` = %d";
-	//$sql .= " AND (`is_refunded` = 1 OR `is_partially_refunded` = 1)";
-	//$sql .= " AND `refund_status` in ('completed', 'requested')";
+	 
+	 
 	$commissions = $wpdb->get_results( $wpdb->prepare( $sql, $order_item_id ) );
 	if( !empty( $commissions ) ) {
 		foreach( $commissions as $commission ) {

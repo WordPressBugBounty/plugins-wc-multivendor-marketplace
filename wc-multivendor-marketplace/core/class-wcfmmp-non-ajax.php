@@ -1,30 +1,30 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * Plugin non Ajax Controler
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Non_Ajax {
 
 	public function __construct() {
 		global $WCFM, $WCFMmp;
 		
-		// Plugins page help links
+		 
 		add_filter( 'plugin_action_links_' . $WCFMmp->plugin_base_name, array( &$this, 'wcfmmp_plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( &$this, 'wcfmmp_plugin_row_meta' ), 10, 2 );
 	}
 	
-	/**
-	 * Show action links on the plugin screen.
-	 *
-	 * @param	mixed $links Plugin Action links
-	 * @return	array
-	 */
+	
+
+
+
+
+
 	public function wcfmmp_plugin_action_links( $links ) {
 		global $WCFMmp;
 		$action_links = array(
@@ -34,13 +34,13 @@ class WCFMmp_Non_Ajax {
 		return array_merge( $action_links, $links );
 	}
 	
-	/**
-	 * Show row meta on the plugin screen.
-	 *
-	 * @param	mixed $links Plugin Row Meta
-	 * @param	mixed $file  Plugin Base file
-	 * @return	array
-	 */
+	
+
+
+
+
+
+
 	public function wcfmmp_plugin_row_meta( $links, $file ) {
 		global $WCFMmp;
 		if ( $WCFMmp->plugin_base_name == $file ) {

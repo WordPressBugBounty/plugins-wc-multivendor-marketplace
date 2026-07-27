@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin controllers
- *
- * Plugin WCfM Marketplace Refund Request Approve Controller
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/controllers/refund
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Refund_Requests_Approve_Controller {
 	
@@ -28,7 +28,7 @@ class WCFMmp_Refund_Requests_Approve_Controller {
 	  	$refunds     = $wcfm_refund_manage_form_data['refunds'];
 	  	$refund_note = strip_tags( $wcfm_refund_manage_form_data['refund_note'] );
 	  	
-	  	// WCFM form custom validation filter
+	  	 
 			$custom_validation_results = apply_filters( 'wcfm_form_custom_validation', $wcfm_refund_manage_form_data, 'refund_manage' );
 			if(isset($custom_validation_results['has_error']) && !empty($custom_validation_results['has_error'])) {
 				$custom_validation_error = __( 'There has some error in submitted data.', 'wc-multivendor-marketplace' );
@@ -45,7 +45,7 @@ class WCFMmp_Refund_Requests_Approve_Controller {
 
 				$WCFMmp->refund_processed = false;
 				
-				// Update refund status
+				 
 				$refund_update_status = $WCFMmp->wcfmmp_refund->wcfmmp_refund_status_update_by_refund( $refund_id, 'completed', $refund_note );
 				
 				if( !$refund_update_status ) {
@@ -67,15 +67,15 @@ class WCFMmp_Refund_Requests_Approve_Controller {
 ?>
 
 <?php
-/**
- * WCFM plugin controllers
- *
- * Plugin WCfM Marketplace Refund Request Cancel Controller
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/controllers/refund
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Refund_Requests_Cancel_Controller {
 	
@@ -96,7 +96,7 @@ class WCFMmp_Refund_Requests_Cancel_Controller {
 	  	$refunds = $wcfm_refund_manage_form_data['refunds'];
 	  	$refund_note = strip_tags( $wcfm_refund_manage_form_data['refund_note'] );
 	  	
-	  	// WCFM form custom validation filter
+	  	 
 			$custom_validation_results = apply_filters( 'wcfm_form_custom_validation', $wcfm_refund_manage_form_data, 'refund_manage' );
 			if(isset($custom_validation_results['has_error']) && !empty($custom_validation_results['has_error'])) {
 				$custom_validation_error = __( 'There has some error in submitted data.', 'wc-multivendor-marketplace' );
@@ -111,7 +111,7 @@ class WCFMmp_Refund_Requests_Cancel_Controller {
 			
 			foreach( $refunds as $refund_id ) {
 				
-				// Update refund status
+				 
 				$WCFMmp->wcfmmp_refund->wcfmmp_refund_status_update_by_refund( $refund_id, 'cancelled', $refund_note );
 				
 				do_action( 'wcfmmp_refund_request_cancelled', $refund_id );

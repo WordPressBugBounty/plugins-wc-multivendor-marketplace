@@ -1,22 +1,30 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Rewrite
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Rewrites {
 
 	public $query_vars = array();
 	public $wcfm_store_url = '';
+
 	
-	/**
-	 * Hook into the functions
-	 */
+
+
+
+
+
+	public $located_store_template = '';
+
+	
+
+
 	public function __construct() {
 		global $wp_query;
 		
@@ -31,6 +39,7 @@ class WCFMmp_Rewrites {
 		add_action( 'init', array( $this, 'custom_taxonomy_register_rule' ), 11 );
 
 		add_filter( 'template_include', array( $this, 'store_template' ), 9 );
+		add_filter( 'template_include', array( $this, 'protect_store_template' ), PHP_INT_MAX );
 
 		add_filter( 'query_vars', array( $this, 'register_query_var' ) );
 		if( $wp_query ) {
@@ -39,7 +48,7 @@ class WCFMmp_Rewrites {
 		}
 		add_action( 'woocommerce_product_query', array( $this, 'store_query_filter' ), 10, 2 );
 		
-		// WC Filter Term Query Store Filter
+		 
 		add_filter( 'woocommerce_get_filtered_term_product_counts_query', array( &$this, 'wcfmmp_product_counts_query' ) );
 		
 		add_filter( 'post_type_archive_link', array( $this, 'store_archive_link' ) );
@@ -48,29 +57,29 @@ class WCFMmp_Rewrites {
 		
 		add_filter( 'woocommerce_get_breadcrumb', array( $this, 'store_page_breadcrumb'), 10 ,1  );
 		
-		// Ocean WP - Theme Support
+		 
 		add_filter( 'ocean_title', array( $this, 'oceanwp_store_page_title' ) );
 		add_filter( 'breadcrumb_trail_items', array( $this, 'oceanwp_store_page_breadcrumb'), 10 ,2  );
 		
-		// Store Page WPML Switcher Compatibility
+		 
 		add_filter( 'icl_ls_languages', array( &$this, 'wcfmmp_store_page_wpml_language_switcher' ), 999 );
 		
-		// WooCommerce Widget Store Page URL
+		 
 		add_filter( 'woocommerce_widget_get_current_page_url', array( $this, 'wcfmmp_widget_get_current_page_url' ), 50, 2 );
 		
-		// WC Filter Price Query Store Filter
+		 
 		add_filter( 'woocommerce_price_filter_sql', array( &$this, 'wcfmmp_price_filter_sql' ), 500, 3 );
 	}
 
 
-	/**
-	 * Initializes the WCFMmp_Rewrites() class
-	 *
-	 * @since 1.0.0
-	 *
-	 * Checks for an existing WCFMmp_Rewrites() instance
-	 * and if it doesn't find one, creates it.
-	 */
+	
+
+
+
+
+
+
+
 	public static function init() {
 		static $instance = false;
 
@@ -81,15 +90,15 @@ class WCFMmp_Rewrites {
 		return $instance;
 	}
 
-	/**
-	 * Generate breadcrumb for store page
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $crumbs
-	 *
-	 * @return array $crumbs
-	 */
+	
+
+
+
+
+
+
+
+
 	public function store_page_breadcrumb( $crumbs ) {
 		if (  wcfm_is_store_page() ) {
 			$author      = apply_filters( 'wcfmmp_store_query_var', get_query_var( $this->wcfm_store_url ) );
@@ -109,15 +118,15 @@ class WCFMmp_Rewrites {
 		return $crumbs;
 	}
 	
-	/**
-	 * Generate Page Title for store page - OceanWP theme support
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $crumbs
-	 *
-	 * @return array $crumbs
-	 */
+	
+
+
+
+
+
+
+
+
 	public function oceanwp_store_page_title( $page_title = '' ) {
 
 		$store_name   = urldecode( get_query_var( $this->wcfm_store_url ) );
@@ -141,15 +150,15 @@ class WCFMmp_Rewrites {
 		return $page_title;
 	}
 	
-	/**
-	 * Generate breadcrumb for store page - OceanWP Theme support
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $crumbs
-	 *
-	 * @return array $crumbs
-	 */
+	
+
+
+
+
+
+
+
+
 	function oceanwp_store_page_breadcrumb( $crumbs, $args ) {
 		if (  wcfm_is_store_page() ) {
 			$author      = get_query_var( $this->wcfm_store_url );
@@ -168,9 +177,9 @@ class WCFMmp_Rewrites {
 		return $crumbs;
 	}
 	
-	/**
-	 * Store Page WPML Language Switcher Compatibility
-	 */
+	
+
+
 	function wcfmmp_store_page_wpml_language_switcher( $languages ) {
 		
 		if (  wcfm_is_store_page() ) {
@@ -198,11 +207,11 @@ class WCFMmp_Rewrites {
 		return $languages;
 	}
 
-	/**
-	 * Register the rewrite rule
-	 *
-	 * @return void
-	 */
+	
+
+
+
+
 	function register_rule() {
 		
 		if( function_exists( 'wcfm_get_option' ) ) {
@@ -237,7 +246,7 @@ class WCFMmp_Rewrites {
 	
 	function custom_taxonomy_register_rule() {
 		
-		// Custom Taxonomies Filter Rules
+		 
 		$product_taxonomies = get_object_taxonomies( 'product', 'objects' );
 		if( !empty( $product_taxonomies ) ) {
 			foreach( $product_taxonomies as $product_taxonomy ) {
@@ -251,13 +260,13 @@ class WCFMmp_Rewrites {
 		}
 	}
 	
-	/**
-	 * Register the query var
-	 *
-	 * @param array  $vars
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
+
+
 	function register_query_var( $vars ) {
 		$vars[] = $this->wcfm_store_url;
 		$vars[] = 'term_section';
@@ -268,7 +277,7 @@ class WCFMmp_Rewrites {
 		$vars[] = $this->store_endpoint( 'followings' );
 		$vars[] = $this->store_endpoint( 'articles' );
 		
-		// Custom Taxonomies Filters Query Vars
+		 
 		$product_taxonomies = get_object_taxonomies( 'product', 'objects' );
 		if( !empty( $product_taxonomies ) ) {
 			foreach( $product_taxonomies as $product_taxonomy ) {
@@ -287,18 +296,18 @@ class WCFMmp_Rewrites {
 		return $vars;
 	}
 	
-	/**
-	 * Include store template
-	 *
-	 * @param type  $template
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
+
+
 	function store_template_title() {
 		global $WCFM, $WCFMmp;
-		
+
 		if ( !WCFMmp_Dependencies::woocommerce_plugin_active_check() ) {
-			return $template;
+			return '';
 		}
 		
 		$store_name = get_query_var( $this->wcfm_store_url );
@@ -309,17 +318,17 @@ class WCFMmp_Rewrites {
 			
 			$store_user = get_user_by( 'slug', $store_name );
 			
-			// no user found
+			 
 			if ( ! $store_user ) {
 				return '';
 			}
 
-			// check if the user is seller
+			 
 			if ( ! wcfm_is_vendor( $store_user->ID ) ) {
 				return '';
 			}
 			
-			// Check is store Online
+			 
 			$is_store_offline = get_user_meta( $store_user->ID, '_wcfm_store_offline', true );
 			$is_store_offline = apply_filters( 'wcfmmp_is_store_offline', $is_store_offline, $store_user->ID );
 			if ( $is_store_offline ) {
@@ -350,13 +359,13 @@ class WCFMmp_Rewrites {
 		return $template;
 	}
 
-	/**
-	 * Include store template
-	 *
-	 * @param type  $template
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
+
+
 	function store_template( $template ) {
 		global $WCFM, $WCFMmp;
 		
@@ -374,66 +383,211 @@ class WCFMmp_Rewrites {
 			remove_filter( 'template_include', array( 'WC_Template_Loader', 'template_loader' ) );
 			$WCFMmp->store_template_loaded = true;
 			
-			// no user found
+			 
 			if ( ! $store_user ) {
-				return get_404_template();
+				return $this->store_404_template();
 			}
 
-			// check if the user is seller
+			 
 			if ( ! wcfm_is_vendor( $store_user->ID ) ) {
-				return get_404_template();
+				return $this->store_404_template();
 			}
 			
-			// Disable Store URL Visit
+			 
 			if( apply_filters( 'wcfm_is_disable_store_url_access', false ) ) {
 				wp_safe_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
 				exit;
 			}
 			
-			// Check is store Online
+			 
 			$is_store_offline = get_user_meta( $store_user->ID, '_wcfm_store_offline', true );
 			$is_store_offline = apply_filters( 'wcfmmp_is_store_offline', $is_store_offline, $store_user->ID );
 			if ( $is_store_offline ) {
-				return get_404_template();
+				return $this->store_404_template();
 			}
 			
-			// WCFM Marketplace Elementor Compatibility
+			 
 			$wcfmem_template = apply_filters( 'wcfmem_locate_store_template', '' );
 			if( $wcfmem_template ) return $wcfmem_template;
 			
-			// Dive Theme Builder Support
-			if( function_exists( 'et_theme_builder_frontend_override_template' ) ) {
+			 
+			if ( function_exists( 'et_theme_builder_get_template_layouts' ) && function_exists( 'et_theme_builder_overrides_layout' ) &&
+				defined( 'ET_THEME_BUILDER_HEADER_LAYOUT_POST_TYPE' ) && defined( 'ET_THEME_BUILDER_FOOTER_LAYOUT_POST_TYPE' ) ) {
 				$layouts         = et_theme_builder_get_template_layouts();
 				$override_header = et_theme_builder_overrides_layout( ET_THEME_BUILDER_HEADER_LAYOUT_POST_TYPE );
 				$override_footer = et_theme_builder_overrides_layout( ET_THEME_BUILDER_FOOTER_LAYOUT_POST_TYPE );
 				if ( $override_header || $override_footer ) {
-					add_action( 'get_header', 'et_theme_builder_frontend_override_header' );
-					add_action( 'get_footer', 'et_theme_builder_frontend_override_footer' );
-						
-					et_theme_builder_frontend_enqueue_styles( $layouts );
+					if ( function_exists( 'et_theme_builder_frontend_override_header' ) ) {
+						add_action( 'get_header', 'et_theme_builder_frontend_override_header' );
+					}
+					if ( function_exists( 'et_theme_builder_frontend_override_footer' ) ) {
+						add_action( 'get_footer', 'et_theme_builder_frontend_override_footer' );
+					}
+					if ( function_exists( 'et_theme_builder_frontend_enqueue_styles' ) ) {
+						et_theme_builder_frontend_enqueue_styles( $layouts );
+					}
 				}
 			}
-			
-			if ( get_query_var( $this->store_endpoint('about') ) ) {
-				return $WCFMmp->template->get_template( 'store/wcfmmp-view-store.php', array( 'store_tab' => 'about' ) );
-			} elseif ( get_query_var( $this->store_endpoint('policies') ) ) {
-				return $WCFMmp->template->get_template( 'store/wcfmmp-view-store.php', array( 'store_tab' => 'policies' ) );
-			} elseif ( get_query_var( $this->store_endpoint('reviews') ) ) {
-				return $WCFMmp->template->get_template( 'store/wcfmmp-view-store.php', array( 'store_tab' => 'reviews' ) );
-			} elseif ( get_query_var( $this->store_endpoint('followers') ) ) {
-				return $WCFMmp->template->get_template( 'store/wcfmmp-view-store.php', array( 'store_tab' => 'followers' ) );
-			} elseif ( get_query_var( $this->store_endpoint('followings') ) ) {
-				return $WCFMmp->template->get_template( 'store/wcfmmp-view-store.php', array( 'store_tab' => 'followings' ) );
-			} elseif ( get_query_var( $this->store_endpoint('articles') ) ) {
-				return $WCFMmp->template->get_template( 'store/wcfmmp-view-store.php', array( 'store_tab' => 'articles' ) );
+
+			$store_tab = 'products';
+			if ( get_query_var( $this->store_endpoint( 'about' ) ) ) {
+				$store_tab = 'about';
+			} elseif ( get_query_var( $this->store_endpoint( 'policies' ) ) ) {
+				$store_tab = 'policies';
+			} elseif ( get_query_var( $this->store_endpoint( 'reviews' ) ) ) {
+				$store_tab = 'reviews';
+			} elseif ( get_query_var( $this->store_endpoint( 'followers' ) ) ) {
+				$store_tab = 'followers';
+			} elseif ( get_query_var( $this->store_endpoint( 'followings' ) ) ) {
+				$store_tab = 'followings';
+			} elseif ( get_query_var( $this->store_endpoint( 'articles' ) ) ) {
+				$store_tab = 'articles';
 			} else {
-				return $WCFMmp->template->get_template( 'store/wcfmmp-view-store.php', array( 'store_tab' => apply_filters( 'wcfmmp_store_default_query_vars', apply_filters( 'wcfmp_store_default_query_vars', 'products', $store_user->ID ), 'products', $store_user->ID ) ) );
+				$store_tab = apply_filters(
+					'wcfmmp_store_default_query_vars',
+					apply_filters( 'wcfmp_store_default_query_vars', 'products', $store_user->ID ),
+					'products',
+					$store_user->ID
+				);
 			}
+			 
+			 
+			 
+			set_query_var( 'store_tab', $store_tab );
+			$GLOBALS['store_tab'] = $store_tab;
+
+			$store_template = $WCFMmp->template->locate_template( 'store/wcfmmp-view-store.php' );
+
+			
+
+
+
+
+
+
+
+
+
+
+
+			$store_template = apply_filters( 'wcfmmp_store_template', $store_template, $store_tab, $store_user->ID );
+
+			if ( $store_template && file_exists( $store_template ) ) {
+				$this->located_store_template = $store_template;
+
+				return $store_template;
+			}
+
+			return $template;
 		}
 
 		return $template;
 	}
+
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	function protect_store_template( $template ) {
+		if ( ! $this->located_store_template || $template === $this->located_store_template ) {
+			return $template;
+		}
+
+		$this->record_store_template_override( $template );
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			error_log( sprintf(
+				'WCFM Marketplace: the store template was replaced with "%s" (ours was "%s"). Filter wcfmmp_store_template to take over deliberately, or return true from wcfmmp_enforce_store_template to keep ours.',
+				$template,
+				$this->located_store_template
+			) );
+		}
+
+		
+
+
+
+
+
+
+
+
+
+		if ( apply_filters( 'wcfmmp_enforce_store_template', false, $template, $this->located_store_template ) ) {
+			return $this->located_store_template;
+		}
+
+		return $template;
+	}
+
+	
+
+
+
+
+
+
+	function record_store_template_override( $template ) {
+		$recorded = get_option( 'wcfmmp_store_template_override', array() );
+
+		if ( isset( $recorded['template'] ) && $recorded['template'] === $template ) {
+			return;
+		}
+
+		update_option( 'wcfmmp_store_template_override', array(
+			'template' => $template,
+			'ours'     => $this->located_store_template,
+			'detected' => time(),
+		), false );
+	}
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	function store_404_template() {
+		global $wp_query;
+
+		$wp_query->set_404();
+		status_header( 404 );
+		nocache_headers();
+
+		$wp_query->posts         = array();
+		$wp_query->post          = null;
+		$wp_query->post_count    = 0;
+		$wp_query->found_posts   = 0;
+		$wp_query->max_num_pages = 0;
+
+		$template_404 = get_404_template();
+
+		return $template_404 ? $template_404 : get_index_template();
+	}
+
 	function store_endpoint( $endpoint ) {
 		global $WCFMmp;
 		$endpoint = !empty( $WCFMmp->wcfmmp_store_endpoints[$endpoint] ) ? $WCFMmp->wcfmmp_store_endpoints[$endpoint] : $endpoint;
@@ -485,15 +639,15 @@ class WCFMmp_Rewrites {
 		return $seller_info ? '' : $page_title;
 	}
 	
-	/**
-	 * Store Query Uncessary Hook/Filter Check
-	 */
+	
+
+
 	function store_query_check( $query ) {
 		if (  wcfm_is_store_page() ) {
-			// Divi Theme Support
+			 
 			remove_action( 'pre_get_posts', 'et_builder_wc_pre_get_posts' );
 			
-			// Oxygen Builder Support
+			 
 			remove_filter( 'template_include', 'ct_css_output', 99 );
 			remove_filter( 'template_include', 'ct_determine_render_template', 98 );
 			remove_filter( 'template_include', 'ct_eval_condition_template', 100 );
@@ -501,15 +655,15 @@ class WCFMmp_Rewrites {
 		}
 	}
 
-	/**
-	 * Store query filter
-	 *
-	 * Handles the product filtering by category in store page
-	 *
-	 * @param object  $query
-	 *
-	 * @return void
-	 */
+	
+
+
+
+
+
+
+
+
 	function store_query_filter( $query, $that = null ) {
 		global $wp_query, $WCFMmp;
 		
@@ -522,9 +676,9 @@ class WCFMmp_Rewrites {
 			$seller_info  = get_user_by( 'slug', $store_name );
 			if( $seller_info ) {
 				
-				// WC Product Query
+				 
 				if ( !get_query_var( 'articles' ) ) {
-					//WC()->query->product_query( $query );
+					 
 				}
 				
 				$store_info   = wcfmmp_get_store_info( $seller_info->data->ID );
@@ -547,7 +701,7 @@ class WCFMmp_Rewrites {
 
 				if ( $query->query['term_section'] ) {
 					$is_custom_taxonomy_filter = false;
-					// Custom Taxonomies Filter Rules
+					 
 					$product_taxonomies = get_object_taxonomies( 'product', 'objects' );
 					if( !empty( $product_taxonomies ) ) {
 						foreach( $product_taxonomies as $product_taxonomy ) {
@@ -587,7 +741,7 @@ class WCFMmp_Rewrites {
 					}
 				}
 				
-				// Reset Shop Page ID - Specially Fix for Divi Theme
+				 
 				$query->set( 'page_id', 0 );
 				
 				if( defined( 'ELEMENTOR_VERSION' )  ) {
@@ -604,16 +758,16 @@ class WCFMmp_Rewrites {
 						$query->is_post_type_archive    = false;
 				}
 				
-				//print_r($query);
+				 
 				
 				add_filter( 'woocommerce_page_title', array( $this, 'store_page_title' ) );
 			}
 		}
 	}
 	
-	/**
-	 * Store Page WC Product Filter Query
-	 */
+	
+
+
 	function wcfmmp_product_counts_query( $query ) {
 		global $wpdb, $WCFMmp;
 		if (  wcfm_is_store_page() && !$WCFMmp->store_query_filtered ) {
@@ -627,9 +781,9 @@ class WCFMmp_Rewrites {
 		return $query;
 	}
 	
-	/**
-	 * Store Page Widgets Current page URL
-	 */
+	
+
+
 	function wcfmmp_widget_get_current_page_url( $url, $widget ) {
 		global $wpdb, $WCFMmp;
 		if (  wcfm_is_store_page() ) {
@@ -644,16 +798,16 @@ class WCFMmp_Rewrites {
 		return $url;
 	}
 	
-	/**
-	 * Store Page WC Product Price Filter Query
-	 */
+	
+
+
 	function wcfmmp_price_filter_sql( $query, $meta_query_sql, $tax_query_sql ) {
 		global $wpdb, $WCFMmp;
 		if (  wcfm_is_store_page() && !$WCFMmp->store_query_filtered ) {
 			$author      = get_query_var( $this->wcfm_store_url );
 			$seller_info = get_user_by( 'slug', $author );
 			if( $seller_info && $seller_info->data->ID ) {
-		    //$query .= " AND {$wpdb->posts}.post_author = {$seller_info->data->ID}";
+		     
 		    
 		    $search     = WC_Query::get_main_search_query_sql();
 		    $search_query_sql = $search ? ' AND ' . $search : '';

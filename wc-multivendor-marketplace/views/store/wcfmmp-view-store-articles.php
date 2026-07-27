@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying all store articles.
- *
- * @package WCfM Markeplace Views Store/articles
- *
- * For edit coping this to yourtheme/wcfm/store 
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 
@@ -49,7 +49,7 @@ $counter = 0;
 			<?php do_action( 'woocommerce_after_shop_loop' ); ?>
 			<?php do_action( 'wcfmmp_woocommerce_after_shop_loop_after', $store_user->get_id(), $store_info ); ?>
 			
-			<?php //wcfmmp_content_nav( 'nav-below' ); ?>
+			<?php  ?>
 	
 		<?php } else { ?>
 			<?php do_action( 'wcfmmp_store_article_template_none' ); ?>

@@ -1,25 +1,25 @@
 <?php
-/**
- * WCFMmp Shipping Gateway for shipping by Distance
- *
- * Plugin Shipping Gateway
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/includes
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 if (!defined('ABSPATH')) {
     exit;
 }
 
 class WCFMmp_Shipping_By_Distance extends WC_Shipping_Method {
-  /**
-  * Constructor for your shipping class
-  *
-  * @access public
-  *
-  * @return void
-  */
+  
+
+
+
+
+
+
   public function __construct() {
     $this->id                 = 'wcfmmp_product_shipping_by_distance';
     $this->method_title       = __( 'Marketplace Shipping by Distance', 'wc-multivendor-marketplace' );
@@ -35,18 +35,18 @@ class WCFMmp_Shipping_By_Distance extends WC_Shipping_Method {
   }
 
 
-  /**
-  * Init your settings
-  *
-  * @access public
-  * @return void
-  */
+  
+
+
+
+
+
   function init() {
-     // Load the settings API
+      
      $this->init_form_fields();
      $this->init_settings();
 
-     // Save settings in admin if you have any defined
+      
      add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
   }
   
@@ -89,7 +89,7 @@ class WCFMmp_Shipping_By_Distance extends WC_Shipping_Method {
     	return;
     }
     
-    //wcfm_log( $wcfmmp_radius_lat . "::" . $wcfmmp_radius_lng . "::" . json_encode( $distance ) );
+     
     
     $wcfmmp_shipping_by_distance = get_user_meta( $vendor_id, '_wcfmmp_shipping_by_distance', true );
 				 
@@ -119,15 +119,15 @@ class WCFMmp_Shipping_By_Distance extends WC_Shipping_Method {
 	
 			 $rate = array(
 					 'id'    => $this->id . ':1',
-					 'label' => $this->title, // . ' (' . __( 'Distance', 'wc-multivendor-marketplace') . ' ' . $distance . $radius_unit . ')',
+					 'label' => $this->title,  
 					 'cost'  => $amount,
 					 'taxes' => $tax_rate
 			 );
 			 
-			 // Register the rate
+			  
 			 $this->add_rate( $rate );
 			 
-			 // Local Pickup Method Check
+			  
 			 $enable_local_pickup = isset($wcfmmp_shipping_by_distance['_enable_local_pickup']) ? 'yes' : '';
 			 $local_pickup_cost = isset($wcfmmp_shipping_by_distance['_local_pickup_cost']) ? $wcfmmp_shipping_by_distance['_local_pickup_cost'] : '';
 			 if( $enable_local_pickup ) {
@@ -139,11 +139,11 @@ class WCFMmp_Shipping_By_Distance extends WC_Shipping_Method {
 						 'taxes' => $tax_rate
 				 );
 		
-				 // Register the rate
+				  
 				 $this->add_rate( $rate );
 			 }
 			 
-			 // Free Shipping Method Check
+			  
 			 if( $amount ) {
 			 	 $amount = $this->calculate_per_seller( $products, $distance, $default_cost, $wcfmmp_shipping_by_distance_rates, $wcfmmp_free_shipping_amount, true );
 			 	 
@@ -155,28 +155,28 @@ class WCFMmp_Shipping_By_Distance extends WC_Shipping_Method {
 							 'taxes' => $tax_rate
 					 );
 			
-					 // Register the rate
+					  
 					 $this->add_rate( $rate );
 			 	 }
 			 }
 		 }
   }
   
-  /**
-  * Checking is gateway enabled or not
-  *
-  * @return boolean [description]
-  */
+  
+
+
+
+
   public function is_method_enabled() {
      return $this->enabled == 'yes';
   }
 
-  /**
-  * Initialise Gateway Settings Form Fields
-  *
-  * @access public
-  * @return void
-  */
+  
+
+
+
+
+
   function init_form_fields() {
 
      $this->form_fields = array(
@@ -206,13 +206,13 @@ class WCFMmp_Shipping_By_Distance extends WC_Shipping_Method {
      );
   }
   
-  /**
-  * Check if shipping for this product is enabled
-  *
-  * @param  integet  $product_id
-  *
-  * @return boolean
-  */
+  
+
+
+
+
+
+
   public static function is_shipping_enabled_for_seller( $vendor_id ) {
     global  $WCFMmp;
     $vendor_shipping_details = get_user_meta( $vendor_id, '_wcfmmp_shipping', true );
@@ -226,20 +226,20 @@ class WCFMmp_Shipping_By_Distance extends WC_Shipping_Method {
     return false;
   }
   
-  /**
-  * Calculate shipping per seller
-  *
-  * @param  array $products
-  * @param  array $destination
-  *
-  * @return float
-  */
+  
+
+
+
+
+
+
+
   public function calculate_per_seller( $products, $total_distance, $default_cost, $wcfmmp_shipping_by_distance_rates, $wcfmmp_free_shipping_amount = '', $is_consider_free_threshold = false ) {
     $amount = !empty( $default_cost ) ? $default_cost : 0;
     $price = array();
     
     $seller_products = array();
-    //$total_distance = 0.0;
+     
 
     foreach ( $products as $product ) {
 			$vendor_id                     = get_post_field( 'post_author', $product['product_id'] );

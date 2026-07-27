@@ -1,21 +1,21 @@
 <?php
-/**
- * The Template for displaying store sidebar taxonomy.
- *
- * @package WCfM Markeplace Views Store Sidebar Taxonomies
- *
- * For edit coping this to yourtheme/wcfm/store/widgets
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 
 $display_parent_term = array();
 $display_vendor_term = array();
 
-//print_r($vendor_categories);
+ 
 ?>
 
 <div class="categories_list">
@@ -29,7 +29,7 @@ $display_vendor_term = array();
 				if( is_array( $vendor_category ) && !empty( $vendor_category ) ) {
 					$vendor_term = get_term( absint( $vendor_category_id ), $preferred_taxonomy ); 
 					
-					// Toogle Support - 2.1.1
+					 
 					$tax_toggle_class = '';
 					if( $has_toggle ) $tax_toggle_class = 'wcfm_custom_hide wcfm_tax_filter_toggle_' . $vendor_term->term_id;
 					

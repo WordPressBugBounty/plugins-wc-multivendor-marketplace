@@ -3,37 +3,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * WCFM_Stripe_API class.
- *
- * Communicates with Stripe API.
- */
+require_once dirname( __FILE__ ) . '/class-wcfm-stripe-exception.php';
+
+
+
+
+
+
 class WCFM_Stripe_API {
 
-	/**
-	 * Stripe API Endpoint
-	 */
+	
+
+
 	const ENDPOINT           = 'https://api.stripe.com/v1/';
 	const STRIPE_API_VERSION = '2019-02-19';
 
-	/**
-	 * Secret API Key.
-	 * @var string
-	 */
+	
+
+
+
 	private static $secret_key = '';
 
-	/**
-	 * Set secret API Key.
-	 * @param string $key
-	 */
+	
+
+
+
 	public static function set_secret_key( $secret_key ) {
 		self::$secret_key = $secret_key;
 	}
 
-	/**
-	 * Get secret key.
-	 * @return string
-	 */
+	
+
+
+
 	public static function get_secret_key() {
 		global $WCFMmp;
 		if ( ! self::$secret_key ) {
@@ -46,13 +48,13 @@ class WCFM_Stripe_API {
 		return self::$secret_key;
 	}
 
-	/**
-	 * Generates the user agent we use to pass to API request so
-	 * Stripe can identify our application.
-	 *
-	 * @since 4.0.0
-	 * @version 4.0.0
-	 */
+	
+
+
+
+
+
+
 	public static function get_user_agent() {
 		$app_info = array(
 			'name'    => 'Marketplace Stripe Split Pay',
@@ -69,12 +71,12 @@ class WCFM_Stripe_API {
 		);
 	}
 
-	/**
-	 * Generates the headers to pass to API request.
-	 *
-	 * @since 4.0.0
-	 * @version 4.0.0
-	 */
+	
+
+
+
+
+
 	public static function get_headers() {
 		$user_agent = self::get_user_agent();
 		$app_info   = $user_agent['application'];
@@ -90,18 +92,18 @@ class WCFM_Stripe_API {
 		);
 	}
 
-	/**
-	 * Send the request to Stripe's API
-	 *
-	 * @since 3.1.0
-	 * @version 4.0.6
-	 * @param array $request
-	 * @param string $api
-	 * @param bool $with_headers To get the response with headers.
-	 * @return array|WP_Error
-	 */
+	
+
+
+
+
+
+
+
+
+
 	public static function request( $request, $api = 'charges', $method = 'POST', $with_headers = false ) {
-		//WC_Stripe_Logger::log( "{$api} request: " . print_r( $request, true ) );
+		 
 
 		$headers         = self::get_headers();
 		$idempotency_key = '';
@@ -125,18 +127,18 @@ class WCFM_Stripe_API {
 		);
 
 		if ( is_wp_error( $response ) || empty( $response['body'] ) ) {
-			/*WC_Stripe_Logger::log(
-				'Error Response: ' . print_r( $response, true ) . PHP_EOL . PHP_EOL . 'Failed request: ' . print_r(
-					array(
-						'api'             => $api,
-						'request'         => $request,
-						'idempotency_key' => $idempotency_key,
-					),
-					true
-				)
-			);*/
+			
 
-			throw new WC_Stripe_Exception( print_r( $response, true ), __( 'There was a problem connecting to the Stripe API endpoint.', 'wc-multivendor-marketplace' ) );
+
+
+
+
+
+
+
+
+
+			throw new WCFM_Stripe_Exception( print_r( $response, true ), __( 'There was a problem connecting to the Stripe API endpoint.', 'wc-multivendor-marketplace' ) );
 		}
 
 		if ( $with_headers ) {
@@ -149,15 +151,15 @@ class WCFM_Stripe_API {
 		return json_decode( $response['body'] );
 	}
 
-	/**
-	 * Retrieve API endpoint.
-	 *
-	 * @since 4.0.0
-	 * @version 4.0.0
-	 * @param string $api
-	 */
+	
+
+
+
+
+
+
 	public static function retrieve( $api ) {
-		//WC_Stripe_Logger::log( "{$api}" );
+		 
 
 		$response = wp_safe_remote_get(
 			self::ENDPOINT . $api,
@@ -169,7 +171,7 @@ class WCFM_Stripe_API {
 		);
 
 		if ( is_wp_error( $response ) || empty( $response['body'] ) ) {
-			//WC_Stripe_Logger::log( 'Error Response: ' . print_r( $response, true ) );
+			 
 			return new WP_Error( 'stripe_error', __( 'There was a problem connecting to the Stripe API endpoint.', 'wc-multivendor-marketplace' ) );
 		}
 

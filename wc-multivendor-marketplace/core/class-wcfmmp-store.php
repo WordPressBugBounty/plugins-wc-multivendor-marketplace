@@ -1,41 +1,41 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Store
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 class WCFMmp_Store {
 
-	/**
-	 * The store ID
-	 *
-	 * @var integer
-	 */
+	
+
+
+
+
 	public $id = 0;
 
-	/**
-	 * Holds the user data object
-	 *
-	 * @var null|WP_User
-	 */
+	
+
+
+
+
 	public $data = null;
 
-	/**
-	 * Holds the store info
-	 *
-	 * @var array
-	 */
+	
+
+
+
+
 	private $shop_data = array();
 
-	/**
-	 * The constructor
-	 *
-	 * @param int|WP_User $vendor
-	 */
+	
+
+
+
+
 	public function __construct( $vendor = null ) {
 		if ( is_numeric( $vendor ) ) {
 			$the_user = get_user_by( 'id', $vendor );
@@ -53,14 +53,14 @@ class WCFMmp_Store {
 		$this->popluate_store_data();
 	}
 
-	/**
-	 * Call undefined functions callback
-	 *
-	 * @param string $name
-	 * @param [type] $param [description]
-	 *
-	 * @return [type] [description]
-	 */
+	
+
+
+
+
+
+
+
 	public function __call( $name, $param ) {
 		if ( strpos( $name, 'get_' ) === 0 ) {
 			$function_name  = str_replace('get_', '', $name );
@@ -68,11 +68,11 @@ class WCFMmp_Store {
 		}
 	}
 
-	/**
-	 * Store info to array
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
 	public function to_array() {
 
 		$info = array(
@@ -101,31 +101,31 @@ class WCFMmp_Store {
 		return $info;
 	}
 
-	/**
-	 * Check if key is exist
-	 *
-	 * @param $key
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
+
+
 	public function get_value( $key ) {
 		return ! empty( $key ) ? $key : '';
 	}
 
-	/**
-	 * Check if the user is vendor
-	 *
-	 * @return boolean
-	 */
+	
+
+
+
+
 	public function is_vendor() {
 		return wcfm_is_vendor( $this->id );
 	}
 
-	/**
-	 * Get vendor's store tabs
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
 	public function get_store_tabs( $with_count = true ) {
 		global $WCFM, $WCFMmp;
 		$store_tabs =  array(
@@ -177,7 +177,7 @@ class WCFMmp_Store {
 		}
 			
 		if( !apply_filters( 'wcfm_is_pref_vendor_reviews', true ) ) {
-			//$WCFM->wcfm_vendor_support->wcfm_vendor_has_capability( $this->id, 'review_manage' )
+			 
 			if( isset( $store_tabs['reviews'] ) ) unset( $store_tabs['reviews'] );
 		} else {
 			$store_tabs['reviews'] = __( 'Reviews', 'wc-multivendor-marketplace' );
@@ -190,11 +190,11 @@ class WCFMmp_Store {
 		return apply_filters( 'wcfmmp_store_tabs', $store_tabs, $this->id );
 	}
 	
-	/**
-	 * Populate store info
-	 *
-	 * @return void
-	 */
+	
+
+
+
+
 	public function popluate_store_data() {
 		$defaults = array(
 				'store_name'              => '',
@@ -247,14 +247,14 @@ class WCFMmp_Store {
 		$this->shop_data = apply_filters( 'wcfmmp_popluate_store_data', $shop_info, $this->id );
 	}
 
-	/**
-	 * Get the store info by lazyloading
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
 	public function get_shop_info() {
 
-		// return if already populated
+		 
 		if ( $this->shop_data ) {
 			return $this->shop_data;
 		}
@@ -264,13 +264,13 @@ class WCFMmp_Store {
 		return $this->shop_data;
 	}
 
-	/**
-	 * Get store info by key
-	 *
-	 * @param  string $item
-	 *
-	 * @return mixed
-	 */
+	
+
+
+
+
+
+
 	public function get_info_part( $item ) {
 		$info = $this->get_shop_info();
 
@@ -279,117 +279,117 @@ class WCFMmp_Store {
 		}
 	}
 
-	/**
-	 * Get store ID
-	 *
-	 * @return void
-	 */
+	
+
+
+
+
 	public function get_id() {
 		return $this->id;
 	}
 
-	/**
-	 * Get the vendor name
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_name() {
 		if ( $this->id ) {
 			return $this->get_value( $this->data->display_name );
 		}
 	}
 
-	/**
-	 * Get the shop name
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_shop_name() {
 		return $this->get_info_part( 'store_name' );
 	}
 	
-	/**
-	 * Get shop description
-	 *
-	 */
+	
+
+
+
 	function get_shop_description() {
 		return wcfm_get_user_meta( $this->id, '_store_description', true );
 	}
 
-	/**
-	 * Get the shop URL
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_shop_url() {
 		return trailingslashit( wcfmmp_get_store_url( $this->id ) );
 	}
 	
-	/**
-	 * Get the about URL
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_about_url() {
 		global $WCFMmp;
 		return $this->get_shop_url() . $WCFMmp->wcfmmp_rewrite->store_endpoint('about');
 	}
 	
-	/**
-	 * Get the policies URL
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_policies_url() {
 		global $WCFMmp;
 		return $this->get_shop_url() . $WCFMmp->wcfmmp_rewrite->store_endpoint('policies');
 	}
 	
-	/**
-	 * Get the reviews URL
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_reviews_url() {
 		global $WCFMmp;
 		return $this->get_shop_url() . $WCFMmp->wcfmmp_rewrite->store_endpoint('reviews');
 	}
 	
-	/**
-	 * Get the followers URL
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_followers_url() {
 		global $WCFMmp;
 		return $this->get_shop_url() . $WCFMmp->wcfmmp_rewrite->store_endpoint('followers');
 	}
 	
-	/**
-	 * Get the followings URL
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_followings_url() {
 		global $WCFMmp;
 		return $this->get_shop_url() . $WCFMmp->wcfmmp_rewrite->store_endpoint('followings');
 	}
 	
-	/**
-	 * Get the articles URL
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_articles_url() {
 		global $WCFMmp;
 		return $this->get_shop_url() . $WCFMmp->wcfmmp_rewrite->store_endpoint('articles');
 	}
 	
-	/**
-	 * Get the store tabs URL
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_store_tabs_url( $tab = '' ) {
 		$store_tab_url = $this->get_shop_url();
 		
@@ -430,62 +430,62 @@ class WCFMmp_Store {
 		return true;
 	}
 
-	/**
-	 * Get email address
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_email() {
 		if ( $this->id ) {
 			return !empty( $this->shop_data['store_email'] ) ? $this->shop_data['store_email'] : $this->get_value( $this->data->user_email );
 		}
 	}
 
-	/**
-	 * Get first name
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_first_name() {
 		if ( $this->id ) {
 			return $this->get_value( $this->data->first_name );
 		}
 	}
 
-	/**
-	 * Get last name
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_last_name() {
 		if ( $this->id ) {
 			return $this->get_value( $this->data->last_name );
 		}
 	}
 
-	/**
-	 * Get last name
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_register_date() {
 		if ( $this->id ) {
 			return $this->get_value( $this->data->user_registered );
 		}
 	}
 
-	/**
-	 * Get the shop name
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
 	public function get_social_profiles() {
 		return $this->get_info_part( 'social' );
 	}
 	
-	/**
-	 * Check Store has social profile or not
-	 */
+	
+
+
 	public function has_social() {
 		$store_socials = $this->get_social_profiles();
 		if( !empty( $store_socials ) ) {
@@ -508,29 +508,29 @@ class WCFMmp_Store {
 		return false;
 	}
 
-	/**
-	 * Get the phone name
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_phone() {
 		return $this->get_info_part( 'phone' );
 	}
 
-	/**
-	 * Get the shop address
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
 	public function get_address() {
 		return $this->get_info_part( 'address' );
 	}
 	
-	/**
-	 * Get the shop address
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_address_string( $branch_id = '' ) {
 		$vendor_data = apply_filters( 'wcfmmp_store_vendor_data', $this->shop_data, $this->id, $branch_id );
 
@@ -548,11 +548,11 @@ class WCFMmp_Store {
 		return apply_filters( 'wcfmmp_store_address_string', $store_address, $vendor_data );
 	}
 	
-	/**
-	 * Get the customer support details
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
 	function get_customer_support_details() {
 		$this->get_shop_info();
 		$vendor_data = $this->shop_data;
@@ -565,7 +565,7 @@ class WCFMmp_Store {
 		$state = isset( $vendor_data['customer_support']['state'] ) ? $vendor_data['customer_support']['state'] : '';
 		$zip = isset( $vendor_data['customer_support']['zip'] ) ? $vendor_data['customer_support']['zip'] : '';
 		
-		// Country -> States
+		 
 		$country_obj   = new WC_Countries();
 		$countries     = $country_obj->countries;
 		$states        = $country_obj->states;
@@ -594,11 +594,11 @@ class WCFMmp_Store {
 		return $customer_support_details;
 	}
 
-	/**
-	 * Get the shop location
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
 	public function get_location() {
 		$default  = array( 'lat' => 0, 'long' => 0 );
 		$location = $this->get_info_part( 'location' );
@@ -610,11 +610,11 @@ class WCFMmp_Store {
 		return $location;
 	}
 	
-	/**
-	 * Get the store list banner type
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_list_banner_type() {
 		$vendor_data = $this->shop_data;
 		$list_banner_type    = isset( $vendor_data['list_banner_type'] ) ? $vendor_data['list_banner_type'] : 'single_img';
@@ -622,16 +622,16 @@ class WCFMmp_Store {
 		
 		if( ( $list_banner_type == 'video' ) && empty( $list_banner_video ) ) $list_banner_type = 'single_img';
 		
-		// Add capability check
+		 
 
 		return $list_banner_type;
 	}
 	
-	/**
-	 * Get the store list banner
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_list_banner() {
 		$list_banner_id = (int) $this->get_info_part( 'list_banner' );
 
@@ -645,11 +645,11 @@ class WCFMmp_Store {
 		return apply_filters( 'wcfmmp_store_list_bannar', wp_get_attachment_url( $list_banner_id ), $this->get_id() );
 	}
 	
-	/**
-	 * Get the store list banner video
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_list_banner_video() {
 		$vendor_data = $this->shop_data;
 		$list_banner_video    = isset( $vendor_data['list_banner_video'] ) ? $vendor_data['list_banner_video'] : '';
@@ -657,11 +657,11 @@ class WCFMmp_Store {
 		return $list_banner_video;
 	}
 	
-	/**
-	 * Get the shop banner type
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_banner_type() {
 		$vendor_data = $this->shop_data;
 		$banner_type    = isset( $vendor_data['banner_type'] ) ? $vendor_data['banner_type'] : 'single_img';
@@ -671,16 +671,16 @@ class WCFMmp_Store {
 		if( ( $banner_type == 'slider' ) && empty( $banner_slider ) ) $banner_type = 'single_img';
 		if( ( $banner_type == 'video' ) && empty( $banner_video ) ) $banner_type = 'single_img';
 		
-		// Add capability check
+		 
 
 		return $banner_type;
 	}
 
-	/**
-	 * Get the shop banner
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_banner() {
 		$banner_id = (int) $this->get_info_part( 'banner' );
 
@@ -691,11 +691,11 @@ class WCFMmp_Store {
 		return apply_filters( 'wcfmmp_store_banner', wcfm_get_attachment_url( $banner_id ), $this->get_id() );
 	}
 	
-	/**
-	 * Get the shop banner sliders
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_banner_slider() {
 		$vendor_data = $this->shop_data;
 		$banner_slider    = isset( $vendor_data['banner_slider'] ) ? $vendor_data['banner_slider'] : array();
@@ -703,11 +703,11 @@ class WCFMmp_Store {
 		return $banner_slider;
 	}
 	
-	/**
-	 * Get the shop banner video
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_banner_video() {
 		$vendor_data = $this->shop_data;
 		$banner_video    = isset( $vendor_data['banner_video'] ) ? $vendor_data['banner_video'] : '';
@@ -715,11 +715,11 @@ class WCFMmp_Store {
 		return $banner_video;
 	}
 	
-	/**
-	 * Get the mobile banner
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_mobile_banner() {
 		$mobile_banner_id = (int) $this->get_info_part( 'mobile_banner' );
 
@@ -733,38 +733,38 @@ class WCFMmp_Store {
 		return wp_get_attachment_url( $mobile_banner_id );
 	}
 
-	/**
-	 * Get the shop profile icon
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_avatar() {
 		global $WCFM, $WCFMmp;
 		$avatar_id = (int) $this->get_info_part( 'gravatar' );
 
 		if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
-			return apply_filters( 'wcfmmp_store_default_logo', $WCFM->plugin_url . 'assets/images/wcfmmp-blue.png' ); //get_avatar_url( $this->data->user_email, 96 );
+			return apply_filters( 'wcfmmp_store_default_logo', $WCFM->plugin_url . 'assets/images/wcfmmp-blue.png' );  
 		}
 
 		return apply_filters( 'wcfmmp_store_logo', wp_get_attachment_url( $avatar_id ), $this->get_id() );
 	}
 	
-	/**
-	 * Get the store policies
-	 *
-	 * @return string
-	 */
+	
+
+
+
+
 	public function get_store_policies() {
 		$wcfm_policy_vendor_options = (array) wcfm_get_user_meta( $this->get_id(), 'wcfm_policy_vendor_options', true );
 		
 		return $wcfm_policy_vendor_options;
 	}
 
-	/**
-	 * Get per page pagination
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_per_page() {
 		$per_page = (int) $this->get_info_part( 'store_ppp' );
 
@@ -775,11 +775,11 @@ class WCFMmp_Store {
 		return $per_page;
 	}
 	
-	/**
-	 * Get the store taxonomies
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
 	public function get_store_taxonomies( $taxonomy = 'product_cat' ) {
 		global $WCFMmp, $wpdb, $WCFM;
 		
@@ -805,11 +805,11 @@ class WCFMmp_Store {
 		return apply_filters( 'wcfm_vendor_store_taxomonies', $vendor_taxonomies, $this->get_id(), $taxonomy );
 	}
 	
-	/**
-	 * Get total follower count
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_total_follower_count() {
 		$followers = 0;
 		$followers_arr = get_user_meta( $this->get_id(), '_wcfm_followers_list', true );
@@ -819,11 +819,11 @@ class WCFMmp_Store {
 		return $followers;
 	}
 	
-	/**
-	 * Get total following count
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_total_following_count() {
 		$followings = 0;
 		$followings_arr = get_user_meta( $this->get_id(), '_wcfm_following_list', true );
@@ -833,18 +833,18 @@ class WCFMmp_Store {
 		return $followings;
 	}
 
-	/**
-	 * Get total review count
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_total_review_count() {
 		global $WCFMmp;
 		
 		$total_review_count = 0;
 		
 		if( apply_filters( 'wcfm_is_pref_vendor_reviews', true ) ) {
-			// Reset Review User Meta
+			 
 			$total_review_count = $WCFMmp->wcfmmp_reviews->get_vendor_reviews_count( $this->get_id() );
 			if( !$total_review_count ) {
 				delete_user_meta( $this->get_id(), '_wcfmmp_total_review_count' );
@@ -855,18 +855,18 @@ class WCFMmp_Store {
 				delete_user_meta( $this->get_id(), '_wcfmmp_last_author_name' );
 			}
 			
-			//$total_review_count = get_user_meta( $this->get_id(), '_wcfmmp_total_review_count', true );
-			//if( !$total_review_count ) $total_review_count = 0;
-			//else $total_review_count = absint( $total_review_count );
+			 
+			 
+			 
 		}
 		return $total_review_count;
 	}
 	
-	/**
-	 * Get total review rating
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_total_review_rating() {
 		$total_review_rating = get_user_meta( $this->get_id(), '_wcfmmp_total_review_rating', true );
 		if( !$total_review_rating ) $total_review_rating = 0;
@@ -874,11 +874,11 @@ class WCFMmp_Store {
 		return $total_review_rating;
 	}
 	
-	/**
-	 * Get avarage review rating
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_avg_review_rating() {
 		$avg_review_rating = get_user_meta( $this->get_id(), '_wcfmmp_avg_review_rating', true );
 		if( !$avg_review_rating ) $total_review_rating = 0;
@@ -886,21 +886,21 @@ class WCFMmp_Store {
 		return $avg_review_rating;
 	}
 	
-	/**
-	 * Get category review rating
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_category_review_rating() {
 		$category_review_rating = get_user_meta( $this->get_id(), '_wcfmmp_category_review_rating', true );
 		return $category_review_rating;
 	}
 	
-	/**
-	 * Get last review author ID
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_last_review_author_id() {
 		$last_author_id = get_user_meta( $this->get_id(), '_wcfmmp_last_author_id', true );
 		if( !$last_author_id ) $last_author_id = 0;
@@ -908,21 +908,21 @@ class WCFMmp_Store {
 		return $last_author_id;
 	}
 	
-	/**
-	 * Get last review author name
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_last_review_author_name() {
 		$last_author_name = get_user_meta( $this->get_id(), '_wcfmmp_last_author_name', true );
 		return $last_author_name;
 	}
 	
-	/**
-	 * Get lastest reviews
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_lastest_reviews( $offset = 0, $length = 5 ) {
 		global $WCFM, $wpdb;
 		
@@ -937,11 +937,11 @@ class WCFMmp_Store {
 		return $reviews;
 	}
 	
-	/**
-	 * Get review meta
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function get_review_meta( $review_id = '', $meta = 'rating_category' ) {
 		global $WCFM, $wpdb;
 		
@@ -959,11 +959,11 @@ class WCFMmp_Store {
 		return $wcfm_store_review_categories;
 	}
 	
-	/**
-	 * Show store start rating
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function show_star_rating() {
 		global $WCFM, $WCFMmp;
 		

@@ -1,49 +1,49 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Notification Manager
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Notification_Manager {
 
 	public function __construct() {
 		global $WCFM;
 		
-		// Notification Setting
+		 
 		add_action( 'end_wcfm_settings_form_menu_manager', array( &$this, 'wcfm_notification_settings' ), 14 );
 		add_filter( 'wcfm_settings_fields_email_from', array( &$this, 'wcfmmp_email_notification_settings' ), 14 );
 		add_action( 'wcfm_settings_update', array( &$this, 'wcfm_notification_settings_update' ), 14 );
 		
-		// Admin Email Notification Address
+		 
 		add_filter( 'wcfm_admin_email_notification_receiver', array( &$this, 'wcfmmp_admin_email_notification_receiver' ), 50, 2 );
 		
-		// Notification Manager - Message
+		 
 		add_filter( 'wcfm_is_allow_notification_message', array( &$this, 'wcfmmp_is_allow_notification_message' ), 500, 3 );
 		
-		// Notification Manager - Email
+		 
 		add_filter( 'wcfm_is_allow_notification_email', array( &$this, 'wcfmmp_is_allow_notification_email' ), 500, 3 );
 		
-		// Notification Manager - BuddyPress Notification
+		 
 		add_action( 'after_wcfm_notification', array( &$this, 'wcfmmp_send_notification_buddypress' ), 500, 6 );
 		
-		// Notification Manager - SMS
+		 
 		add_action( 'after_wcfm_notification', array( &$this, 'wcfmmp_send_notification_sms' ), 500, 6 );
 		
-		// SMS Alter Plugin SMS contains HTML Restriction
+		 
 		add_filter( 'sa_before_send_sms', array( &$this, 'wcfmmp_strip_sa_sms' ), 500 );
 		
-		// Notification Manager - Mobile App
+		 
     add_action( 'after_wcfm_notification', array( &$this, 'wcfmmp_send_notification_onesignal' ), 500, 6 );
 		
-		// Delivery Boy Notification Manager - SMS
+		 
 		add_action( 'wcfmd_after_delivery_boy_assigned', array( &$this, 'wcfmmp_delivery_boy_send_notification_sms' ), 500, 6 );
 		
-		// Notification - Sound
+		 
 		add_filter( 'wcfm_is_allow_sound', array( &$this, 'wcfmmp_is_allow_sound' ), 500 );
 		
 	}
@@ -234,7 +234,7 @@ class WCFMmp_Notification_Manager {
 		if( isset( $message_types[$message_type] ) ) $message_label = $message_types[$message_type];
 		else $message_label = str_replace( '_', ' ',  ucfirst( $message_type ) );
 		
-		// Attempt to send the message.
+		 
 		$send = messages_new_message( array(
 			'recipients' => array( get_userdata($message_to)->user_nicename ),
 			'subject'    => $message_label,
@@ -280,13 +280,13 @@ class WCFMmp_Notification_Manager {
 				$admin_response       = SmsAlertcURLOTP::sendsms( $sms_data );
 				$response             = json_decode($admin_response,true);
 				if( $response['status'] == 'success' ) {
-					//wcfm_log( "SMS:: " . $sms_data['number'] . ": " . __( 'SMS Sent Successfully.', 'smsalert' ) );
+					 
 				} else {
 					if( is_array( $response['description'] ) && array_key_exists( 'desc', $response['description'] ) ) {
-						//wcfm_log( "SMS:: " . $sms_data['number'] . ": " . __($response['description']['desc'], 'smsalert' ) );
+						 
 					}
 					else {
-						//wcfm_log( "SMS:: " . $sms_data['number'] . ": " . __($response['description'], 'smsalert' ) );
+						 
 					}
 				}
 			}
@@ -373,13 +373,13 @@ class WCFMmp_Notification_Manager {
 			$user_roles = $user_info->roles;
 			$to_user = $user_info->user_email;
 					
-			// Check if the role you're interested in, is present in the array.
+			 
 			if ( in_array( 'administrator', $user_roles, true ) ) {
-					// Do something.
+					 
 					$message_to_user = 'admin';
 			}
 			elseif ( in_array( 'wcfm_delivery_boy', $user_roles, true ) ) {
-					// Do something.
+					 
 					$message_to_user = 'delivery';
 			}
 			else {
@@ -387,9 +387,9 @@ class WCFMmp_Notification_Manager {
 			}
 			
 			if( $message_to_user === 'vendor' || $message_to_user === 'delivery' ) {
-				//$to_user = 'test';
+				 
 					$this->send_push_notification($notification_message, $to_user, $message_to_user);
-				//wcfm_log(json_encode($response));
+				 
 			} 
 		}
   }
@@ -407,8 +407,8 @@ class WCFMmp_Notification_Manager {
                 'rest_api_key' => "YzA3MWY0ZTctZmVkOC00OTE2LWJiMzEtMzM1YzJhNzc1M2Zh",
             ) ); 
         }
-      	//$var = print_r( $one_signal_tokens, true);
-        //wcfm_log($var);
+      	 
+         
       	
 		$body->app_id = $one_signal_tokens['app_id'];
 		$body->contents = array( 'en' => $notification_message );
@@ -425,7 +425,7 @@ class WCFMmp_Notification_Manager {
 			'body' => $bodyAsJson,
 		  )
 		);
-	//return $response['body'];
+	 
 	}
 	
 	function wcfmmp_delivery_boy_send_notification_sms( $order_id, $order_item_id, $wcfm_tracking_data, $product_id, $wcfm_delivery_boy, $wcfm_messages ) {
@@ -455,13 +455,13 @@ class WCFMmp_Notification_Manager {
 				$admin_response       = SmsAlertcURLOTP::sendsms( $sms_data );
 				$response             = json_decode($admin_response,true);
 				if( $response['status'] == 'success' ) {
-					//wcfm_log( "SMS:: " . $sms_data['number'] . ": " . __( 'SMS Sent Successfully.', 'smsalert' ) );
+					 
 				} else {
 					if( is_array( $response['description'] ) && array_key_exists( 'desc', $response['description'] ) ) {
-						//wcfm_log( "SMS:: " . $sms_data['number'] . ": " . __($response['description']['desc'], 'smsalert' ) );
+						 
 					}
 					else {
-						//wcfm_log( "SMS:: " . $sms_data['number'] . ": " . __($response['description'], 'smsalert' ) );
+						 
 					}
 				}
 			}

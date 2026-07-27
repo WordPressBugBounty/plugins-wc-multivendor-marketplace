@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Emails
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Emails {
 	
@@ -48,6 +48,6 @@ class WCFMmp_Emails {
 			if( file_exists( $WCFMmp->plugin_path . 'includes/store-emails/class-wcfmmp-email-' . esc_attr($wcfmmp_email) . '.php' ) ) {
 				require_once ( $WCFMmp->plugin_path . 'includes/store-emails/class-wcfmmp-email-' . esc_attr($wcfmmp_email) . '.php' );
 			}
-		} // End If Statement
+		}  
 	}
 }

@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying store list.
- *
- * @package WCfM Markeplace Views Store Lists
- *
- * For edit coping this to yourtheme/wcfm/store/store-lists
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp, $post;
 

@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin controllers
- *
- * Plugin Review Submit Form Controller
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/controllers/reviews
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Reviews_Submit_Controller {
 	
@@ -75,7 +75,7 @@ class WCFMmp_Reviews_Submit_Controller {
 			$wpdb->query($wcfm_review_submit);
 			$wcfm_review_id = $wpdb->insert_id;
 			
-			// Updating Review Meta
+			 
 			foreach( $wcfm_review_categories as $wcfm_review_cat_key => $wcfm_review_category ) {
 				if( isset( $wcfm_store_review_categories[$wcfm_review_cat_key] ) ) {
 					$wcfm_review_meta_update = $wpdb->prepare( "INSERT into {$wpdb->prefix}wcfm_marketplace_review_rating_meta 
@@ -87,7 +87,7 @@ class WCFMmp_Reviews_Submit_Controller {
 				}
 			}
 			
-			// Update user review data
+			 
 			if( $review_auto_approve == 'yes' ) {
 				$total_review_count = get_user_meta( $vendor_id, '_wcfmmp_total_review_count', true );
 				if( !$total_review_count ) $total_review_count = 0;
@@ -131,7 +131,7 @@ class WCFMmp_Reviews_Submit_Controller {
 			
 			
 			
-			// Direct message
+			 
 			$wcfm_messages = sprintf( __( '%s has received a new Review from <b>%s</b>', 'wc-multivendor-marketplace' ), $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_by_vendor( $vendor_id ), $author_name );
 
 			$raw_message = [
@@ -150,7 +150,7 @@ class WCFMmp_Reviews_Submit_Controller {
 
 			$WCFM->wcfm_notification->wcfm_send_direct_message( -2, 0, 1, 0, $wcfm_messages, 'review', true, $raw_message );
 			
-			// Vendor Direct message
+			 
 			$wcfm_messages = sprintf( __( 'You have received a new Review from <b>%s</b>', 'wc-multivendor-marketplace' ), $author_name );
 
 			$raw_message = [

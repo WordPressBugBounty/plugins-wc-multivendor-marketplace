@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying store sidebar category.
- *
- * @package WCfM Markeplace Views Store List Loop
- *
- * For edit coping this to yourtheme/wcfm/store-lists
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 
@@ -28,11 +28,11 @@ $args = array(
 	'category'        		=> $category,
 	'country'         		=> $country,
 	'state'           		=> $state,
-	//'has_city'        	=> $has_city,
-	//'has_zip'         	=> $has_zip,
+	 
+	 
 	'search_query'    		=> $search_query,
 	'search_category' 		=> $search_category,
-	//'store_category'  	=> $store_category,
+	 
 	'pagination_base' 		=> $pagination_base,
 	'num_of_pages'    		=> $num_of_pages,
 	'orderby'         		=> $orderby,

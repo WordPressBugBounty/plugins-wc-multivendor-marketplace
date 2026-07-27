@@ -252,7 +252,7 @@
               <?php
               
               $shipping_classes =  WC()->shipping->get_shipping_classes();
-              //print_r($shipping_classes);
+               
               if( !empty( $shipping_classes ) ) {
                 foreach ($shipping_classes as  $shipping_class ) {
                 	if ( ! isset( $shipping_class->term_id ) ) {

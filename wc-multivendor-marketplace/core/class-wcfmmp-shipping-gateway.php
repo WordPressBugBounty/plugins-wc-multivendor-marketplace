@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Shipping Gateway
- *
- * @author    WC Lovers
- * @package   wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 
 class WCFMmp_Shipping_Gateway {
@@ -24,13 +24,13 @@ class WCFMmp_Shipping_Gateway {
     $this->load_gateway('shipping-by-distance');
   }
   
-  /**
-    * Register the shipping method.
-    *
-    * @param array $methods Shipping methods.
-    *
-    * @return array Shipping methods.
-    */
+  
+
+
+
+
+
+
   
   public function register_shipping_methods( $methods ) {
     $methods['wcfmmp_product_shipping_by_country'] = 'WCFMmp_Shipping_By_Country';

@@ -134,6 +134,7 @@ class ApiRequestor
         $headers = $headers ?: [];
         list($rbody, $rcode, $rheaders, $myApiKey)
             = $this->_requestRaw($method, $url, $params, $headers, $apiMode, $usage, $maxNetworkRetries);
+        $this->_maybeEmitStripeNotice($rheaders);
         $json = $this->_interpretResponse($rbody, $rcode, $rheaders, $apiMode);
         $resp = new ApiResponse($rbody, $rcode, $rheaders, $json);
 
@@ -158,6 +159,7 @@ class ApiRequestor
         $headers = $headers ?: [];
         list($rbody, $rcode, $rheaders, $myApiKey)
             = $this->_requestRawStreaming($method, $url, $params, $headers, $apiMode, $usage, $readBodyChunkCallable, $maxNetworkRetries);
+        $this->_maybeEmitStripeNotice($rheaders);
         if ($rcode >= 300) {
             $this->_interpretResponse($rbody, $rcode, $rheaders, $apiMode);
         }
@@ -433,11 +435,30 @@ class ApiRequestor
 
         // Fallback to global configuration to maintain backwards compatibility.
         $appInfo = $appInfo ?: Stripe::getAppInfo();
+        // `static` here means it persists for the lifetime of the process
+        static $cachedSource = null;
+        if (null === $cachedSource) {
+            $uname_disabled = self::_isDisabled(\ini_get('disable_functions'), 'php_uname');
+            if ($uname_disabled) {
+                $cachedSource = false;
+            } else {
+                $parts = [\php_uname()];
+                $hostname_disabled = self::_isDisabled(\ini_get('disable_functions'), 'gethostname');
+                if (!$hostname_disabled) {
+                    $parts[] = \gethostname();
+                }
+                $cachedSource = \md5(\implode(' ', $parts));
+            }
+        }
+
         $ua = [
             'bindings_version' => Stripe::VERSION,
             'lang' => 'php',
             'lang_version' => $langVersion,
         ];
+        if ($cachedSource) {
+            $ua['source'] = $cachedSource;
+        }
         if (Stripe::getEnableTelemetry()) {
             $uname_disabled = self::_isDisabled(\ini_get('disable_functions'), 'php_uname');
             $ua['platform'] = $uname_disabled
@@ -555,6 +576,13 @@ class ApiRequestor
         }
 
         return [$absUrl, $rawHeaders, $params, $hasFile, $myApiKey];
+    }
+
+    private function _maybeEmitStripeNotice($rheaders)
+    {
+        if (isset($rheaders['stripe-notice']) && \is_string($rheaders['stripe-notice'])) {
+            \trigger_error($rheaders['stripe-notice'], \E_USER_WARNING);
+        }
     }
 
     /**

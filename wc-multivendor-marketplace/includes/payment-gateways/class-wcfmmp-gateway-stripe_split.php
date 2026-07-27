@@ -58,13 +58,13 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 				'products',
 				'refunds',
 				'subscriptions',
-				//'subscription_date_changes'
+				 
 			);
 		} else {
 			$this->supports	= array(
 				'products',
 				'subscriptions',
-				//'subscription_date_changes'
+				 
 			);
 		}
 		
@@ -86,7 +86,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$this->title        = apply_filters( 'wcfmmp_stripe_split_pay_title', __('Credit or Debit Card (Stripe)', 'wc-multivendor-marketplace') );
 		$this->description  = __('Pay with your credit or debit card via Stripe.', 'wc-multivendor-marketplace');
 		$this->charge_type  = isset( $WCFMmp->wcfmmp_withdrawal_options['stripe_split_pay_mode'] ) ? $WCFMmp->wcfmmp_withdrawal_options['stripe_split_pay_mode'] : 'direct_charges';
-		$this->debug        = apply_filters('wcfmmp_enable_stripe_split_debug_mode', false); //$this->is_testmode;
+		$this->debug        = apply_filters('wcfmmp_enable_stripe_split_debug_mode', false);  
 		
 		if( !class_exists("Stripe\Stripe") ) {
 			require_once( $WCFMmp->plugin_path . 'includes/Stripe/init.php' );
@@ -94,26 +94,72 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		
 		if( !class_exists("WCFM_Stripe_API") ) {
 			require_once( $WCFMmp->plugin_path . 'includes/wcfm-stripe/class-wcfm-stripe-api.php' );
-			
-			if( $this->is_3d_secure ) {
-				$this->charge_type  = 'transfers_charges';
+		}
+		
+		if( !class_exists("WCFMmp_Stripe_Client_Factory") ) {
+			require_once( $WCFMmp->plugin_path . 'includes/wcfm-stripe/class-wcfmmp-stripe-client-factory.php' );
+		}
+		
+		if( !class_exists("WCFMmp_Stripe_Environment") ) {
+			require_once( $WCFMmp->plugin_path . 'includes/wcfm-stripe/class-wcfmmp-stripe-environment.php' );
+		}
+		
+		if( !class_exists("WCFMmp_Stripe_Payment_Engine") ) {
+			require_once( $WCFMmp->plugin_path . 'includes/wcfm-stripe/class-wcfmmp-stripe-payment-engine.php' );
+		}
+		
+		if( !class_exists("WCFMmp_Stripe_Transfer_Queue") ) {
+			require_once( $WCFMmp->plugin_path . 'includes/wcfm-stripe/class-wcfmmp-stripe-transfer-queue.php' );
+		}
+		
+		if( !class_exists("WCFMmp_Stripe_Refund_Handler") ) {
+			require_once( $WCFMmp->plugin_path . 'includes/wcfm-stripe/class-wcfmmp-stripe-refund-handler.php' );
+		}
+		
+		if( !class_exists("WCFMmp_Stripe_Preflight") ) {
+			require_once( $WCFMmp->plugin_path . 'includes/wcfm-stripe/class-wcfmmp-stripe-preflight.php' );
+		}
+		
+		 
+		if( $this->is_3d_secure ) {
+			$this->charge_type  = 'transfers_charges';
+			if( !class_exists("WCFM_Stripe_Helper") ) {
 				require_once( $WCFMmp->plugin_path . 'includes/wcfm-stripe/class-wcfm-stripe-helper.php' );
+			}
+			if( !class_exists("WCFM_Stripe_Order_Handler") ) {
 				require_once( $WCFMmp->plugin_path . 'includes/wcfm-stripe/class-wcfm-stripe-order-handler.php' );
 			}
 		}
 		
 		WCFM_Stripe_API::set_secret_key( $this->secret_key );
 		
-		// Init Access Token
+		 
 		$this->init_stripe_access_token();
 		
-		// Process Refund
+		 
 		add_action( 'wcfmmp_refund_status_completed', array( &$this, 'wcfmmp_stripe_split_process_refund' ), 50, 3 );
+
+		 
+		 
+		 
+		 
+		 
+		 
+		add_filter( 'wcfm_is_allow_api_refund', array( $this, 'wcfmmp_stripe_split_disallow_api_refund' ), 10, 2 );
 		
-		// De-register WCFMmp Auto-withdrawal Gateway
+		 
 		add_filter( 'wcfm_marketplace_disallow_active_order_payment_methods', array( $this, 'wcfmmp_auto_withdrawal_stipe_pay' ), 750 );
 
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wcfmmp_stripe_split_scripts' ) );
+
+		 
+		if( 'modern' === wcfmmp_stripe_split_engine() ) {
+			add_filter( 'woocommerce_payment_successful_result', array( $this, 'modify_modern_payment_result' ), 99999, 2 );
+			add_filter( 'woocommerce_update_order_review_fragments', array( $this, 'modern_amount_fragment' ) );
+		}
+		
+		 
+		add_action( 'wc_ajax_wcfmmp_stripe_verify_intent', array( $this, 'verify_intent' ) );
 		
 		if( $this->is_3d_secure ) {
 			add_filter( 'woocommerce_available_payment_gateways', array( $this, 'prepare_order_pay_page' ) );
@@ -121,7 +167,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			add_filter( 'woocommerce_payment_successful_result', array( $this, 'modify_successful_payment_result' ), 99999, 2 );
 			add_action( 'set_logged_in_cookie', array( $this, 'set_cookie_on_current_request' ) );
 			
-			add_action( 'wc_ajax_wc_stripe_verify_intent', array( $this, 'verify_intent' ) );
+			add_action( 'wc_ajax_wc_stripe_verify_intent', array( $this, 'verify_intent' ) );  
 		}
 	}
 	
@@ -131,17 +177,17 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		return $auto_withdrawal_methods;
 	}
 	
-	/**
-	 * Init Stripe access token.
-	 *
-	 * @access public
-	 */
+	
+
+
+
+
 	public function init_stripe_access_token() {
 		if ($this->secret_key == "") {
 			add_action( 'admin_notices', array( &$this, 'stripe_access_token_error') );
-			//wcfm_stripe_log('Stripe secret_key is not set. Kindly set that from WCFM Dashboard => Settings => Withdrawal Setting');
+			 
 		} else {
-			// Stripe initialize
+			 
 			Stripe::setApiKey($this->secret_key);
 		}
 	}
@@ -160,6 +206,25 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		);
 	}
 
+	
+
+
+
+
+
+	public function is_available() {
+		$is_available = parent::is_available();
+
+		if ( $is_available && is_wc_endpoint_url( 'order-pay' ) ) {
+			$order = wc_get_order( absint( get_query_var( 'order-pay' ) ) );
+			if ( is_a( $order, 'WC_Order' ) && ! in_array( $order->get_payment_method(), array( '', 'stripe_split' ), true ) ) {
+				$is_available = false;
+			}
+		}
+
+		return $is_available;
+	}
+
 	public function wcfmmp_stripe_split_scripts() {
 		global $WCFM, $WCFMmp, $woocommerce, $wp;
 		
@@ -168,11 +233,20 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		}
 		$vendors = array();
 		
-		// Generating Vendors List
+		 
 		if ( is_checkout() ) {
-			if ( isset( $_GET['pay_for_order'] ) && 'true' === $_GET['pay_for_order'] ) { // wpcs: csrf ok.
-				$order_id = wc_get_order_id_by_order_key( urldecode( $_GET['key'] ) ); // wpcs: csrf ok, sanitization ok, xss ok.
+			if ( isset( $_GET['pay_for_order'] ) && 'true' === $_GET['pay_for_order'] ) {  
+				$order_id = wc_get_order_id_by_order_key( urldecode( $_GET['key'] ) );  
 				$order    = wc_get_order( $order_id );
+
+				 
+				 
+				 
+				 
+				if ( is_a( $order, 'WC_Order' ) && ! in_array( $order->get_payment_method(), array( '', 'stripe_split' ), true ) ) {
+					return;
+				}
+
 				if ( is_a( $order, 'WC_Order' ) ) {
 					$items = $order->get_items( 'line_item' );
 					if( !empty( $items ) ) {
@@ -215,7 +289,11 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$script_path = str_replace(array('http:', 'https:'), '', $script_path);
 
 		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v3/', '', '3.0', true );
-		wp_enqueue_script( 'wcfmmp_stripe_split_pay', $script_path . 'js/gateway/stripe.js', array('jquery-payment', 'stripe'), $WCFMmp->version, true );
+		if( function_exists( 'wcfmmp_stripe_split_engine' ) && 'modern' === wcfmmp_stripe_split_engine() ) {
+			wp_enqueue_script( 'wcfmmp_stripe_split_pay', $script_path . 'js/gateway/stripe-modern.js', array( 'jquery', 'stripe' ), $WCFMmp->version, true );
+		} else {
+			wp_enqueue_script( 'wcfmmp_stripe_split_pay', $script_path . 'js/gateway/stripe.js', array('jquery-payment', 'stripe'), $WCFMmp->version, true );
+		}
 
 		$wcfmmp_stripe_split_pay_params['key']                       = $this->published_key;
 		$wcfmmp_stripe_split_pay_params['elements_options']          = apply_filters( 'wcfmmp_stripe_split_pay_elements_options', array());
@@ -225,24 +303,58 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$wcfmmp_stripe_split_pay_params['stripe_nonce']              = wp_create_nonce('_wcfmmp_stripe_split_pay_nonce');
 		$wcfmmp_stripe_split_pay_params['no_of_vendor']              = !empty( $vendors ) ? count($vendors) : 1;
 		$wcfmmp_stripe_split_pay_params['is_3d_secure']              = $this->is_3d_secure;
+		$wcfmmp_stripe_split_pay_params['invalid_request_error']     = __( 'Sorry, we were unable to process your payment. Please try again or use a different payment method.', 'wc-multivendor-marketplace' );
 
+		if( function_exists( 'wcfmmp_stripe_split_engine' ) && 'modern' === wcfmmp_stripe_split_engine() ) {
+			$wcfmmp_stripe_split_pay_params['engine']   = 'modern';
+			$wcfmmp_stripe_split_pay_params['currency'] = strtolower( get_woocommerce_currency() );
+			$modern_total = 0;
+			if ( isset( $order ) && is_a( $order, 'WC_Order' ) ) {
+				$modern_total = $order->get_total();
+			} elseif ( WC()->cart ) {
+				$modern_total = WC()->cart->get_total( 'edit' );
+			}
+			$wcfmmp_stripe_split_pay_params['amount']   = $this->get_stripe_amount( $modern_total, get_woocommerce_currency() );
+
+			$modern_opts = get_option( 'wcfm_withdrawal_options', array() );
+			$modern_mode = isset( $modern_opts['stripe_split_pay_mode'] ) ? $modern_opts['stripe_split_pay_mode'] : 'direct_charges';
+			$wcfmmp_stripe_split_pay_params['flow']     = in_array( $modern_mode, array( 'direct_charges', 'destination_charges' ), true ) ? 'setup' : 'payment';
+
+			 
+			 
+			if ( isset( $order ) && is_a( $order, 'WC_Order' ) && is_wc_endpoint_url( 'order-pay' ) ) {
+				$modern_engine     = new WCFMmp_Stripe_Payment_Engine( $this );
+				$order_pay_payload = $modern_engine->prepare_order_pay_payload( $order );
+				if ( $order_pay_payload ) {
+					$wcfmmp_stripe_split_pay_params['order_pay_payload'] = $order_pay_payload;
+				}
+			}
+		}
+		
 		wp_localize_script( 'wcfmmp_stripe_split_pay', 'wcfmmp_stripe_split_pay_params', apply_filters( 'wcfmmp_stripe_split_pay_params', $wcfmmp_stripe_split_pay_params ) );
 
 		wp_enqueue_style( 'wcfmmp_stripe_split_pay_css', $script_path . 'css/gateway/stripe.css', array(), $WCFMmp->version, 'all' );
 	}
 
-	/**
-	 * Payment form on checkout page
-	 */
+	
+
+
 	public function payment_fields() {
 		$description = $this->description;
 		if ($description) {
 			if ($this->is_testmode) {
 				$test_card = '4242424242424242';
-				if( $this->is_3d_secure ) {
-					$test_card = '4000000000003220';
+				if ( $this->is_3d_secure ) {
+					 
+					 
+					 
+					 
+					 
+					$test_card = ( function_exists( 'wcfmmp_stripe_split_engine' ) && 'modern' === wcfmmp_stripe_split_engine() )
+						? '4000002500003155'
+						: '4000000000003220';
 				}
-				/* translators: link to Stripe testing page */
+				 
 				$description .= ' ' . sprintf(__('TEST MODE ENABLED. In test mode, you can use the card number %s with any CVC and a valid expiration date or check the <a href="%s" target="_blank">Testing Stripe documentation</a> for more card numbers.', 'wc-multivendor-marketplace'), $test_card, 'https://stripe.com/docs/testing');
 				$description = trim($description);
 			}
@@ -309,13 +421,13 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		ob_end_flush();
 	}
 
-	/**
-	 * Process the payment and return the result.
-	 *
-	 * @param  int $order_id
-	 *
-	 * @return array
-	 */
+	
+
+
+
+
+
+
 	public function process_payment($order_id) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -323,13 +435,28 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$error_message = __('An error has occurred while processing your payment, please try again. Or contact us for assistance.', 'wc-multivendor-marketplace');
 		
 		if( !is_a( $order, 'WC_Order' ) ) return;
+		
+		 
+		if( 'modern' === wcfmmp_stripe_split_engine() ) {
+			 
+			 
+			 
+			if ( is_wc_endpoint_url( 'order-pay' ) ) {
+				return array( 'result' => 'success', 'redirect' => $order->get_checkout_payment_url() );
+			}
+			$engine = new WCFMmp_Stripe_Payment_Engine( $this );
+			return $engine->process_payment( $order_id );
+		}
 
-		//$WCFMmp->wcfmmp_commission->wcfmmp_checkout_order_processed( $order_id );
+		 
+		$order->update_meta_data( '_wcfmmp_stripe_engine', 'legacy' );
+
+		 
 		
 		$user = wp_get_current_user();
 		$this->prepare_customer_obj( $user, $_POST, $order );
 		
-		// Update userdata
+		 
 		if ( is_a( $user, 'WP_User' ) && isset($this->customer->id)) {
 			update_user_meta( get_current_user_id(), 'wcfmmp_stripe_split_pay_customer_id', $this->customer->id );
 		}
@@ -340,7 +467,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 				$source_object = WCFM_Stripe_API::retrieve( 'sources/' . wc_clean( $_POST['stripe_source'] ) );
 				$source_id     = $source_object->id;
 
-				// Prepare Source data
+				 
 				$prepared_source = (object) array(
 					'token_id'      => false,
 					'customer'      => $this->customer->id,
@@ -348,11 +475,11 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 					'source_object' => $source_object,
 				);
 				
-				// save Source to Order
+				 
 				$order->update_meta_data( '_wcfmmp_stripe_split_pay_source_id', $source_id );
 				$order->save();
 				
-				// Create/Update Order Intent
+				 
 				$intent = $this->get_intent_from_order( $order );
 				if ( $intent ) {
 					$intent = $this->update_existing_intent( $intent, $order, $prepared_source );
@@ -362,7 +489,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 				
 				wcfm_stripe_log( json_encode( (array) $intent ) );
 	
-				// Confirm the intent after locking the order to make sure webhooks will not interfere.
+				 
 				if ( empty( $intent->error ) ) {
 					$this->lock_order_payment( $order, $intent );
 					$intent = $this->confirm_intent( $intent, $order, $prepared_source );
@@ -380,10 +507,10 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 				}
 				
 				if ( ! empty( $intent ) ) {
-					// Use the last charge within the intent to proceed.
+					 
 					$response = end( $intent->charges->data );
 	
-					// If the intent requires a 3DS flow, redirect to it.
+					 
 					if ( 'requires_action' === $intent->status ) {
 						$this->unlock_order_payment( $order );
 	
@@ -395,11 +522,11 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 								'redirect' => $redirect_url,
 							);
 						} else {
-							/**
-							 * This URL contains only a hash, which will be sent to `checkout.js` where it will be set like this:
-							 * `window.location = result.redirect`
-							 * Once this redirect is sent to JS, the `onHashChange` function will execute `handleCardPayment`.
-							 */
+							
+
+
+
+
 	
 							return array(
 								'result'        => 'success',
@@ -410,16 +537,16 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 					}
 				}
 				
-				// Process valid response.
+				 
 				$this->process_response( $response, $order );
 				
-				// Remove cart.
+				 
 				WC()->cart->empty_cart();
 	
-				// Unlock the order.
+				 
 				$this->unlock_order_payment( $order );
 	
-				// Return thank you page redirect.
+				 
 				return array(
 					'result'   => 'success',
 					'redirect' => $this->get_return_url( $order ),
@@ -438,41 +565,38 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$card_charged = false;
 		$all_success = array();
 
-		/**
-		 * 	Before proceeding with creating a charge
-		 * 	we need to ensure if all connected vendors 
-		 * 	supports card_payments
-		 * 
-		 * 	if not, forcefully change the charge_type to transfers_charges
-		 * 	as direct_charges won't be possible
-		 * 	destination_charges is still possible
-		 */
+		
+
+
+
+
+
+
+
+
 		if (apply_filters('wcfmmp_switch_to_stripe_transfer_if_no_card_payments', true)) {
 
 			if ($this->charge_type == 'direct_charges') {
 
 				$all_vendor_supports_card_payments = true;
 
-				if (!class_exists('WCFM_Stripe_Connect_Client')) {
-					include_once $WCFM->plugin_path . "helpers/class-wcfm-stripe-connect-client.php";
-				}
+				
 
-				$stripe_client = new WCFM_Stripe_Connect_Client($this->client_id, $this->secret_key);
 
-				/**
-				 * 	Check stripe account capabilities
-				 */
+
+
+
 				foreach ($wcfmmp_stripe_split_pay_list['distribution_list'] as $vendor_id => $distribution_info) {
 
 					$capabilities = get_user_meta( $vendor_id, 'stripe_account_capabilities', true );
 
-					if (!$capabilities || apply_filters('wcfmmp_refresh_stripe_account_capabilities', false, $vendor_id)) {
-						$stripe_client->set_user_id($vendor_id);
-						$stripe_account_obj = $stripe_client->retrieve_account();
-
-						if ($stripe_account_obj) {
-							$capabilities = $stripe_account_obj->capabilities;
-							update_user_meta( $vendor_id, 'stripe_account_capabilities', $capabilities );
+					if ( ( ! $capabilities || apply_filters('wcfmmp_refresh_stripe_account_capabilities', false, $vendor_id) ) && class_exists('WCFMmp_Stripe_Client_Factory') ) {
+						try {
+							$stripe_account_obj = WCFMmp_Stripe_Client_Factory::client()->accounts->retrieve( get_user_meta( $vendor_id, 'stripe_user_id', true ) );
+							WCFMmp_Stripe_Webhook_Handler::store_account_meta( $vendor_id, $stripe_account_obj );
+							$capabilities = get_user_meta( $vendor_id, 'stripe_account_capabilities', true );
+						} catch ( Exception $capability_refresh_error ) {
+							wcfm_stripe_log( "Stripe capability refresh failed for vendor {$vendor_id}: " . $capability_refresh_error->getMessage(), 'error' );
 						}
 					}
 
@@ -506,10 +630,10 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 						
 						$store_name = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_name_by_vendor( absint($vendor_id) );
 						
-						// Fetching Total Commission from Vendor Order Newly 
+						 
 						$re_total_commission = $wpdb->get_var($wpdb->prepare("SELECT SUM(total_commission) as total_commission FROM `{$wpdb->prefix}wcfm_marketplace_orders` WHERE order_id = %d AND vendor_id = %d", $order_id, $vendor_id));
 						
-						// Directly Charge the Customer and collect the application_fee
+						 
 						try {
 							$charge_data = array(
 								"amount"          => $this->get_stripe_amount($distribution_info['gross_sales']),
@@ -519,23 +643,20 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 								"description"     => $wcfmmp_stripe_split_pay_list['description'],
 							);
 							
-							/**
-							 * 	In case of Stripe Direct Charge, the stripe fee is deducted directly from the connected account (i.e. vendor account)
-							 * 	If we set Transaction fee in the WCFM dashboard > payment settings, 
-							 * 	then the Transaction fee also added to the application_fee (admin commission) & returned to the admin account
-							 * 	This causes deduction of stripe_fee twice from vendor
-							 */
+							
+
+
+
+
+
+
+
+
+
+
+
 							if ( apply_filters( 'wcfmmp_prevent_stripe_direct_charge_deduct_transaction_fee', true ) ) {
-								$re_total_transaction_charge = $wpdb->get_var(
-									$wpdb->prepare(
-										"SELECT SUM(order_meta.value)
-										FROM {$wpdb->prefix}wcfm_marketplace_orders as orders
-										INNER JOIN {$wpdb->prefix}wcfm_marketplace_orders_meta as order_meta
-										ON orders.ID = order_meta.order_commission_id
-										WHERE order_id = %d AND vendor_id = %d AND order_meta.key = 'transaction_charge'", 
-										[$order_id, $vendor_id]
-									)
-								);
+								$re_total_transaction_charge = $this->wcfmmp_stripe_split_total_gateway_fee( $order_id, $vendor_id );
 
 								$charge_data['application_fee'] -= $this->get_stripe_amount($re_total_transaction_charge);
 							}
@@ -544,6 +665,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 								"stripe_account" => $distribution_info['destination']
 							);
 							$charge_data = apply_filters('wcfmmp_stripe_split_pay_create_direct_charges', $charge_data, $order_id, $vendor_id);
+							$vendor_stripe_account['idempotency_key'] = 'wcfmmp-' . $order_id . '-v' . $vendor_id . '-charge-' . md5( $charge_data['amount'] . $charge_data['currency'] . $charge_data['source'] );
 							$i++;
 							
 							if ($this->debug)
@@ -560,15 +682,15 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 									$order->update_meta_data('wcfmmp_stripe_split_pay_charge_type_'.$vendor_id, $this->charge_type);
 									$order->payment_complete();
 																																							
-									// Create vendor withdrawal Instance
+									 
 									$commission_id_list = $wpdb->get_col($wpdb->prepare("SELECT ID FROM `{$wpdb->prefix}wcfm_marketplace_orders` WHERE order_id = %d AND vendor_id = %d", $order_id, $vendor_id));
 									
 									$withdrawal_id = $WCFMmp->wcfmmp_withdraw->wcfmmp_withdrawal_processed( $vendor_id, $order_id, implode( ',', $commission_id_list ), 'stripe_split', $distribution_info['gross_sales'], $re_total_commission, 0, 'pending', 'by_split_pay', 0 );
 									
-									// Withdrawal Processing
+									 
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_withdraw_status_update_by_withdrawal( $withdrawal_id, 'completed', __( 'Stripe Split Pay', 'wc-multivendor-marketplace' ) );
 									
-									// Withdrawal Meta
+									 
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $withdrawal_id, 'withdraw_amount', $re_total_commission );
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $withdrawal_id, 'currency', $order->get_currency() );
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $withdrawal_id, 'transaction_id', $this->charge->id );
@@ -591,12 +713,52 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 								$all_success[$vendor_id] = "false";
 								return false;
 							}
+						} catch (\Stripe\Exception\CardException $ex) {
+							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error');
+							$this->delete_vendor_commission($order_id);
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\InvalidRequestException $ex) {
+							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$this->delete_vendor_commission($order_id);
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\AuthenticationException $ex) {
+							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$this->delete_vendor_commission($order_id);
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\ApiConnectionException $ex) {
+							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$this->delete_vendor_commission($order_id);
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\ApiErrorException $ex) {
+							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$this->delete_vendor_commission($order_id);
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
 						} catch (Exception $ex) {
 							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . $ex->getMessage());
 							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error');
 							$this->delete_vendor_commission($order_id);
-							//$stripe_cust = Stripe_Customer::retrieve($this->customer->id);
-							//$stripe_cust->delete();
+							 
+							 
 							$all_success[$vendor_id] = "false";
 							return array(
 								'result' => 'fail',
@@ -605,7 +767,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 					}
 				}
 				
-				// Remaining Amount Pay to Admin
+				 
 				$remaining_sales_amount = $total_gross_sales - $vendor_gross_sales;
 				if( $remaining_sales_amount && ( absint($remaining_sales_amount) >= 1 ) ) {
 					try {
@@ -616,7 +778,8 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 							"customer"       => $this->customer->id,
 							"description"    => sprintf(__('Payment for Order #%s', 'wc-multivendor-marketplace'), $order_id),
 						);
-						$this->charge = Stripe_Charge::create($charge_data);
+						$charge_opts = array( 'idempotency_key' => 'wcfmmp-' . $order_id . '-v0-admincharge-' . md5( $charge_data['amount'] . $charge_data['currency'] . $charge_data['source'] ) );
+						$this->charge = Stripe_Charge::create($charge_data, $charge_opts);
 						
 						if (isset($this->charge['failure_message']) && empty($this->charge['failure_message'])) {
 							if (isset($this->charge->id)) {
@@ -629,6 +792,18 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 							$all_success[0] = "false";
 							return false;
 						}
+					} catch (\Stripe\Exception\InvalidRequestException $ex) {
+						wcfm_stripe_log( "Stripe Split Pay Remaining Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+						$all_success[0] = "false";
+					} catch (\Stripe\Exception\AuthenticationException $ex) {
+						wcfm_stripe_log( "Stripe Split Pay Remaining Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+						$all_success[0] = "false";
+					} catch (\Stripe\Exception\ApiConnectionException $ex) {
+						wcfm_stripe_log( "Stripe Split Pay Remaining Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+						$all_success[0] = "false";
+					} catch (\Stripe\Exception\ApiErrorException $ex) {
+						wcfm_stripe_log( "Stripe Split Pay Remaining Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+						$all_success[0] = "false";
 					} catch (Exception $ex) {
 						wcfm_stripe_log( "Stripe Split Pay Remaining Pay Error: " . $ex->getMessage() );
 						$all_success[0] = "false";
@@ -645,21 +820,21 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 						
 						$store_name = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_name_by_vendor( absint($vendor_id) );
 						
-						// Fetching Total Commission from Vendor Order Newly 
+						 
 						$re_total_commission = $wpdb->get_var($wpdb->prepare("SELECT SUM(total_commission) as total_commission FROM `{$wpdb->prefix}wcfm_marketplace_orders` WHERE order_id = %d AND vendor_id = %d", $order_id, $vendor_id));
 						
-						// Directly Charge the Customer and collect the application_fee
+						 
 						try {
-							// $charge_data = array(
-							// 	"amount"       => $this->get_stripe_amount($distribution_info['gross_sales']),
-							// 	"currency"     => $wcfmmp_stripe_split_pay_list['currency'],
-							// 	"source"       => $wcfmmp_stripe_split_pay_list['stripe_token'][$i],
-							// 	"destination"  => array(
-							// 		"amount"     => $this->get_stripe_amount($re_total_commission),
-							// 		"account"    => $distribution_info['destination'],
-							// 	),
-							// 	"description"    => $wcfmmp_stripe_split_pay_list['description'],
-							// );
+							 
+							 
+							 
+							 
+							 
+							 
+							 
+							 
+							 
+							 
 							$charge_data = array(
 								"amount"     	=> $this->get_stripe_amount($distribution_info['gross_sales']),
 								"currency"     	=> $wcfmmp_stripe_split_pay_list['currency'],
@@ -672,12 +847,13 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 								"transfer_group" => $wcfmmp_stripe_split_pay_list['transfer_group'],
 							);
 							$charge_data = apply_filters('wcfmmp_stripe_split_pay_destination_charges', $charge_data);
+							$charge_opts = array( 'idempotency_key' => 'wcfmmp-' . $order_id . '-v' . $vendor_id . '-charge-' . md5( $charge_data['amount'] . $charge_data['currency'] . $charge_data['source'] ) );
 							$i++;
 							
 							if ($this->debug)
 								wcfm_stripe_log("Stripe Charge Data before Processing: " . serialize($charge_data));
 							
-							$this->charge = Stripe_Charge::create($charge_data);
+							$this->charge = Stripe_Charge::create($charge_data, $charge_opts);
 							
 							if ($this->debug)
 								wcfm_stripe_log("Stripe Charge Data after Processing: " . serialize($this->charge));
@@ -688,15 +864,15 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 									$order->update_meta_data('wcfmmp_stripe_split_pay_charge_type_'.$vendor_id, $this->charge_type);
 									$order->payment_complete();
 																																							
-									// Create vendor withdrawal Instance
+									 
 									$commission_id_list = $wpdb->get_col($wpdb->prepare("SELECT ID FROM `{$wpdb->prefix}wcfm_marketplace_orders` WHERE order_id = %d AND vendor_id = %d", $order_id, $vendor_id));
 									
 									$withdrawal_id = $WCFMmp->wcfmmp_withdraw->wcfmmp_withdrawal_processed( $vendor_id, $order_id, implode( ',', $commission_id_list ), 'stripe_split', $distribution_info['gross_sales'], $re_total_commission, 0, 'pending', 'by_split_pay', 0 );
 									
-									// Withdrawal Processing
+									 
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_withdraw_status_update_by_withdrawal( $withdrawal_id, 'completed', __( 'Stripe Split Pay', 'wc-multivendor-marketplace' ) );
 									
-									// Withdrawal Meta
+									 
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $withdrawal_id, 'withdraw_amount', $re_total_commission );
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $withdrawal_id, 'currency', $order->get_currency() );
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $withdrawal_id, 'transaction_id', $this->charge->id );
@@ -719,12 +895,52 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 								$all_success[$vendor_id] = "false";
 								return false;
 							}
+						} catch (\Stripe\Exception\CardException $ex) {
+							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error');
+							$this->delete_vendor_commission($order_id);
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\InvalidRequestException $ex) {
+							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$this->delete_vendor_commission($order_id);
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\AuthenticationException $ex) {
+							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$this->delete_vendor_commission($order_id);
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\ApiConnectionException $ex) {
+							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$this->delete_vendor_commission($order_id);
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\ApiErrorException $ex) {
+							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$this->delete_vendor_commission($order_id);
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
 						} catch (Exception $ex) {
 							wcfm_stripe_log( $store_name . " Stripe Split Pay Error: " . $ex->getMessage());
 							wc_add_notice(__("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error');
 							$this->delete_vendor_commission($order_id);
-							//$stripe_cust = Stripe_Customer::retrieve($this->customer->id);
-							//$stripe_cust->delete();
+							 
+							 
 							$all_success[$vendor_id] = "false";
 							return array(
 								'result' => 'fail',
@@ -733,7 +949,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 					}
 				}
 				
-				// Remaining Amount Pay to Admin
+				 
 				$remaining_sales_amount = $total_gross_sales - $vendor_gross_sales;
 				if( $remaining_sales_amount && ( absint($remaining_sales_amount) >= 1 ) ) {
 					try {
@@ -744,7 +960,8 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 							"customer"       => $this->customer->id,
 							"description"    => sprintf(__('Payment for Order #%s', 'wc-multivendor-marketplace'), $order_id),
 						);
-						$this->charge = Stripe_Charge::create($charge_data);
+						$charge_opts = array( 'idempotency_key' => 'wcfmmp-' . $order_id . '-v0-admincharge-' . md5( $charge_data['amount'] . $charge_data['currency'] . $charge_data['source'] ) );
+						$this->charge = Stripe_Charge::create($charge_data, $charge_opts);
 						
 						if (isset($this->charge['failure_message']) && empty($this->charge['failure_message'])) {
 							if (isset($this->charge->id)) {
@@ -757,6 +974,18 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 							$all_success[0] = "false";
 							return false;
 						}
+					} catch (\Stripe\Exception\InvalidRequestException $ex) {
+						wcfm_stripe_log( "Stripe Split Pay Remaining Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+						$all_success[0] = "false";
+					} catch (\Stripe\Exception\AuthenticationException $ex) {
+						wcfm_stripe_log( "Stripe Split Pay Remaining Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+						$all_success[0] = "false";
+					} catch (\Stripe\Exception\ApiConnectionException $ex) {
+						wcfm_stripe_log( "Stripe Split Pay Remaining Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+						$all_success[0] = "false";
+					} catch (\Stripe\Exception\ApiErrorException $ex) {
+						wcfm_stripe_log( "Stripe Split Pay Remaining Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+						$all_success[0] = "false";
 					} catch (Exception $ex) {
 						wcfm_stripe_log( "Stripe Split Pay Remaining Pay Error: " . $ex->getMessage() );
 						$all_success[0] = "false";
@@ -775,11 +1004,12 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 						"description"    => $wcfmmp_stripe_split_pay_list['description'],
 					);
 					$charge_data = apply_filters( 'wcfmmp_stripe_split_pay_create_destination_charges', $charge_data, $_POST );
+					$charge_opts = array( 'idempotency_key' => 'wcfmmp-' . $order_id . '-v0-charge-' . md5( $charge_data['amount'] . $charge_data['currency'] . $charge_data['source'] ) );
 					
 					if ($this->debug)
 						wcfm_stripe_log("Stripe Charge Data before Processing: " . serialize($charge_data));
 					
-					$this->charge = Stripe_Charge::create($charge_data);
+					$this->charge = Stripe_Charge::create($charge_data, $charge_opts);
 					
 					if ($this->debug)
 						wcfm_stripe_log("Stripe Charge Data after Processing: " . serialize($this->charge));
@@ -797,12 +1027,52 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 						$all_success[0] = "false";
 						return false;
 					}
+				} catch (\Stripe\Exception\CardException $ex) {
+					wcfm_stripe_log( "Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+					wc_add_notice( __("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error' );
+					$this->delete_vendor_commission($order_id);
+					$all_success[0] = "false";
+					return array(
+						'result' => 'fail',
+					);
+				} catch (\Stripe\Exception\InvalidRequestException $ex) {
+					wcfm_stripe_log( "Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+					wc_add_notice( __("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error' );
+					$this->delete_vendor_commission($order_id);
+					$all_success[0] = "false";
+					return array(
+						'result' => 'fail',
+					);
+				} catch (\Stripe\Exception\AuthenticationException $ex) {
+					wcfm_stripe_log( "Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+					wc_add_notice( __("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error' );
+					$this->delete_vendor_commission($order_id);
+					$all_success[0] = "false";
+					return array(
+						'result' => 'fail',
+					);
+				} catch (\Stripe\Exception\ApiConnectionException $ex) {
+					wcfm_stripe_log( "Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+					wc_add_notice( __("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error' );
+					$this->delete_vendor_commission($order_id);
+					$all_success[0] = "false";
+					return array(
+						'result' => 'fail',
+					);
+				} catch (\Stripe\Exception\ApiErrorException $ex) {
+					wcfm_stripe_log( "Stripe Split Pay Error: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage() );
+					wc_add_notice( __("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error' );
+					$this->delete_vendor_commission($order_id);
+					$all_success[0] = "false";
+					return array(
+						'result' => 'fail',
+					);
 				} catch (Exception $ex) {
 					wcfm_stripe_log( "Stripe Split Pay Error: " . $ex->getMessage() );
 					wc_add_notice( __("Stripe Split Pay Error: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error' );
 					$this->delete_vendor_commission($order_id);
-					//$stripe_cust = Stripe_Customer::retrieve( $this->customer->id );
-					//$stripe_cust->delete();
+					 
+					 
 					$all_success[0] = "false";
 					return array(
 						'result' => 'fail',
@@ -814,7 +1084,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 					foreach( $wcfmmp_stripe_split_pay_list['distribution_list'] as $vendor_id => $distribution_info ) {
 						$store_name = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_name_by_vendor( absint($vendor_id) );
 						
-						// Dristribute among vendors
+						 
 						$source_transaction = apply_filters( 'wcfmmp_stripe_split_pay_source_transaction_enabled', true, $vendor_id );
 						try {
 							$transfer_data = array(
@@ -829,16 +1099,16 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 							
 							$commission_id_list = $wpdb->get_col($wpdb->prepare("SELECT ID FROM `{$wpdb->prefix}wcfm_marketplace_orders` WHERE order_id = %d AND vendor_id = %d", $order_id, $vendor_id));
 							
-							// Fetching Total Commission from Vendor Order Newly 
+							 
 							$re_total_commission = $wpdb->get_var($wpdb->prepare("SELECT SUM(total_commission) as total_commission FROM `{$wpdb->prefix}wcfm_marketplace_orders` WHERE order_id = %d AND vendor_id = %d", $order_id, $vendor_id));
 							
-							// Creating Withdrawal Instance
+							 
 							$withdrawal_id = $WCFMmp->wcfmmp_withdraw->wcfmmp_withdrawal_processed( $vendor_id, $order_id, implode( ',', $commission_id_list ), 'stripe_split', $distribution_info['gross_sales'], $re_total_commission, 0, 'pending', 'by_split_pay', 0 );
 							
-							// Processing 
+							 
 							$transfer_response = $WCFMmp->wcfmmp_gateways->payment_gateways['stripe']->process_payment( $withdrawal_id, $vendor_id, $re_total_commission, 0, 'auto', $transfer_data );
 							
-							// Update withdrawal status
+							 
 							if ($transfer_response) {
 								if( isset( $transfer_response['status'] ) && $transfer_response['status'] ) {
 									$all_success[$vendor_id] = "true";
@@ -848,10 +1118,10 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 										$order->update_meta_data( 'wcfmmp_stripe_split_pay_transaction_id_'.$vendor_id, $transfer_data['id'] );
 									}
 									
-									// Withdrawal Processing
+									 
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_withdraw_status_update_by_withdrawal( $withdrawal_id, 'completed', __( 'Stripe Split Pay', 'wc-multivendor-marketplace' ) );
 									
-									// Withdrawal Meta
+									 
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $withdrawal_id, 'transaction_type', $this->charge_type );
 									
 									do_action( 'wcfmmp_withdrawal_request_approved', $withdrawal_id );
@@ -870,6 +1140,34 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 							if ($this->debug)
 								wcfm_stripe_log("After creating transfer with Stripe. Stripe Transfer Response: " . serialize($transfer_response));
 						
+						} catch (\Stripe\Exception\InvalidRequestException $ex) {
+							wcfm_stripe_log( $store_name . " Error creating transfer record with Stripe: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Error creating transfer record with Stripe: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\AuthenticationException $ex) {
+							wcfm_stripe_log( $store_name . " Error creating transfer record with Stripe: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Error creating transfer record with Stripe: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\ApiConnectionException $ex) {
+							wcfm_stripe_log( $store_name . " Error creating transfer record with Stripe: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Error creating transfer record with Stripe: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
+						} catch (\Stripe\Exception\ApiErrorException $ex) {
+							wcfm_stripe_log( $store_name . " Error creating transfer record with Stripe: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Error creating transfer record with Stripe: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$all_success[$vendor_id] = "false";
+							return array(
+								'result' => 'fail',
+							);
 						} catch (Exception $ex) {
 							wcfm_stripe_log( $store_name . " Error creating transfer record with Stripe: " . $ex->getMessage());
 							wc_add_notice(__("Error creating transfer record with Stripe: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error');
@@ -884,10 +1182,10 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			default:
 		}
 		
-		// Update Customer Store
+		 
 		$this->update_customer_obj( $user, $_POST );
 
-		//if ((is_array($all_success) && in_array( "false", $all_success )) || $this->vendor_disconnected) {
+		 
 		if( is_array( $all_success ) && in_array( "false", $all_success ) ) {
 			$order->update_status( apply_filters( 'wcfmmp_stripe_split_pay_failed_order_status', 'failed', $order ) );
 			
@@ -906,13 +1204,13 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			);
 		}
 		
-		// Set Cart Empty
-		// WC()->cart->empty_cart();
+		 
+		 
 	}
 	
-	/**
-	 * Store extra meta data for an order from a Stripe Response.
-	 */
+	
+
+
 	public function process_response( $response, $order ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -921,7 +1219,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$order_id = $order->get_id();
 		$captured = ( isset( $response->captured ) && $response->captured ) ? 'yes' : 'no';
 
-		// Store charge data.
+		 
 		$order->update_meta_data( '_stripe_charge_captured', $captured );
 
 		if ( isset( $response->balance_transaction ) ) {
@@ -929,11 +1227,11 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		}
 
 		if ( 'yes' === $captured ) {
-			/**
-			 * Charge can be captured but in a pending state. Payment methods
-			 * that are asynchronous may take couple days to clear. Webhook will
-			 * take care of the status changes.
-			 */
+			
+
+
+
+
 			if ( 'pending' === $response->status ) {
 				$order_stock_reduced = $order->get_meta( '_order_stock_reduced', true );
 
@@ -942,20 +1240,20 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 				}
 
 				$order->set_transaction_id( $response->id );
-				/* translators: transaction id */
+				 
 				$order->update_status( 'on-hold', sprintf( __( 'Stripe charge awaiting payment: %s.', 'wc-multivendor-marketplace' ), $response->id ) );
 			}
 
 			if ( 'succeeded' === $response->status ) {
 				
-				// Process Connected Vendor's Commissions
+				 
 				$wcfmmp_stripe_split_pay_list = $WCFMmp->wcfmmp_commission->wcfmmp_split_pay_vendor_list( $order, array(), 'stripe' );
 				
 				if( isset( $wcfmmp_stripe_split_pay_list['distribution_list'] ) && is_array( $wcfmmp_stripe_split_pay_list['distribution_list'] ) && count( $wcfmmp_stripe_split_pay_list['distribution_list'] ) > 0 ) {
 					foreach( $wcfmmp_stripe_split_pay_list['distribution_list'] as $vendor_id => $distribution_info ) {
 						$store_name = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_name_by_vendor( absint($vendor_id) );
 						
-						// Dristribute among vendors
+						 
 						$source_transaction = apply_filters( 'wcfmmp_stripe_split_pay_source_transaction_enabled', true, $vendor_id );
 						try {
 							$transfer_data = array(
@@ -970,16 +1268,16 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 							
 							$commission_id_list = $wpdb->get_col($wpdb->prepare("SELECT ID FROM `{$wpdb->prefix}wcfm_marketplace_orders` WHERE order_id = %d AND vendor_id = %d", $order_id, $vendor_id));
 							
-							// Fetching Total Commission from Vendor Order Newly 
+							 
 							$re_total_commission = $wpdb->get_var($wpdb->prepare("SELECT SUM(total_commission) as total_commission FROM `{$wpdb->prefix}wcfm_marketplace_orders` WHERE order_id = %d AND vendor_id = %d", $order_id, $vendor_id));
 							
-							// Creating Withdrawal Instance
+							 
 							$withdrawal_id = $WCFMmp->wcfmmp_withdraw->wcfmmp_withdrawal_processed( $vendor_id, $order_id, implode( ',', $commission_id_list ), 'stripe_split', $distribution_info['gross_sales'], $re_total_commission, 0, 'pending', 'by_split_pay', 0 );
 							
-							// Processing 
+							 
 							$transfer_response = $WCFMmp->wcfmmp_gateways->payment_gateways['stripe']->process_payment( $withdrawal_id, $vendor_id, $re_total_commission, 0, 'auto', $transfer_data );
 							
-							// Update withdrawal status
+							 
 							if ($transfer_response) {
 								if( isset( $transfer_response['status'] ) && $transfer_response['status'] ) {
 									$all_success[$vendor_id] = "true";
@@ -989,10 +1287,10 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 										$order->update_meta_data( 'wcfmmp_stripe_split_pay_transaction_id_'.$vendor_id, $transfer_data['id'] );
 									}
 									
-									// Withdrawal Processing
+									 
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_withdraw_status_update_by_withdrawal( $withdrawal_id, 'completed', __( 'Stripe Split Pay', 'wc-multivendor-marketplace' ) );
 									
-									// Withdrawal Meta
+									 
 									$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $withdrawal_id, 'transaction_type', 'transfers_charges' );
 									
 									do_action( 'wcfmmp_withdrawal_request_approved', $withdrawal_id );
@@ -1012,6 +1310,22 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 							if ($this->debug)
 								wcfm_stripe_log("After creating transfer with Stripe. Stripe Transfer Response: " . serialize($transfer_response));
 						
+						} catch (\Stripe\Exception\InvalidRequestException $ex) {
+							wcfm_stripe_log( $store_name . " Error creating transfer record with Stripe: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Error creating transfer record with Stripe: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$all_success[$vendor_id] = "false";
+						} catch (\Stripe\Exception\AuthenticationException $ex) {
+							wcfm_stripe_log( $store_name . " Error creating transfer record with Stripe: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Error creating transfer record with Stripe: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$all_success[$vendor_id] = "false";
+						} catch (\Stripe\Exception\ApiConnectionException $ex) {
+							wcfm_stripe_log( $store_name . " Error creating transfer record with Stripe: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Error creating transfer record with Stripe: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$all_success[$vendor_id] = "false";
+						} catch (\Stripe\Exception\ApiErrorException $ex) {
+							wcfm_stripe_log( $store_name . " Error creating transfer record with Stripe: " . get_class($ex) . " [code: " . $ex->getStripeCode() . ", request: " . $ex->getRequestId() . "] " . $ex->getMessage());
+							wc_add_notice(__("Error creating transfer record with Stripe: ", 'wc-multivendor-marketplace') . __('Payment could not be processed at this time. Please try again or contact the site administrator.', 'wc-multivendor-marketplace'), 'error');
+							$all_success[$vendor_id] = "false";
 						} catch (Exception $ex) {
 							wcfm_stripe_log( $store_name . " Error creating transfer record with Stripe: " . $ex->getMessage());
 							wc_add_notice(__("Error creating transfer record with Stripe: ", 'wc-multivendor-marketplace') . $ex->getMessage(), 'error');
@@ -1025,7 +1339,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 				
 				$order->payment_complete( $response->id );
 
-				/* translators: transaction id */
+				 
 				$message = sprintf( __( 'Stripe charge complete (Charge ID: %s)', 'wc-multivendor-marketplace' ), $response->id );
 				$order->add_order_note( $message );
 			}
@@ -1042,7 +1356,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 				wc_reduce_stock_levels( $order_id );
 			}
 
-			/* translators: transaction id */
+			 
 			$order->update_status( 'on-hold', sprintf( __( 'Stripe charge authorized (Charge ID: %s). Process order to take payment, or cancel to remove the pre-authorization.', 'wc-multivendor-marketplace' ), $response->id ) );
 		}
 
@@ -1075,7 +1389,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$order->delete_meta_data( '_wcfm_store_invoices' );
 		$order->save();
 		
-		// Order Item Meta Reset - Order rest already performing this
+		 
 		$line_items = $order->get_items( 'line_item' );
 		if( !empty( $line_items ) ) {
 			foreach( $line_items as $item_id => $item ) {
@@ -1085,16 +1399,16 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		}
 	}
 
-	/**
-	 * Prepare & assign stripe customer object
-	 *
-	 * @since 1.0.0
-	 * @param object $user
-	 * @param array $postData
-	 *
-	 * @throws Exception When card was not added or for and invalid card.
-	 * @return object
-	 */
+	
+
+
+
+
+
+
+
+
+
 	public function prepare_customer_obj( $user, $postData, $order ) {
 		
 		if( !isset( $postData['stripe_source'] ) || empty( $postData['stripe_source'] ) ) {
@@ -1102,7 +1416,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			return false;
 		}
 		
-		// Create stripe customer
+		 
 		try {
 			
 			$source_object = sanitize_text_field( $postData['stripe_source'] );
@@ -1161,16 +1475,16 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		}
 	}
 	
-	/**
-	 * Update stripe customer object
-	 *
-	 * @since 1.0.0
-	 * @param object $user
-	 * @param array $postData
-	 *
-	 * @throws Exception When card was not added or for and invalid card.
-	 * @return object
-	 */
+	
+
+
+
+
+
+
+
+
+
 	public function update_customer_obj( $user, $postData ) {
 		try {
 			$stripe_customer_id = '';
@@ -1182,7 +1496,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			if( $stripe_customer_id ) {
 				$this->customer = Stripe_Customer::retrieve( $stripe_customer_id );
 				
-				// Saving User Card for Future Use
+				 
 				if( $this->customer && $this->customer->id && !isset( $this->customer->deleted ) && $this->customer->sources ) {
 					$stripe_saved_cards = get_user_meta( $user->ID, 'wcfmmp_stripe_customer_saved_cards', true );
 					if( !$stripe_saved_cards ) $stripe_saved_cards = array();
@@ -1197,9 +1511,9 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		}
 	}
 	
-	/**
-	 * Stripe Split Charges Refund
-	 */
+	
+
+
 	public function wcfmmp_stripe_split_process_refund( $refund_id, $order_id, $vendor_id ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -1207,12 +1521,19 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		
 		if( !$refund_id ) return;
 		if( !$order_id ) return;
-		//if( !$vendor_id ) return;
+		 
 		
 		$order = wc_get_order( $order_id );
 		if( !is_a( $order, 'WC_Order' ) ) return;
 		
 		if( $order->get_payment_method() != 'stripe_split' ) return;
+		
+		 
+		if( 'modern' === WCFMmp_Stripe_Payment_Engine::era_from_meta( $order->get_meta( '_wcfmmp_stripe_engine' ) ) ) {
+			$refund_handler = new WCFMmp_Stripe_Refund_Handler( $this );
+			$refund_handler->process_refund( $refund_id, $order_id, $vendor_id );
+			return;
+		}
 		
 		$vendor_token           = '';
 		$vendor_connected 		= false;
@@ -1221,28 +1542,30 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$refund_application_fee = true;
 		$charge_type            = $order->get_meta( "wcfmmp_stripe_split_pay_charge_type" );
 		
-		if( !$this->is_3d_secure ) {
-			if( $vendor_id && ( $charge_type != 'transfers_charges' ) ) {
-				$vendor_token     		= get_user_meta($vendor_id, 'access_token', true);
-				$vendor_connected 		= (get_user_meta($vendor_id, 'vendor_connected', true) == 1);
-				$vendor_stripe_account 	= get_user_meta($vendor_id, 'stripe_user_id', true);
-				$charge_account 		= [
-					'stripe_account' => $vendor_stripe_account
-				];
+		 
+		 
+		 
+		 
+		if( $vendor_id && ( $charge_type != 'transfers_charges' ) ) {
+			$vendor_token     		= get_user_meta($vendor_id, 'access_token', true);
+			$vendor_connected 		= (get_user_meta($vendor_id, 'vendor_connected', true) == 1);
+			$vendor_stripe_account 	= get_user_meta($vendor_id, 'stripe_user_id', true);
+			$charge_account 		= [
+				'stripe_account' => $vendor_stripe_account
+			];
 
-				if( $vendor_connected ) {
-					$stripe_charge_id = $order->get_meta( "wcfmmp_stripe_split_pay_charge_id_{$vendor_id}" );
-					if( !$stripe_charge_id ) return;
-				} else {
-					$refund_application_fee = false;
-					$stripe_charge_id = $order->get_meta( "wcfmmp_stripe_split_pay_charge_id_admin" );
-					if( !$stripe_charge_id ) return;
-				}
+			if( $vendor_connected ) {
+				$stripe_charge_id = $order->get_meta( "wcfmmp_stripe_split_pay_charge_id_{$vendor_id}" );
+				if( !$stripe_charge_id ) return;
 			} else {
 				$refund_application_fee = false;
-				$stripe_charge_id = $order->get_meta( "wcfmmp_stripe_split_pay_charge_id_admin" );
+				$stripe_charge_id = $this->wcfmmp_stripe_split_platform_charge_id( $order );
 				if( !$stripe_charge_id ) return;
 			}
+		} else {
+			$refund_application_fee = false;
+			$stripe_charge_id = $this->wcfmmp_stripe_split_platform_charge_id( $order );
+			if( !$stripe_charge_id ) return;
 		}
 		
 		$reverse_transfer = false;
@@ -1274,32 +1597,40 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 				if( $is_partially_refunded ) $refund_application_fee = false;
 				$refund_application_fee = apply_filters( 'wcfm_is_allow_stripe_refund_application_fee', $refund_application_fee, $refund_id, $order_id, $vendor_id );
 				
-				if( $this->is_3d_secure ) {
-					$stripe_refund_id = $order->get_meta( '_stripe_refund_id' );//$this->process_refund( $refund_info->order_id, $refunded_amount, $refund_reason );
-				} else {
-					\Stripe\Stripe::setApiKey( $this->secret_key );
-					
-					try {
-						$refund = \Stripe\Refund::create( [
-							'charge'                 => $stripe_charge_id,
-							'amount'                 => $this->get_stripe_amount( round($refunded_amount,2) ),
-							'reason'                 => 'requested_by_customer',
-							'refund_application_fee' => $refund_application_fee,
-							'reverse_transfer'       => $reverse_transfer
-						], $charge_account );
-						
-						if ( $refund->id ) {
-							$stripe_refund_id = $refund->id;
-						}
-							
-					} catch( Exception $e ) {
-						wcfm_stripe_log( "Stripe Split Pay refund error: " . $e->getMessage() );
+				 
+				 
+				 
+				 
+				\Stripe\Stripe::setApiKey( $this->secret_key );
+
+				try {
+					$refund = \Stripe\Refund::create( [
+						'charge'                 => $stripe_charge_id,
+						'amount'                 => $this->get_stripe_amount( round($refunded_amount,2) ),
+						'reason'                 => 'requested_by_customer',
+						'refund_application_fee' => $refund_application_fee,
+						'reverse_transfer'       => $reverse_transfer
+					], $charge_account );
+
+					if ( $refund->id ) {
+						$stripe_refund_id = $refund->id;
 					}
+
+				} catch( \Stripe\Exception\InvalidRequestException $e ) {
+					wcfm_stripe_log( "Stripe Split Pay refund error: " . get_class($e) . " [code: " . $e->getStripeCode() . ", request: " . $e->getRequestId() . "] " . $e->getMessage() );
+				} catch( \Stripe\Exception\AuthenticationException $e ) {
+					wcfm_stripe_log( "Stripe Split Pay refund error: " . get_class($e) . " [code: " . $e->getStripeCode() . ", request: " . $e->getRequestId() . "] " . $e->getMessage() );
+				} catch( \Stripe\Exception\ApiConnectionException $e ) {
+					wcfm_stripe_log( "Stripe Split Pay refund error: " . get_class($e) . " [code: " . $e->getStripeCode() . ", request: " . $e->getRequestId() . "] " . $e->getMessage() );
+				} catch( \Stripe\Exception\ApiErrorException $e ) {
+					wcfm_stripe_log( "Stripe Split Pay refund error: " . get_class($e) . " [code: " . $e->getStripeCode() . ", request: " . $e->getRequestId() . "] " . $e->getMessage() );
+				} catch( Exception $e ) {
+					wcfm_stripe_log( "Stripe Split Pay refund error: " . $e->getMessage() );
 				}
 					
 				if ( $stripe_refund_id ) {
 					
-					// Create Transfer Charge Reversal
+					 
 					try {
 						if( $vendor_id && ( $charge_type == 'transfers_charges' ) ) {
 							$vendor_token     = get_user_meta( $vendor_id, 'access_token', true );
@@ -1308,10 +1639,10 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 								$vendor_trasfer_id = $order->get_meta( 'wcfmmp_stripe_split_pay_transaction_id_'.$vendor_id );
 								if( $vendor_trasfer_id ) {
 									$trasfer = Stripe_Transfer::retrieve($vendor_trasfer_id);
-									// $trasfer->reverse(); /* Deprecated */
+									 
 									$trasfer->createReversal($vendor_trasfer_id);
 									
-									// Cancel Withdrwal Request
+									 
 									$commission_ids = '';
 									$marketplace_orders = $wpdb->get_results(  $wpdb->prepare( "SELECT ID from {$wpdb->prefix}wcfm_marketplace_orders WHERE order_id = %d AND vendor_id = %d", $order_id, $vendor_id ) );
 									foreach( $marketplace_orders as $marketplace_order ) {
@@ -1334,6 +1665,26 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 								}
 							}
 						}
+					} catch( \Stripe\Exception\InvalidRequestException $e ) {
+						 $order->delete_meta_data( 'wcfmmp_stripe_split_pay_transaction_id_'.$vendor_id );
+						 $order->save();
+						 
+						 wcfm_stripe_log( "Stripe Split Pay transfer reversal error: " . get_class($e) . " [code: " . $e->getStripeCode() . ", request: " . $e->getRequestId() . "] " . $e->getMessage() );
+					} catch( \Stripe\Exception\AuthenticationException $e ) {
+						 $order->delete_meta_data( 'wcfmmp_stripe_split_pay_transaction_id_'.$vendor_id );
+						 $order->save();
+						 
+						 wcfm_stripe_log( "Stripe Split Pay transfer reversal error: " . get_class($e) . " [code: " . $e->getStripeCode() . ", request: " . $e->getRequestId() . "] " . $e->getMessage() );
+					} catch( \Stripe\Exception\ApiConnectionException $e ) {
+						 $order->delete_meta_data( 'wcfmmp_stripe_split_pay_transaction_id_'.$vendor_id );
+						 $order->save();
+						 
+						 wcfm_stripe_log( "Stripe Split Pay transfer reversal error: " . get_class($e) . " [code: " . $e->getStripeCode() . ", request: " . $e->getRequestId() . "] " . $e->getMessage() );
+					} catch( \Stripe\Exception\ApiErrorException $e ) {
+						 $order->delete_meta_data( 'wcfmmp_stripe_split_pay_transaction_id_'.$vendor_id );
+						 $order->save();
+						 
+						 wcfm_stripe_log( "Stripe Split Pay transfer reversal error: " . get_class($e) . " [code: " . $e->getStripeCode() . ", request: " . $e->getRequestId() . "] " . $e->getMessage() );
 					} catch( Exception $e ) {
 						 $order->delete_meta_data( 'wcfmmp_stripe_split_pay_transaction_id_'.$vendor_id );
 						 $order->save();
@@ -1352,14 +1703,66 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		}
 	}
 	
-	/**
-	 * Refund a charge.
-	 *
-	 * @since 3.2.0
-	 * @param  int $order_id
-	 * @param  float $amount
-	 * @return bool
-	 */
+	
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+	public function wcfmmp_stripe_split_disallow_api_refund( $allow, $payment_method ) {
+		return ( $this->id === $payment_method ) ? false : $allow;
+	}
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	public function wcfmmp_stripe_split_total_gateway_fee( $order_id, $vendor_id ) {
+		global $WCFMmp;
+
+		$charge = $WCFMmp->wcfmmp_commission->wcfmmp_get_order_transaction_charge( $order_id, $vendor_id );
+
+		return (float) $charge['total'];
+	}
+
+	
+
+
+
+
+
+
+
+
+
+	private function wcfmmp_stripe_split_platform_charge_id( $order ) {
+		$charge_id = $order->get_meta( 'wcfmmp_stripe_split_pay_charge_id_admin' );
+		if ( ! $charge_id ) {
+			$charge_id = $order->get_transaction_id();
+		}
+		return $charge_id;
+	}
+
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		$order = wc_get_order( $order_id );
 
@@ -1367,110 +1770,47 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			return false;
 		}
 
-		$request = array();
-
-		$order_currency = $order->get_currency();
-		$captured       = $order->get_meta( '_stripe_charge_captured', true );
-		$charge_id      = $order->get_transaction_id();
-
-		if ( ! $charge_id ) {
+		 
+		 
+		 
+		 
+		if ( 'no' === $order->get_meta( '_stripe_charge_captured', true ) ) {
+			$intent = $this->get_intent_from_order( $order );
+			if ( $intent && 'requires_capture' === $intent->status ) {
+				WCFM_Stripe_API::request( array(), 'payment_intents/' . $intent->id . '/cancel' );
+				return true;
+			}
 			return false;
 		}
 
-		if ( ! is_null( $amount ) ) {
-			$request['amount'] = $this->get_stripe_amount( $amount, $order_currency );
-		}
-
-		// If order is only authorized, don't pass amount.
-		if ( 'yes' !== $captured ) {
-			unset( $request['amount'] );
-		}
-
-		if ( $reason ) {
-			$request['metadata'] = array(
-				'reason' => $reason,
-			);
-		}
-
-		$request['charge'] = $charge_id;
-		wcfm_stripe_log( "Info: Beginning refund for order {$charge_id} for the amount of {$amount}" );
-
-		$request = apply_filters( 'wc_stripe_refund_request', $request, $order );
-
-		$intent = $this->get_intent_from_order( $order );
-		$intent_cancelled = false;
-		if ( $intent ) {
-			// If the order has a Payment Intent pending capture, then the Intent itself must be refunded (cancelled), not the Charge
-			if ( ! empty( $intent->error ) ) {
-				$response = $intent;
-				$intent_cancelled = true;
-			} elseif ( 'requires_capture' === $intent->status ) {
-				$result = WCFM_Stripe_API::request(
-					array(),
-					'payment_intents/' . $intent->id . '/cancel'
-				);
-				$intent_cancelled = true;
-
-				if ( ! empty( $result->error ) ) {
-					$response = $result;
-				} else {
-					$charge = end( $result->charges->data );
-					$response = end( $charge->refunds->data );
-				}
-			}
-		}
-
-		if ( ! $intent_cancelled ) {
-			$response = WCFM_Stripe_API::request( $request, 'refunds' );
-		}
-
-		if ( ! empty( $response->error ) ) {
-			wcfm_stripe_log( 'Error: ' . $response->error->message );
-
-			return false;
-
-		} elseif ( ! empty( $response->id ) ) {
-			$order->update_meta_data( '_stripe_refund_id', $response->id );
-
-			$amount = wc_price( $response->amount / 100 );
-
-			if ( in_array( strtolower( $order->get_currency() ), $this->no_decimal_currencies() ) ) {
-				$amount = wc_price( $response->amount );
-			}
-
-			if ( isset( $response->balance_transaction ) ) {
-				$this->update_fees( $order, $response->balance_transaction );
-			}
-
-			/* translators: 1) dollar amount 2) transaction id 3) refund message */
-			$refund_message = ( isset( $captured ) && 'yes' === $captured ) ? sprintf( __( 'Refunded %1$s - Refund ID: %2$s - Reason: %3$s', 'wc-multivendor-marketplace' ), $amount, $response->id, $reason ) : __( 'Pre-Authorization Released', 'wc-multivendor-marketplace' );
-
-			$order->add_order_note( $refund_message );
-			wcfm_stripe_log( 'Success: ' . html_entity_decode( wp_strip_all_tags( $refund_message ) ) );
-
-			return $response->id;
-		}
+		 
+		 
+		 
+		 
+		 
+		 
+		return new WP_Error( 'wcfmmp_stripe_split_refund', __( 'Refund this order through the WCFM refund requests, so the vendor transfers and commissions are reversed as well.', 'wc-multivendor-marketplace' ) );
 	}
+
 	
-	/**
-	 * Loads the order from the current request.
-	 *
-	 * @since 4.2.0
-	 * @throws WC_Stripe_Exception An exception if there is no order ID or the order does not exist.
-	 * @return WC_Order
-	 */
+
+
+
+
+
+
 	protected function get_order_from_request() {
 		if ( ! isset( $_GET['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['nonce'] ), 'wc_stripe_confirm_pi' ) ) {
 			throw new Exception( 'missing-nonce', __( 'CSRF verification failed.', 'wc-multivendor-marketplace' ) );
 		}
 
-		// Load the order ID.
+		 
 		$order_id = null;
 		if ( isset( $_GET['order'] ) && absint( $_GET['order'] ) ) {
 			$order_id = absint( $_GET['order'] );
 		}
 
-		// Retrieve the order.
+		 
 		$order = wc_get_order( $order_id );
 
 		if ( ! $order ) {
@@ -1480,18 +1820,18 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		return $order;
 	}
 	
-	/**
-	 * Handles successful PaymentIntent authentications.
-	 *
-	 * @since 3.2.0
-	 */
+	
+
+
+
+
 	public function verify_intent() {
 		global $woocommerce;
 
 		try {
 			$order = $this->get_order_from_request();
 		} catch ( Exception $e ) {
-			/* translators: Error message text */
+			 
 			$message = sprintf( __( 'Payment verification error: %s', 'wc-multivendor-marketplace' ), $e->getMessage() );
 			
 			wcfm_stripe_log( "Stripe Split Pay Error: " . esc_html( $message ) );
@@ -1511,14 +1851,39 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		try {
 			$this->verify_intent_after_checkout( $order );
 
-			if ( ! isset( $_GET['is_ajax'] ) ) {
-				$redirect_url = isset( $_GET['redirect_to'] ) // wpcs: csrf ok.
-					? esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) // wpcs: csrf ok.
-					: $this->get_return_url( $order );
+			 
+			$order = wc_get_order( $order->get_id() );
 
-				wp_safe_redirect( $redirect_url );
+			 
+			 
+			 
+			 
+			$pending = $order->get_meta( '_wcfmmp_stripe_pending_vendor_action' );
+			if ( is_array( $pending ) && ! empty( $pending['client_secret'] ) ) {
+				if ( isset( $_GET['is_ajax'] ) ) {
+					wp_send_json( array(
+						'requires_action' => true,
+						'client_secret'   => $pending['client_secret'],
+						'account'         => isset( $pending['account'] ) ? $pending['account'] : '',
+					) );
+				}
+				 
+				wp_safe_redirect( $order->get_checkout_payment_url() );
+				exit;
 			}
 
+			$redirect_to  = isset( $_GET['redirect_to'] )  
+				? esc_url_raw( wp_unslash( $_GET['redirect_to'] ) )  
+				: $this->get_return_url( $order );
+			$order_unpaid = in_array( $order->get_status(), array( 'failed', 'pending' ), true );
+			$retry_url    = isset( $_GET['is_pay_for_order'] ) ? $order->get_checkout_payment_url() : wc_get_checkout_url();  
+			$redirect_url = $order_unpaid ? $retry_url : $redirect_to;
+
+			if ( isset( $_GET['is_ajax'] ) ) {
+				wp_send_json( array( 'redirect' => $redirect_url ) );
+			}
+
+			wp_safe_redirect( $redirect_url );
 			exit;
 		} catch ( Exception $ex ) {
 			
@@ -1529,16 +1894,16 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		}
 	}
 	
-	/**
-	 * Adds the necessary hooks to modify the "Pay for order" page in order to clean
-	 * it up and prepare it for the Stripe PaymentIntents modal to confirm a payment.
-	 *
-	 * @since 3.2
-	 * @param WC_Payment_Gateway[] $gateways A list of all available gateways.
-	 * @return WC_Payment_Gateway[]          Either the same list or an empty one in the right conditions.
-	 */
+	
+
+
+
+
+
+
+
 	public function prepare_order_pay_page( $gateways ) {
-		if ( ! is_wc_endpoint_url( 'order-pay' ) || ! isset( $_GET['wcfm-stripe-confirmation'] ) ) { // wpcs: csrf ok.
+		if ( ! is_wc_endpoint_url( 'order-pay' ) || ! isset( $_GET['wcfm-stripe-confirmation'] ) ) {  
 			return $gateways;
 		}
 
@@ -1551,22 +1916,22 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		return array();
 	}
 	
-	/**
-	 * Changes the text of the "No available methods" message to one that indicates
-	 * the need for a PaymentIntent to be confirmed.
-	 *
-	 * @since 4.2
-	 * @return string the new message.
-	 */
+	
+
+
+
+
+
+
 	public function change_no_available_methods_message() {
 		return wpautop( __( "Almost there!\n\nYour order has already been created, the only thing that still needs to be done is for you to authorize the payment with your bank.", 'wc-multivendor-marketplace' ) );
 	}
 
-	/**
-	 * Renders hidden inputs on the "Pay for Order" page in order to let Stripe handle PaymentIntents.
-	 *
-	 * @since 4.2
-	 */
+	
+
+
+
+
 	public function render_payment_intent_inputs() {
 		$order     = wc_get_order( absint( get_query_var( 'order-pay' ) ) );
 		$intent    = $this->get_intent_from_order( $order );
@@ -1578,20 +1943,20 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 				'redirect_to'      => rawurlencode( $this->get_return_url( $order ) ),
 				'is_pay_for_order' => true,
 			),
-			WC_AJAX::get_endpoint( 'wc_stripe_verify_intent' )
+			WC_AJAX::get_endpoint( 'wcfmmp_stripe_verify_intent' )
 		);
 
 		echo '<input type="hidden" id="stripe-intent-id" value="' . esc_attr( $intent->client_secret ) . '" />';
 		echo '<input type="hidden" id="stripe-intent-return" value="' . esc_attr( $verification_url ) . '" />';
 	}
 	
-	/**
-	 * Attempt to manually complete the payment process for orders, which are still pending
-	 * before displaying the View Order page. This is useful in case webhooks have not been set up.
-	 *
-	 * @since 4.2.0
-	 * @param int $order_id The ID that will be used for the thank you page.
-	 */
+	
+
+
+
+
+
+
 	public function check_intent_status_on_order_page( $order_id ) {
 		if ( empty( $order_id ) || absint( $order_id ) <= 0 ) {
 			return;
@@ -1601,34 +1966,34 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$this->verify_intent_after_checkout( $order );
 	}
 
-	/**
-	 * Attached to `woocommerce_payment_successful_result` with a late priority,
-	 * this method will combine the "naturally" generated redirect URL from
-	 * WooCommerce and a payment intent secret into a hash, which contains both
-	 * the secret, and a proper URL, which will confirm whether the intent succeeded.
-	 *
-	 * @since 4.2.0
-	 * @param array $result   The result from `process_payment`.
-	 * @param int   $order_id The ID of the order which is being paid for.
-	 * @return array
-	 */
+	
+
+
+
+
+
+
+
+
+
+
 	public function modify_successful_payment_result( $result, $order_id ) {
-		// Only redirects with intents need to be modified.
+		 
 		if ( ! isset( $result['intent_secret'] ) ) {
 			return $result;
 		}
 
-		// Put the final thank you page redirect into the verification URL.
+		 
 		$verification_url = add_query_arg(
 			array(
 				'order'       => $order_id,
 				'nonce'       => wp_create_nonce( 'wc_stripe_confirm_pi' ),
 				'redirect_to' => rawurlencode( $result['redirect'] ),
 			),
-			WC_AJAX::get_endpoint( 'wc_stripe_verify_intent' )
+			WC_AJAX::get_endpoint( 'wcfmmp_stripe_verify_intent' )
 		);
 
-		// Combine into a hash.
+		 
 		$redirect = sprintf( '#confirm-pi-%s:%s', $result['intent_secret'], rawurlencode( $verification_url ) );
 
 		return array(
@@ -1637,39 +2002,98 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		);
 	}
 
-	/**
-	 * Proceed with current request using new login session (to ensure consistent nonce).
-	 */
+	
+
+
+
+
+
+
+
+
+	public function modify_modern_payment_result( $result, $order_id ) {
+		if ( empty( $result['wcfmmp_intent_client_secret'] ) ) {
+			return $result;
+		}
+
+		$verification_url = add_query_arg(
+			array(
+				'order'       => $order_id,
+				'nonce'       => wp_create_nonce( 'wc_stripe_confirm_pi' ),
+				'redirect_to' => rawurlencode( $result['redirect'] ),
+			),
+			WC_AJAX::get_endpoint( 'wcfmmp_stripe_verify_intent' )
+		);
+
+		$payload = rawurlencode( wp_json_encode( array(
+			'flow'     => isset( $result['wcfmmp_flow'] ) ? $result['wcfmmp_flow'] : 'payment',
+			'secret'   => $result['wcfmmp_intent_client_secret'],
+			'account'  => isset( $result['wcfmmp_intent_account'] ) ? $result['wcfmmp_intent_account'] : '',
+			'verify'   => $verification_url,
+			'redirect' => $result['redirect'],
+		) ) );
+
+		return array(
+			'result'   => 'success',
+			'redirect' => '#wcfmmp-stripe-modern:' . $payload,
+		);
+	}
+
+	
+
+
+
+
+
+
+
+	public function modern_amount_fragment( $fragments ) {
+		if ( WC()->cart ) {
+			$fragments['wcfmmp_stripe_amount'] = $this->get_stripe_amount( WC()->cart->get_total( 'edit' ), get_woocommerce_currency() );
+		}
+		return $fragments;
+	}
+
+	
+
+
 	public function set_cookie_on_current_request( $cookie ) {
 		$_COOKIE[ LOGGED_IN_COOKIE ] = $cookie;
 	}
 
-	/**
-	 * Executed between the "Checkout" and "Thank you" pages, this
-	 * method updates orders based on the status of associated PaymentIntents.
-	 *
-	 * @since 3.2.0
-	 * @param WC_Order $order The order which is in a transitional state.
-	 */
+	
+
+
+
+
+
+
 	public function verify_intent_after_checkout( $order ) {
 		$payment_method = $order->get_payment_method();
 		if ( $payment_method !== $this->id ) {
-			// If this is not the payment method, an intent would not be available.
+			 
+			return;
+		}
+
+		 
+		if ( 'modern' === WCFMmp_Stripe_Payment_Engine::era_from_meta( $order->get_meta( '_wcfmmp_stripe_engine' ) ) ) {
+			$engine = new WCFMmp_Stripe_Payment_Engine( $this );
+			$engine->complete_verification( $order );
 			return;
 		}
 
 		$intent = $this->get_intent_from_order( $order );
 		if ( ! $intent ) {
-			// No intent, redirect to the order received page for further actions.
+			 
 			return;
 		}
 
-		// A webhook might have modified or locked the order while the intent was retreived. This ensures we are reading the right status.
+		 
 		clean_post_cache( $order->get_id() );
 		$order = wc_get_order( $order->get_id() );
 
 		if ( 'pending' !== $order->get_status() && 'failed' !== $order->get_status() ) {
-			// If payment has already been completed, this function is redundant.
+			 
 			return;
 		}
 
@@ -1678,32 +2102,32 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		}
 
 		if ( 'succeeded' === $intent->status || 'requires_capture' === $intent->status ) {
-			// Proceed with the payment completion.
+			 
 			$this->process_response( end( $intent->charges->data ), $order );
 		} else if ( 'requires_payment_method' === $intent->status ) {
-			// `requires_payment_method` means that SCA got denied for the current payment method.
+			 
 			$this->failed_sca_auth( $order, $intent );
 		}
 
 		$this->unlock_order_payment( $order );
 	}
 
-	/**
-	 * Checks if the payment intent associated with an order failed and records the event.
-	 *
-	 * @since 4.2.0
-	 * @param WC_Order $order  The order which should be checked.
-	 * @param object   $intent The intent, associated with the order.
-	 */
+	
+
+
+
+
+
+
 	public function failed_sca_auth( $order, $intent ) {
-		// If the order has already failed, do not repeat the same message.
+		 
 		if ( 'failed' === $order->get_status() ) {
 			return;
 		}
 
-		// Load the right message and update the status.
+		 
 		$status_message = ( $intent->last_payment_error )
-			/* translators: 1) The error message that was received from Stripe. */
+			 
 			? sprintf( __( 'Stripe SCA authentication failed. Reason: %s', 'wc-multivendor-marketplace' ), $intent->last_payment_error->message )
 			: __( 'Stripe SCA authentication failed.', 'wc-multivendor-marketplace' );
 		$order->update_status( 'failed', $status_message );
@@ -1711,14 +2135,14 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$this->send_failed_order_email( $order->get_id() );
 	}
 	
-	/**
-	 * Sends the failed order email to admin.
-	 *
-	 * @since 3.1.0
-	 * @version 4.0.0
-	 * @param int $order_id
-	 * @return null
-	 */
+	
+
+
+
+
+
+
+
 	public function send_failed_order_email( $order_id ) {
 		$emails = WC()->mailer()->get_emails();
 		if ( ! empty( $emails ) && ! empty( $order_id ) ) {
@@ -1726,14 +2150,14 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		}
 	}
 	
-	/**
-	 * Updates Stripe fees/net.
-	 * e.g usage would be after a refund.
-	 *
-	 * @since 3.2.0
-	 * @param object $order The order object
-	 * @param int $balance_transaction_id
-	 */
+	
+
+
+
+
+
+
+
 	public function update_fees( $order, $balance_transaction_id ) {
 		$order_id = $order->get_id();
 
@@ -1741,16 +2165,16 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 
 		if ( empty( $balance_transaction->error ) ) {
 			if ( isset( $balance_transaction ) && isset( $balance_transaction->fee ) ) {
-				// Fees and Net needs to both come from Stripe to be accurate as the returned
-				// values are in the local currency of the Stripe account, not from WC.
+				 
+				 
 				$fee_refund = ! empty( $balance_transaction->fee ) ? WCFM_Stripe_Helper::format_balance_fee( $balance_transaction, 'fee' ) : 0;
 				$net_refund = ! empty( $balance_transaction->net ) ? WCFM_Stripe_Helper::format_balance_fee( $balance_transaction, 'net' ) : 0;
 
-				// Current data fee & net.
+				 
 				$fee_current = WCFM_Stripe_Helper::get_stripe_fee( $order );
 				$net_current = WCFM_Stripe_Helper::get_stripe_net( $order );
 
-				// Calculation.
+				 
 				$fee = (float) $fee_current + (float) $fee_refund;
 				$net = (float) $net_current + (float) $net_refund;
 
@@ -1780,9 +2204,9 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			return absint($total);
 		} else {
 			if ($reverse) {
-				return absint(wc_format_decimal(( (float) $total / 100), wc_get_price_decimals())); // actual.
+				return absint(wc_format_decimal(( (float) $total / 100), wc_get_price_decimals()));  
 			} else {
-				return absint(wc_format_decimal(( (float) $total * 100), wc_get_price_decimals())); // In cents.
+				return absint(wc_format_decimal(( (float) $total * 100), wc_get_price_decimals()));  
 			}
 		}
 	}
@@ -1790,7 +2214,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 	public static function clean_statement_descriptor( $statement_descriptor = '' ) {
 		$disallowed_characters = array( '<', '>', '"', "'" );
 
-		// Remove special characters.
+		 
 		$statement_descriptor = str_replace( $disallowed_characters, '', $statement_descriptor );
 
 		$statement_descriptor = substr( trim( $statement_descriptor ), 0, 22 );
@@ -1798,21 +2222,21 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		return $statement_descriptor;
 	}
 	
-	/**
-	 * Generate the request for the payment.
-	 *
-	 * @since 3.2.0
-	 * @param  WC_Order $order
-	 * @param  object $prepared_source
-	 * @return array()
-	 */
+	
+
+
+
+
+
+
+
 	public function generate_payment_request( $order, $prepared_source ) {
 		$statement_descriptor  = $this->clean_statement_descriptor( get_bloginfo( 'name' ) );
 		$capture               = true;
 		$post_data             = array();
 		$post_data['currency'] = $order->get_currency();
 		$post_data['amount']   = $this->get_stripe_amount( $order->get_total(), $post_data['currency'] );
-		/* translators: 1) blog name 2) order number */
+		 
 		$post_data['description'] = sprintf( __( '%1$s - Order %2$s', 'wc-multivendor-marketplace' ), wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), $order->get_order_number() );
 		$billing_email            = $order->get_billing_email();
 		$billing_first_name       = $order->get_billing_first_name();
@@ -1845,15 +2269,15 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		return apply_filters( 'wc_stripe_generate_payment_request', $post_data, $order, $prepared_source );
 	}
 	
-	/**
-	 * Create a new PaymentIntent.
-	 *
-	 * @param WC_Order $order           The order that is being paid for.
-	 * @param object   $prepared_source The source that is used for the payment.
-	 * @return object                   An intent or an error.
-	 */
+	
+
+
+
+
+
+
 	public function create_intent( $order, $prepared_source ) {
-		// The request for a charge contains metadata for the intent.
+		 
 		$full_request = $this->generate_payment_request( $order, $prepared_source );
 
 		$request = array(
@@ -1873,7 +2297,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			$request['customer'] = $prepared_source->customer;
 		}
 
-		// Create an intent that awaits an action.
+		 
 		$intent = WCFM_Stripe_API::request( $request, 'payment_intents' );
 		if ( ! empty( $intent->error ) ) {
 			return $intent;
@@ -1882,20 +2306,20 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		$order_id = $order->get_id();
 		wcfm_stripe_log( "Stripe PaymentIntent $intent->id initiated for order $order_id" );
 
-		// Save the intent ID to the order.
+		 
 		$this->save_intent_to_order( $order, $intent );
 
 		return $intent;
 	}
 
-	/**
-	 * Updates an existing intent with updated amount, source, and customer.
-	 *
-	 * @param object   $intent          The existing intent object.
-	 * @param WC_Order $order           The order.
-	 * @param object   $prepared_source Currently selected source.
-	 * @return object                   An updated intent.
-	 */
+	
+
+
+
+
+
+
+
 	public function update_existing_intent( $intent, $order, $prepared_source ) {
 		$request = array();
 
@@ -1919,21 +2343,21 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		return WCFM_Stripe_API::request( $request, "payment_intents/$intent->id" );
 	}
 
-	/**
-	 * Confirms an intent if it is the `requires_confirmation` state.
-	 *
-	 * @since 3.2.0
-	 * @param object   $intent          The intent to confirm.
-	 * @param WC_Order $order           The order that the intent is associated with.
-	 * @param object   $prepared_source The source that is being charged.
-	 * @return object                   Either an error or the updated intent.
-	 */
+	
+
+
+
+
+
+
+
+
 	public function confirm_intent( $intent, $order, $prepared_source ) {
 		if ( 'requires_confirmation' !== $intent->status ) {
 			return $intent;
 		}
 
-		// Try to confirm the intent & capture the charge (if 3DS is not required).
+		 
 		$confirm_request = array(
 			'source' => $prepared_source->source,
 		);
@@ -1944,7 +2368,7 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 			return $confirmed_intent;
 		}
 
-		// Save a note about the status of the intent.
+		 
 		$order_id = $order->get_id();
 		if ( 'succeeded' === $confirmed_intent->status ) {
 			wcfm_stripe_log( "Stripe PaymentIntent $intent->id succeeded for order $order_id" );
@@ -1955,13 +2379,13 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		return $confirmed_intent;
 	}
 
-	/**
-	 * Saves intent to order.
-	 *
-	 * @since 3.2.0
-	 * @param WC_Order $order For to which the source applies.
-	 * @param stdClass $intent Payment intent information.
-	 */
+	
+
+
+
+
+
+
 	public function save_intent_to_order( $order, $intent ) {
 		$order_id = $order->get_id();
 
@@ -1972,13 +2396,13 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		}
 	}
 
-	/**
-	 * Retrieves the payment intent, associated with an order.
-	 *
-	 * @since 3.2.0
-	 * @param WC_Order $order The order to retrieve an intent for.
-	 * @return obect|bool     Either the intent object or `false`.
-	 */
+	
+
+
+
+
+
+
 	public function get_intent_from_order( $order ) {
 		$order_id = $order->get_id();
 		
@@ -1991,63 +2415,63 @@ class WCFMmp_Gateway_Stripe_Split extends WC_Payment_Gateway {
 		return WCFM_Stripe_API::request( array(), "payment_intents/$intent_id", 'GET' );
 	}
 
-	/**
-	 * Locks an order for payment intent processing for 5 minutes.
-	 *
-	 * @since 4.2
-	 * @param WC_Order $order  The order that is being paid.
-	 * @param stdClass $intent The intent that is being processed.
-	 * @return bool            A flag that indicates whether the order is already locked.
-	 */
+	
+
+
+
+
+
+
+
 	public function lock_order_payment( $order, $intent ) {
 		$order_id       = $order->get_id();
 		$transient_name = 'wcfmmp_stripe_processing_intent_' . $order_id;
 		$processing     = get_transient( $transient_name );
 
-		// Block the process if the same intent is already being handled.
+		 
 		if ( $processing === $intent->id ) {
 			return true;
 		}
 
-		// Save the new intent as a transient, eventually overwriting another one.
+		 
 		set_transient( $transient_name, $intent->id, 5 * MINUTE_IN_SECONDS );
 
 		return false;
 	}
 
-	/**
-	 * Unlocks an order for processing by payment intents.
-	 *
-	 * @since 3.2.0
-	 * @param WC_Order $order The order that is being unlocked.
-	 */
+	
+
+
+
+
+
 	public function unlock_order_payment( $order ) {
 		$order_id = $order->get_id();
 		delete_transient( 'wcfmmp_stripe_processing_intent_' . $order_id );
 	}
 
-	/**
-	 * List of currencies supported by Stripe that has no decimals.
-	 *
-	 * @return array $currencies
-	 */
+	
+
+
+
+
 	public function no_decimal_currencies() {
 		return apply_filters('wcfmmp_stripe_split_pay_no_decimal_currencies', array(
-				'bif', // Burundian Franc
-				'djf', // Djiboutian Franc
-				'jpy', // Japanese Yen
-				'krw', // South Korean Won
-				'pyg', // Paraguayan GuaranÃ­
-				'vnd', // Vietnamese Ä�á»“ng
-				'xaf', // Central African Cfa Franc
-				'xpf', // Cfp Franc
-				'clp', // Chilean Peso
-				'gnf', // Guinean Franc
-				'kmf', // Comorian Franc
-				'mga', // Malagasy Ariary
-				'rwf', // Rwandan Franc
-				'vuv', // Vanuatu Vatu
-				'xof', // West African Cfa Franc
+				'bif',  
+				'djf',  
+				'jpy',  
+				'krw',  
+				'pyg',  
+				'vnd',  
+				'xaf',  
+				'xpf',  
+				'clp',  
+				'gnf',  
+				'kmf',  
+				'mga',  
+				'rwf',  
+				'vuv',  
+				'xof',  
 		));
 	}
 

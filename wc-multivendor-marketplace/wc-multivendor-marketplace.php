@@ -4,7 +4,7 @@
  * Plugin URI: https://wclovers.com/knowledgebase_category/wcfm-marketplace/
  * Description: Most featured and flexible marketplace solution for your e-commerce store. Simply and Smoothly.
  * Author: WC Lovers
- * Version: 3.7.4
+ * Version: 3.8.0
  * Author URI: https://wclovers.com
  *
  * Text Domain: wc-multivendor-marketplace
@@ -16,7 +16,7 @@
  * Requires Plugins: woocommerce, wc-frontend-manager
  */
 
-if(!defined('ABSPATH')) exit; // Exit if accessed directly
+if(!defined('ABSPATH')) exit;  
 
 if ( ! class_exists( 'WCFMmp_Dependencies' ) )
 	require_once 'helpers/class-wcfmmp-dependencies.php';
@@ -34,16 +34,16 @@ if(!class_exists('WCFMmp')) {
 	$WCFMmp = new WCFMmp( __FILE__ );
 	$GLOBALS['WCFMmp'] = $WCFMmp;
 	
-	// Activation Hooks
+	 
 	register_activation_hook( __FILE__, array('wcfmmp', 'activate_wcfmmp') );
 	register_activation_hook( __FILE__, 'flush_rewrite_rules' );
 	
-	// Deactivation Hooks
+	 
 	register_deactivation_hook( __FILE__, array('wcfmmp', 'deactivate_wcfmmp') );
 	
-	/**
-	 * 	Declaring WooCommerce High-Performance Order Storage(HPOS) compatibility
-	 */
+	
+
+
 	add_action( 'before_woocommerce_init', function() {
 		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );

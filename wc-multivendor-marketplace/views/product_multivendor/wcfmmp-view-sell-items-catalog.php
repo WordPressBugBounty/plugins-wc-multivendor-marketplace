@@ -37,7 +37,7 @@ if( !wcfm_is_vendor() || !apply_filters( 'wcfmmp_is_allow_single_product_multive
 		<div class="wcfm_sell_items_catalog_filter_wrap wcfm_filters_wrap">
 		  <input type="submit" id="wcfm_bulk_add_to_my_store" class="wcfm_bulk_add_to_my_store wcfm_submit_button" value="<?php _e( 'Bulk Add', 'wc-multivendor-marketplace' ); ?>" />
 			<?php	
-			// Category Filtering
+			 
 			if( apply_filters( 'wcfm_is_products_taxonomy_filter', true, 'product_cat' ) && apply_filters( 'wcfm_is_products_category_filter', true ) ) {
 				$product_categories   = get_terms( 'product_cat', 'orderby=name&hide_empty=0&parent=0' );
 				$categories = array();
@@ -48,7 +48,7 @@ if( !wcfm_is_vendor() || !apply_filters( 'wcfmmp_is_allow_single_product_multive
 				
 			}
 			
-			// Custom Taxonomy Filtering
+			 
 			if( apply_filters( 'wcfm_is_products_custom_taxonomy_filter', true ) ) {
 				$product_taxonomies = get_object_taxonomies( 'product', 'objects' );
 				if( !empty( $product_taxonomies ) ) {
@@ -72,7 +72,7 @@ if( !wcfm_is_vendor() || !apply_filters( 'wcfmmp_is_allow_single_product_multive
 				}
 			}
 			
-			// Type filtering
+			 
 			if( $wcfm_is_products_type_filter = apply_filters( 'wcfm_is_products_type_filter', true ) ) {
 				$product_types = apply_filters( 'wcfm_product_types', array('simple' => __('Simple Product', 'wc-frontend-manager'), 'variable' => __('Variable Product', 'wc-frontend-manager'), 'grouped' => __('Grouped Product', 'wc-frontend-manager'), 'external' => __('External/Affiliate Product', 'wc-frontend-manager') ) );
 				$output  = '<select name="product_type" id="dropdown_product_type" style="width: 160px;">';

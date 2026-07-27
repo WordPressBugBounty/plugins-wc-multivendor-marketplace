@@ -1,68 +1,68 @@
 <?php
-/**
- * WCFM plugin core
- *
- * WCFM Reviews core
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Reviews {
 
 	public function __construct() {
 		global $WCFM, $WCFMmp;
 		
-		// WCFM Reviews Query Var Filter
+		 
 		add_filter( 'wcfm_query_vars', array( &$this, 'wcfm_reviews_query_vars' ), 10 );
 		add_filter( 'wcfm_endpoint_title', array( &$this, 'wcfm_reviews_endpoint_title' ), 10, 2 );
 		add_action( 'init', array( &$this, 'wcfm_reviews_init' ), 120 );
 		
-		// WCFMu Reviews Load WCFMu Scripts
+		 
 		add_action( 'wcfm_load_scripts', array( &$this, 'wcfm_reviews_load_scripts' ), 10 );
 		add_action( 'after_wcfm_load_scripts', array( &$this, 'wcfm_reviews_load_scripts' ), 10 );
 		
-		// WCFMu Reviews Load WCFMu Styles
+		 
 		add_action( 'wcfm_load_styles', array( &$this, 'wcfm_reviews_load_styles' ), 10 );
 		add_action( 'after_wcfm_load_styles', array( &$this, 'wcfm_reviews_load_styles' ), 10 );
 		
-		// WCFMu Reviews Load WCFMu views
+		 
 		add_action( 'wcfm_load_views', array( &$this, 'wcfm_reviews_load_views' ), 10 );
 		
-		// WCFMu Reviews Ajax Controller
+		 
 		add_action( 'after_wcfm_ajax_controller', array( &$this, 'wcfm_reviews_ajax_controller' ) );
 		
-		// Reviews menu on WCfM dashboard
+		 
 		if( apply_filters( 'wcfm_is_allow_reviews', true ) ) {
 			add_filter( 'wcfm_menus', array( &$this, 'wcfm_reviews_menus' ), 30 );
 		}
 		
-		// Reviews Status Update 
+		 
 		add_action( 'wp_ajax_wcfmmp_reviews_status_update', array( &$this, 'wcfmmp_reviews_status_update' ) );
 		
-		// Product Reviews Status Update 
+		 
 		add_action( 'wp_ajax_wcfmmp_product_reviews_status_update', array( &$this, 'wcfmmp_product_reviews_status_update' ) );
 		
-		// Reviews Delete
+		 
 		add_action( 'wp_ajax_wcfmmp_reviews_delete', array( &$this, 'wcfmmp_reviews_delete' ) );
 		
-		// Check wheather current user can add review to the store
+		 
 		add_filter( 'wcfm_is_allow_new_review', array( &$this, 'wcfmmp_check_new_review_permission' ), 10, 2 );
 		
-		// Vendor Product comment as Store Review
+		 
 		add_action( 'comment_post', array( &$this, 'wcfmmp_add_store_review' ), 50 );
 		
-		// Reviews direct message type
+		 
 		add_filter( 'wcfm_message_types', array( &$this, 'wcfmmp_reviews_message_types' ), 110 );
 		
-		// Is allow Store Review Rating
+		 
 		add_filter( 'wcfm_is_allow_review_rating', array( &$this, 'wcfmmp_is_allow_review_rating' ) );
 	}
 	
-	/**
-   * WCfM Reviews Query Var
-   */
+	
+
+
   function wcfm_reviews_query_vars( $query_vars ) {
   	$wcfm_modified_endpoints = wcfm_get_option( 'wcfm_endpoints', array() );
   	
@@ -76,15 +76,15 @@ class WCFMmp_Reviews {
 		return $query_vars;
   }
   
-  /**
-   * WCfM Reviews End Point Title
-   */
+  
+
+
   function wcfm_reviews_endpoint_title( $title, $endpoint ) {
   	
   	switch ( $endpoint ) {
-			//case 'wcfm-payments' :
-				//$title = __( 'Payments History', 'wc-multivendor-marketplace' );
-			//break;
+			 
+				 
+			 
 			
 			case 'wcfm-reviews' :
 				$title = __( 'Store Reviews', 'wc-multivendor-marketplace' );
@@ -98,26 +98,26 @@ class WCFMmp_Reviews {
   	return $title;
   }
   
-  /**
-   * WCfM Reviews Endpoint Intialize
-   */
+  
+
+
   function wcfm_reviews_init() {
   	global $WCFM_Query;
 	
-		// Intialize WCFM End points
+		 
 		$WCFM_Query->init_query_vars();
 		$WCFM_Query->add_endpoints();
 		
 		if( !get_option( 'wcfm_updated_end_point_reviews' ) ) {
-			// Flush rules after endpoint update
+			 
 			flush_rewrite_rules();
 			update_option( 'wcfm_updated_end_point_reviews', 1 );
 		}
   }
   
-	/**
-   * WCfM Reviews Reviews Menu
-   */
+	
+
+
   function wcfm_reviews_menus( $menus ) {
   	global $WCFM;
   		
@@ -131,9 +131,9 @@ class WCFMmp_Reviews {
   	return $menus;
   }
   
-	/**
-   * WCfM Reviews Scripts
-   */
+	
+
+
   public function wcfm_reviews_load_scripts( $end_point ) {
 	  global $WCFM, $WCFMmp;
     
@@ -177,9 +177,9 @@ class WCFMmp_Reviews {
 	  }
 	}
 	
-	/**
-   * WCfM Reviews Styles
-   */
+	
+
+
 	public function wcfm_reviews_load_styles( $end_point ) {
 	  global $WCFM, $WCFMmp;
 		
@@ -201,9 +201,9 @@ class WCFMmp_Reviews {
 	  }
 	}
 	
-	/**
-   * WCfM Reviews Views
-   */
+	
+
+
   public function wcfm_reviews_load_views( $end_point ) {
 	  global $WCFM, $WCFMmp;
 	  
@@ -222,9 +222,9 @@ class WCFMmp_Reviews {
 	  }
 	}
 	
-	/**
-   * WCfM Reviews Ajax Controllers
-   */
+	
+
+
   public function wcfm_reviews_ajax_controller() {
   	global $WCFM, $WCFMmp;
   	
@@ -287,9 +287,9 @@ class WCFMmp_Reviews {
   	}
   }
   
-  /**
-   * WCfM Reviews Status Update
-   */
+  
+
+
   function wcfmmp_reviews_status_update() {
   	global $WCFM, $WCFMmp, $_POST, $wpdb;
   	
@@ -312,7 +312,7 @@ class WCFMmp_Reviews {
   		$review_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wcfm_marketplace_reviews WHERE `ID`= %d", $reviewid ) ); 
   		$review_meta = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wcfm_marketplace_review_rating_meta WHERE `type` = 'rating_category' AND `review_id`= %d ORDER BY ID ASC", $reviewid ) );
   		if( $review_data && !empty( $review_data ) && is_object( $review_data ) ) {
-				if( $status ) { // On Approve
+				if( $status ) {  
 					$total_review_count = get_user_meta( $review_data->vendor_id, '_wcfmmp_total_review_count', true );
 					if( !$total_review_count ) $total_review_count = 0;
 					else $total_review_count = absint( $total_review_count );
@@ -360,7 +360,7 @@ class WCFMmp_Reviews {
 					update_user_meta( $review_data->vendor_id, '_wcfmmp_last_author_name', $review_data->author_name );
 					
 					$wpdb->update("{$wpdb->prefix}wcfm_marketplace_reviews", array('approved' => 1), array('ID' => $reviewid), array('%d'), array('%d'));
-				} else { // On UnApprove
+				} else {  
 					$total_review_count = get_user_meta( $review_data->vendor_id, '_wcfmmp_total_review_count', true );
 					if( !$total_review_count ) $total_review_count = 0;
 					else $total_review_count = absint( $total_review_count );
@@ -414,9 +414,9 @@ class WCFMmp_Reviews {
   	die;
   }
   
-  /**
-   * WCFM Product Review Status Update
-   */
+  
+
+
   function wcfmmp_product_reviews_status_update() {
     global $WCFM, $WCFMmp, $_POST, $wpdb;
     
@@ -434,7 +434,7 @@ class WCFMmp_Reviews {
 		$status   = absint($_POST['status']);
 		
 		if( $reviewid ) {
-			if( $status ) { // On Approve
+			if( $status ) {  
 				if( $status == 2 ) {
 					wp_set_comment_status( $reviewid, 'trash' );
 				} else {
@@ -448,9 +448,9 @@ class WCFMmp_Reviews {
   	die;
   }
   
-  /**
-   * WCfM Reviews Delete
-   */
+  
+
+
   function wcfmmp_reviews_delete() {
   	global $WCFM, $WCFMmp, $_POST, $wpdb;
   	
@@ -472,7 +472,7 @@ class WCFMmp_Reviews {
   		$review_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wcfm_marketplace_reviews WHERE `ID`= %d", $reviewid ) ); 
   		$review_meta = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wcfm_marketplace_review_rating_meta WHERE `type` = 'rating_category' AND `review_id`= %d ORDER BY ID ASC", $reviewid ) );
   		if( $review_data && !empty( $review_data ) && is_object( $review_data ) ) {
-				if( $review_data->approved == 1 ) { // On Approve Review Delete reset Stats
+				if( $review_data->approved == 1 ) {  
 					$total_review_count = get_user_meta( $review_data->vendor_id, '_wcfmmp_total_review_count', true );
 					if( !$total_review_count ) $total_review_count = 0;
 					else $total_review_count = absint( $total_review_count );
@@ -527,9 +527,9 @@ class WCFMmp_Reviews {
   	die;
   }
 
-	/**
-	 * Vendor Reviews Count
-	 */
+	
+
+
 	public function get_vendor_reviews_count($vendor_id = 0, $status = 'approved') {
 		global $WCFM, $WCFMmp, $wpdb;
 
@@ -553,11 +553,11 @@ class WCFMmp_Reviews {
 		return $reviews_count;
 	}
   
-  /**
-	 * Get avarage review rating
-	 *
-	 * @return integer
-	 */
+  
+
+
+
+
 	public function get_vendor_review_rating( $vendor_id ) {
 		if( !$vendor_id ) return 0;
 		$avg_review_rating = get_user_meta( $vendor_id, '_wcfmmp_avg_review_rating', true );
@@ -566,11 +566,11 @@ class WCFMmp_Reviews {
 		return $avg_review_rating;
 	}
 	
-	/**
-	 * Get avarage review rating
-	 *
-	 * @return integer
-	 */
+	
+
+
+
+
 	public function show_star_rating( $store_rating = 0, $vendor_id = 0 ) {
 		
 		if ( apply_filters( 'wcfm_is_pref_vendor_reviews', true ) && apply_filters( 'wcfm_is_allow_review_rating', true ) ) {
@@ -604,9 +604,9 @@ class WCFMmp_Reviews {
 		<?php }
 	}
 
-	/**
-	 * Users Reviews Count
-	 */
+	
+
+
 	public function get_author_reviews_count($author_id = 0) {
 		global $WCFM, $WCFMmp, $wpdb;
 
@@ -626,9 +626,9 @@ class WCFMmp_Reviews {
 		return $reviews_count;
 	}
   
-  /**
-   * Check wheather new user allow to add new review or not
-   */
+  
+
+
   function wcfmmp_check_new_review_permission( $is_allow, $vendor_id ) {
   	global $WCFM, $WCFMmp, $wpdb;
   	
@@ -716,7 +716,7 @@ class WCFMmp_Reviews {
 				
 				if( $wcfm_review_id ) {
 				
-					// Updating Review Meta
+					 
 					foreach( $wcfm_review_categories as $wcfm_review_cat_key => $wcfm_review_category ) {
 						$wcfm_review_meta_update = $wpdb->prepare("INSERT into {$wpdb->prefix}wcfm_marketplace_review_rating_meta 
 																				(`review_id`, `key`, `value`, `type`)
@@ -727,7 +727,7 @@ class WCFMmp_Reviews {
 						$wpdb->query($wcfm_review_meta_update);
 					}
 					
-					// Updating Review Meta - Product
+					 
 					$wcfm_review_meta_update = $wpdb->prepare("INSERT into {$wpdb->prefix}wcfm_marketplace_review_rating_meta 
 																				(`review_id`, `key`, `value`, `type`)
 																				VALUES
@@ -736,7 +736,7 @@ class WCFMmp_Reviews {
 																				);
 					$wpdb->query($wcfm_review_meta_update);
 					
-					// Update user review data
+					 
 					if( $review_auto_approve == 'yes' ) {
 						$total_review_count = get_user_meta( $vendor_id, '_wcfmmp_total_review_count', true );
 						if( !$total_review_count ) $total_review_count = 0;
@@ -773,7 +773,7 @@ class WCFMmp_Reviews {
 						update_user_meta( $vendor_id, '_wcfmmp_last_author_name', $vendor_review->comment_author );
 					}
 					
-					// Vendor Direct message
+					 
 					$wcfm_messages = sprintf( __( 'You have received a new Review from <b>%s</b>', 'wc-multivendor-marketplace' ), $vendor_review->comment_author );
 
 					$raw_message = [

@@ -1,62 +1,62 @@
 <?php
 
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Settings
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Settings {
 
 	public function __construct() {
 		global $WCFM;
 
-		// Marketplace Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_marketplace_settings'), 14);
 		add_action('wcfm_settings_update', array(&$this, 'wcfm_marketplace_settings_update'), 14);
 
-		// Geo Locate Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_geolocate_settings'), 14);
 
-		// Order Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_marketplace_order_settings'), 14);
 
-		// Commission Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_commission_settings'), 14);
 		add_action('wcfm_settings_update', array(&$this, 'wcfm_commission_settings_update'), 14);
 
-		// Withdrawal Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_withdrawal_settings'), 14);
 		add_action('wcfm_settings_update', array(&$this, 'wcfm_withdrawal_settings_update'), 14);
 
-		// Payment Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_payment_settings'), 14);
 
-		// Shipping Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_shipping_settings'), 14);
 		add_action('wcfm_settings_update', array(&$this, 'wcfm_shipping_settings_update'), 14);
 
-		// Refund Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_refund_settings'), 14);
 		add_action('wcfm_settings_update', array(&$this, 'wcfm_refund_settings_update'), 14);
 
-		// Review Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_review_settings'), 14);
 		add_action('wcfm_settings_update', array(&$this, 'wcfm_review_settings_update'), 14);
 
-		// Vendor Registration Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_vendor_registration_settings'), 14);
 		add_action('wcfm_settings_update', array(&$this, 'wcfm_vendor_registration_settings_update'), 14);
 
-		// Store Style Setting
+		 
 		add_action('begin_wcfm_settings_form_style', array(&$this, 'wcfm_store_style_settings'), 14);
 		add_action('wcfm_settings_update', array(&$this, 'wcfm_store_style_settings_update'), 14);
 
-		// Old Data Cleanup Setting
+		 
 		add_action('end_wcfm_settings', array(&$this, 'wcfm_data_cleanup_settings'), 200);
 		add_action('wcfm_settings_update', array(&$this, 'wcfm_data_cleanup_settings_update'), 200);
 	}
@@ -80,7 +80,7 @@ class WCFMmp_Settings {
 		$store_related_products   =  isset($wcfm_marketplace_options['store_related_products']) ? $wcfm_marketplace_options['store_related_products'] : 'default';
 		$store_ppp                =  isset($wcfm_marketplace_options['store_ppp']) ? $wcfm_marketplace_options['store_ppp'] : get_option('posts_per_page');
 
-		//$product_mulivendor       = isset( $wcfm_marketplace_options['product_mulivendor'] ) ? $wcfm_marketplace_options['product_mulivendor'] : 'yes';
+		 
 
 		$store_default_logo   = !empty($wcfm_marketplace_options['store_default_logo']) ? $wcfm_marketplace_options['store_default_logo'] : $WCFM->plugin_url . 'assets/images/wcfmmp-blue.png';
 		$store_default_banner = !empty($wcfm_marketplace_options['store_default_banner']) ? $wcfm_marketplace_options['store_default_banner'] : $WCFMmp->plugin_url . 'assets/images/default_banner.jpg';
@@ -128,7 +128,7 @@ class WCFMmp_Settings {
 					"store_ppp" => array('label' => __('Products per page', 'wc-multivendor-marketplace'), 'type' => 'number', 'class' => 'wcfm-text wcfm_ele', 'label_class' => 'wcfm_title', 'value' => $store_ppp, 'attributes' => array('min' => 1, 'step' => 1), 'desc_class' => 'wcfm_page_options_desc', 'desc' => __('No of products at Store per Page.', 'wc-frontend-manager')),
 					"store_related_products" => array('label' => __('Store Related Products', 'wc-multivendor-marketplace'), 'type' => 'select', 'options' => array('default' => __('As per WC Default Rule', 'wc-multivendor-marketplace'), 'store' => __('Only same Store Products', 'wc-multivendor-marketplace')), 'class' => 'wcfm-select wcfm_ele', 'label_class' => 'wcfm_title', 'value' => $store_related_products, 'desc_class' => 'wcfm_page_options_desc', 'desc' => __('Single product page related products rule.', 'wc-frontend-manager')),
 
-					//"product_mulivendor" => array('label' => __('Product Multi-vendor', 'wc-multivendor-marketplace'), 'type' => 'checkbox', 'class' => 'wcfm-checkbox wcfm_ele', 'label_class' => 'wcfm_title checkbox_title', 'value' => 'yes', 'dfvalue' => $product_mulivendor, 'desc_class' => 'wcfm_page_options_desc', 'desc' => __( 'Enable this to allow vendors to sell other vendor products, single product multiple seller.', 'wc-multivendor-marketplace' ) ),
+					 
 
 					"store_default_logo" => array('label' => __('Store Default Logo', 'wc-multivendor-marketplace'), 'type' => 'upload', 'class' => 'wcfm-text wcfm_ele wcfm-logo-uploads', 'label_class' => 'wcfm_title', 'prwidth' => 75, 'value' => $store_default_logo),
 					"store_default_banner" => array('label' => __('Store Default Banner', 'wc-multivendor-marketplace'), 'type' => 'upload', 'class' => 'wcfm-text wcfm_ele wcfm-banner-uploads', 'label_class' => 'wcfm_title', 'prwidth' => 250, 'value' => $store_default_banner),
@@ -216,7 +216,7 @@ class WCFMmp_Settings {
 
 		$checkout_user_location        = isset($wcfm_marketplace_options['checkout_user_location']) ? $wcfm_marketplace_options['checkout_user_location'] : 'no';
 
-		// Default Map Location
+		 
 		$default_geolocation = isset($wcfm_marketplace_options['default_geolocation']) ? $wcfm_marketplace_options['default_geolocation'] : array();
 		$store_location      = isset($default_geolocation['location']) ? esc_attr($default_geolocation['location']) : '';
 		$map_address         = isset($default_geolocation['address']) ? esc_attr($default_geolocation['address']) : '';
@@ -232,7 +232,7 @@ class WCFMmp_Settings {
 		<div class="wcfm-container">
 			<div id="wcfm_settings_form_geolocate_expander" class="wcfm-content">
 				<h2><?php _e('GEO Location Settings', 'wc-multivendor-marketplace'); ?></h2>
-				<?php //wcfm_video_tutorial( 'https://www.youtube.com/embed/ZKGD1PkdgYI' ); 
+				<?php  
 				?>
 				<div class="wcfm_clearfix"></div>
 				<?php
@@ -389,11 +389,11 @@ class WCFMmp_Settings {
 			$wcfm_marketplace_options['store_ppp'] = $wcfm_settings_form['store_ppp'];
 		}
 
-		//if( isset( $wcfm_settings_form['product_mulivendor'] ) ) {
-		//$wcfm_marketplace_options['product_mulivendor'] = 'yes';
-		//} else {
+		 
+		 
+		 
 		$wcfm_marketplace_options['product_mulivendor'] = 'no';
-		//}
+		 
 
 		if (isset($wcfm_settings_form['order_sync'])) {
 			$wcfm_marketplace_options['order_sync'] = 'yes';
@@ -419,7 +419,7 @@ class WCFMmp_Settings {
 			$wcfm_marketplace_options['delete_data_on_uninstall'] = 'no';
 		}
 
-		// GEO Location Setting Options
+		 
 		if (isset($wcfm_settings_form['enable_wcfm_geo_locate'])) {
 			$wcfm_marketplace_options['enable_wcfm_geo_locate'] = 'yes';
 		} else {
@@ -675,7 +675,7 @@ class WCFMmp_Settings {
 			$withdrawal_mode                      = 'by_manual';
 		}
 
-		$disallow_order_payment_methods       = get_wcfm_marketplace_disallow_active_order_payment_methods(); //isset( $wcfm_withdrawal_options['disallow_order_payment_methods'] ) ? $wcfm_withdrawal_options['disallow_order_payment_methods'] : array();
+		$disallow_order_payment_methods       = get_wcfm_marketplace_disallow_active_order_payment_methods();  
 		$withdrawal_reverse                   = isset($wcfm_withdrawal_options['withdrawal_reverse']) ? 'yes' : 'no';
 		$withdrawal_reverse_limit             = isset($wcfm_withdrawal_options['withdrawal_reverse_limit']) ? $wcfm_withdrawal_options['withdrawal_reverse_limit'] : '';
 
@@ -699,7 +699,7 @@ class WCFMmp_Settings {
 
 						"withdrawal_mode"   => array('label' => __('Withdrawal Mode', 'wc-multivendor-marketplace'), 'name' => 'wcfm_withdrawal_options[withdrawal_mode]', 'type' => 'select', 'class' => 'wcfm-select wcfm_ele withdrawal_mode', 'label_class' => 'wcfm_title withdrawal_mode', 'options' => apply_filters('wcfm_withdrawal_modes', array('by_manual' => __('Manual Withdrawal', 'wc-multivendor-marketplace'), 'by_schedule' => __('Periodic Withdrawal', 'wc-multivendor-marketplace'), 'by_order_status' => __('By Order Status', 'wc-multivendor-marketplace'))), 'value' => $withdrawal_mode),
 
-						//"withdrawal_generate_auto_withdrawal" => array('label' => __('Generate auto-withdrawal?', 'wc-multivendor-marketplace'), 'type' => 'checkbox', 'name' => 'wcfm_withdrawal_options[generate_auto_withdrawal]', 'class' => 'wcfm-checkbox wcfm_ele', 'label_class' => 'wcfm_title checkbox_title', 'value' => 'yes', 'dfvalue' => $generate_auto_withdrawal, 'desc_class' => 'instructions', 'desc' => __( 'Check this to generate withdrawal request automatically when order status reach at certain status.', 'wc-multivendor-marketplace' ) ),
+						 
 						"withdrawal_auto_withdrawal_status"   => array('label' => __('Order Status', 'wc-multivendor-marketplace'), 'name' => 'wcfm_withdrawal_options[auto_withdrawal_status]', 'type' => 'select', 'class' => 'wcfm-select wcfm_ele auto_withdrawal_order_status', 'label_class' => 'wcfm_title auto_withdrawal_order_status', 'options' => $wcfm_marketplace_withdrawal_order_status, 'value' => $auto_withdrawal_status, 'desc_class' => 'wcfm_page_options_desc auto_withdrawal_order_status', 'desc' => __('Order status for generate withdrawal request automatically.', 'wc-multivendor-marketplace'),),
 
 						"withdrawal_schedule"   => array('label' => __('Schedule Interval', 'wc-multivendor-marketplace'), 'name' => 'wcfm_withdrawal_options[withdrawal_schedule]', 'type' => 'select', 'class' => 'wcfm-select wcfm_ele schedule_withdrawal_threshold_ele', 'label_class' => 'wcfm_title schedule_withdrawal_threshold_ele', 'options' => apply_filters('wcfm_withdrawal_schedule_periods', array('day' => __('Every Day', 'wc-multivendor-marketplace'), 'week' => __('Every 7 Days (Every Week - Monday)', 'wc-multivendor-marketplace'), '2weeks' => __('Every 15 Days (Every 2 Weeks - Monday)', 'wc-multivendor-marketplace'), 'month' => __('Every 30 Days (Every Month - 1st)', 'wc-multivendor-marketplace'), '2months' => __('Every 60 Days (Every 2 Months - 1st)', 'wc-multivendor-marketplace'), 'quarter' => __('Every 90 Days (Every 3 Months - 1st)', 'wc-multivendor-marketplace'))), 'value' => $withdrawal_schedule),
@@ -770,6 +770,7 @@ class WCFMmp_Settings {
 
 		$withdrawal_stripe_is_3d_secure       = isset($wcfm_withdrawal_options['stripe_3d_secure']) ? 'yes' : 'no';
 		$withdrawal_stripe_split_pay_mode     = isset($wcfm_withdrawal_options['stripe_split_pay_mode']) ? $wcfm_withdrawal_options['stripe_split_pay_mode'] : 'direct_charges';
+		$withdrawal_stripe_split_pay_engine   = wcfmmp_stripe_split_engine_configured();
 
 		$withdrawal_charge_type               = isset($wcfm_withdrawal_options['withdrawal_charge_type']) ? $wcfm_withdrawal_options['withdrawal_charge_type'] : 'no';
 
@@ -799,8 +800,9 @@ class WCFMmp_Settings {
 						"withdrawal_payment_methods" => array('label' => __('Withdraw Payment Methods', 'wc-multivendor-marketplace'), 'name' => 'wcfm_withdrawal_options[payment_methods]', 'type' => 'checklist', 'class' => 'wcfm-checkbox wcfm_ele payment_options', 'label_class' => 'wcfm_title wcfm_full_title', 'options' => $wcfm_marketplace_withdrwal_payment_methods, 'value' => $payment_methods),
 						"withdrawal_setting_break_1" => array('type' => 'html', 'value' => '<div style="height: 15px;"></div>'),
 
-						"withdrawal_stripe_is_3d_secure" => array('label' => __('Stripe 3D Secure and SCA?', 'wc-multivendor-marketplace'), 'name' => 'wcfm_withdrawal_options[stripe_3d_secure]', 'type' => 'checkbox', 'class' => 'wcfm-checkbox wcfm_ele withdrawal_mode withdrawal_mode_stripe_split', 'label_class' => 'wcfm_title checkbox_title withdrawal_mode withdrawal_mode_stripe_split', 'value' => 'yes', 'dfvalue' => $withdrawal_stripe_is_3d_secure, 'desc_class' => 'withdrawal_mode withdrawal_mode_stripe_split wcfm_page_options_desc', 'desc' => __('3D Secure and SCA ready transaction is only supported when both your platform and the connected account (Vendor) are in the same region: both in Europe or both in the U.S.', 'wc-multivendor-marketplace')),
+						"withdrawal_stripe_is_3d_secure" => array('label' => __('Stripe 3D Secure and SCA?', 'wc-multivendor-marketplace'), 'name' => 'wcfm_withdrawal_options[stripe_3d_secure]', 'type' => 'checkbox', 'class' => 'wcfm-checkbox wcfm_ele withdrawal_mode withdrawal_mode_stripe_split', 'label_class' => 'wcfm_title checkbox_title withdrawal_mode withdrawal_mode_stripe_split', 'value' => 'yes', 'dfvalue' => $withdrawal_stripe_is_3d_secure, 'desc_class' => 'withdrawal_mode withdrawal_mode_stripe_split wcfm_page_options_desc', 'desc' => __('Legacy engine only: enabling this forces Transfer Charges mode and requires platform and vendor in the same region. Modern engine: 3D Secure / SCA runs automatically whenever the card requires it - this setting has no effect.', 'wc-multivendor-marketplace')),
 						"withdrawal_stripe_split_pay_mode" => array('label' => __('Stripe Split Pay Mode', 'wc-multivendor-marketplace'), 'name' => 'wcfm_withdrawal_options[stripe_split_pay_mode]', 'type' => 'select', 'options' => array('direct_charges' => __('Direct Charges',  'wc-multivendor-marketplace'), 'destination_charges' => __('Destination Charges',  'wc-multivendor-marketplace'), 'transfers_charges' => __('Transfer Charges',  'wc-multivendor-marketplace')), 'class' => 'wcfm-select wcfm_ele withdrawal_mode withdrawal_mode_stripe_split withdrawal_charge_type_ele', 'label_class' => 'wcfm_title withdrawal_mode withdrawal_mode_stripe_split withdrawal_charge_type_ele', 'value' => $withdrawal_stripe_split_pay_mode, 'desc_class' => 'withdrawal_mode withdrawal_mode_stripe_split wcfm_page_options_desc withdrawal_charge_type_ele', 'desc' => __('Set your preferred Stripe Split pay mode.', 'wc-multivendor-marketplace')),
+						"withdrawal_stripe_split_pay_engine" => array('label' => __('Stripe Split Pay Engine', 'wc-multivendor-marketplace'), 'name' => 'wcfm_withdrawal_options[stripe_split_pay_engine]', 'type' => 'select', 'options' => array('legacy' => __('Legacy (Charges API)',  'wc-multivendor-marketplace'), 'modern' => __('Modern (PaymentIntents + Payment Element)',  'wc-multivendor-marketplace')), 'class' => 'wcfm-select wcfm_ele withdrawal_mode withdrawal_mode_stripe_split', 'label_class' => 'wcfm_title withdrawal_mode withdrawal_mode_stripe_split', 'value' => $withdrawal_stripe_split_pay_engine, 'desc_class' => 'withdrawal_mode withdrawal_mode_stripe_split wcfm_page_options_desc', 'desc' => __('Checkout engine for Stripe Split Pay. Existing stores keep the Legacy engine until you switch; the Modern engine processes payments with Stripe PaymentIntents (SCA always on).', 'wc-multivendor-marketplace')),
 
 						"withdrawal_test_mode" => array('label' => __('Enable Test Mode', 'wc-multivendor-marketplace'), 'type' => 'checkbox', 'name' => 'wcfm_withdrawal_options[test_mode]', 'class' => 'wcfm-checkbox wcfm_ele', 'label_class' => 'wcfm_title checkbox_title', 'value' => 'yes', 'dfvalue' => $withdrawal_test_mode),
 					), $wcfm_withdrawal_options));
@@ -848,7 +850,7 @@ class WCFMmp_Settings {
 							$transactional_charges_fileds['transaction_charge_' . $method_id] = array('label' => $metnohd_name . ' ' . __('Charge', 'wc-multivendor-marketplace'), 'type' => 'multiinput', 'name' => 'wcfm_withdrawal_options[transaction_charge][' . $method_id . ']', 'class' => 'wcfm_non_sortable transaction_charge_block transaction_charge_' . $method_id, 'label_class' => 'wcfm_title wcfm_ele wcfm_full_ele transaction_charge_block transaction_charge_' . $method_id, 'value' => isset($transaction_charge[$method_id]) ? $transaction_charge[$method_id] : array(), 'custom_attributes' => array('limit' => 1), 'options' => array(
 								"percent" => array('label' => __('Percent Charge(%)', 'wc-multivendor-marketplace'),  'type' => 'number', 'class' => 'wcfm-text wcfm_ele wcfm_non_negative_input transaction_charge_field transaction_charge_percent transaction_charge_percent_fixed', 'label_class' => 'wcfm_title wcfm_ele transaction_charge_field transaction_charge_percent transaction_charge_percent_fixed', 'attributes' => array('min' => '0.1', 'step' => '0.1')),
 								"fixed" => array('label' => __('Fixed Charge', 'wc-multivendor-marketplace'), 'type' => 'number', 'class' => 'wcfm-text wcfm_ele wcfm_non_negative_input transaction_charge_field transaction_charge_fixed transaction_charge_percent_fixed', 'label_class' => 'wcfm_title wcfm_ele transaction_charge_field transaction_charge_fixed transaction_charge_percent_fixed', 'attributes' => array('min' => '0.1', 'step' => '0.1')),
-								//"tax" => array('label' => __('Charge Tax', 'wc-multivendor-marketplace'), 'type' => 'number', 'class' => 'wcfm-text wcfm_ele wcfm_non_negative_input ', 'label_class' => 'wcfm_title wcfm_ele', 'attributes' => array( 'min' => '0.1', 'step' => '0.1'), 'hints' => __( 'Tax for transaction charge, calculate in percent.', 'wc-multivendor-marketplace' ) ),
+								 
 							));
 						}
 
@@ -907,7 +909,7 @@ class WCFMmp_Settings {
 
 		if (isset($wcfm_settings_form['wcfm_withdrawal_options'])) {
 
-			// Periodic Schedule Reset - Only if any change happend
+			 
 			$wcfm_withdrawal_options = get_option('wcfm_withdrawal_options', array());
 
 			$withdrawal_mode         = isset($wcfm_withdrawal_options['withdrawal_mode']) ? $wcfm_withdrawal_options['withdrawal_mode'] : '';
@@ -1020,7 +1022,7 @@ class WCFMmp_Settings {
 				if (isset($response->ERROR)) {
 					wcfm_wirecard_log('Wirecard APP: Access Token Generate - ' . $response->ERROR, 'error');
 					return;
-					//return wp_send_json_error( $response->ERROR );
+					 
 				}
 
 				if (!isset($response->id, $response->secret, $response->accessToken)) {
@@ -1423,7 +1425,7 @@ class WCFMmp_Settings {
 		$wcfm_shipping_options['enable_store_shipping'] = $enable_store_shipping;
 		update_option('wcfm_shipping_options', $wcfm_shipping_options);
 
-		// Shipping by Zone
+		 
 		if (isset($wcfm_settings_form['enable_marketplace_shipping_zone'])) {
 			$enable_marketplace_shipping_zone = 'yes';
 		} else {
@@ -1433,7 +1435,7 @@ class WCFMmp_Settings {
 		$wcfmmp_marketplace_shipping_zone_options['enabled'] = $enable_marketplace_shipping_zone;
 		update_option('woocommerce_wcfmmp_product_shipping_by_zone_settings', $wcfmmp_marketplace_shipping_zone_options);
 
-		// Shipping by Country
+		 
 		if (isset($wcfm_settings_form['enable_marketplace_shipping'])) {
 			$enable_marketplace_shipping = 'yes';
 		} else {
@@ -1466,7 +1468,7 @@ class WCFMmp_Settings {
 			update_option('_wcfmmp_state_rates', $wcfmmp_state_rates);
 		}
 
-		// Shipping by Weight
+		 
 		if (isset($wcfm_settings_form['enable_marketplace_shipping_by_weight'])) {
 			$enable_marketplace_shipping_by_weight = 'yes';
 		} else {
@@ -1501,7 +1503,7 @@ class WCFMmp_Settings {
 		update_option('_wcfmmp_country_weight_unit_cost', $wcfmmp_country_weight_unit_cost);
 		update_option('_wcfmmp_country_weight_default_costs', $wcfmmp_country_weight_default_costs);
 
-		// Shipping by Distance
+		 
 		if (isset($wcfm_settings_form['enable_marketplace_shipping_by_distance'])) {
 			$enable_marketplace_shipping_by_distance = 'yes';
 		} else {
@@ -1828,9 +1830,9 @@ class WCFMmp_Settings {
 		}
 	}
 
-	/**
-	 * Create WCFMmp custom Store CSS
-	 */
+	
+
+
 	function wcfmmp_create_store_css() {
 		global $WCFM, $WCFMmp;
 
@@ -2007,7 +2009,7 @@ class WCFMmp_Settings {
 					</div>
 				</div>
 
-				<?php //if( WCFM_Dependencies::wcfma_plugin_active_check() ) { 
+				<?php  
 				?>
 				<div id="wcfm_settings_form_data_cleanup_for_analytics_expander" class="wcfm_data_cleanup_fields" style="margin-top:50px;">
 					<div class="wcfm_vendor_settings_heading">
@@ -2024,7 +2026,7 @@ class WCFMmp_Settings {
 						?>
 					</div>
 				</div>
-				<?php //} 
+				<?php  
 				?>
 			</div>
 		</div>

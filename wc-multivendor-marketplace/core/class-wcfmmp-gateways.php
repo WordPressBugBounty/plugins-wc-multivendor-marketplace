@@ -1,12 +1,12 @@
 <?php
 
 if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly
+    exit;  
 }
 
 class WCFMmp_Gateways {
 
-	/** @var array Array of payment gateway classes. */
+	 
 	public $payment_gateways = array();
 
 	public function __construct() {
@@ -88,6 +88,6 @@ class WCFMmp_Gateways {
 			if( file_exists( $WCFMmp->plugin_path . 'includes/payment-gateways/class-wcfmmp-gateway-' . esc_attr($payment_method) . '.php' ) ) {
 				require_once ( $WCFMmp->plugin_path . 'includes/payment-gateways/class-wcfmmp-gateway-' . esc_attr($payment_method) . '.php' );
 			}
-		} // End If Statement
+		}  
 	}
 }

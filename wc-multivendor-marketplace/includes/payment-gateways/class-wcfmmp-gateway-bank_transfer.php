@@ -28,7 +28,7 @@ class WCFMmp_Gateway_Bank_transfer extends WCFMmp_Abstract_Gateway {
 		$this->transaction_mode = $transaction_mode;
 		$bank_details = $WCFMmp->wcfmmp_vendor->get_vendor_bank_details( $this->vendor_id );
 		if ( $this->validate_request() ) {
-			// Updating withdrawal meta
+			 
 			$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $this->withdrawal_id, 'withdraw_amount', $this->withdraw_amount );
 			$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $this->withdrawal_id, 'currency', $this->currency );
 			if( !empty( $bank_details ) ) {

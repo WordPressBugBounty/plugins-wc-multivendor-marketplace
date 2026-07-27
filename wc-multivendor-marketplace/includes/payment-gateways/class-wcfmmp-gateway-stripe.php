@@ -77,7 +77,7 @@ class WCFMmp_Gateway_Stripe extends WCFMmp_Abstract_Gateway {
 			if( $transfer ) {
 				$transfer_data = $transfer->jsonSerialize();
 				
-				// Updating Vendor Transaction ID at Order Meta
+				 
 				if( isset( $transfer_data['id'] ) && !empty( $transfer_data['id'] ) ) {
 					$sql = 'SELECT * FROM ' . $wpdb->prefix . 'wcfm_marketplace_withdraw_request';
 					$sql .= ' WHERE 1=1';
@@ -137,14 +137,17 @@ class WCFMmp_Gateway_Stripe extends WCFMmp_Abstract_Gateway {
 				$transfer_args['transfer_group'] = __('Payout for withdrawal ID #', 'wc-multivendor-marketplace') . sprintf( '%06u', $this->withdrawal_id );
 			}
 			$transfer_args = wp_parse_args($args, $transfer_args);
+			$transfer_opts = array(
+				'idempotency_key' => 'wcfmmp-wd' . $this->withdrawal_id . '-transfer-' . md5( $transfer_args['amount'] . $transfer_args['currency'] ),
+			);
 
 			if ($this->debug)
 				wcfm_stripe_log("Before creating transfer with Stripe. Stripe Transfer Data: " . serialize($transfer_args));
 
-			$transfer = Transfer::create($transfer_args);
+			$transfer = Transfer::create($transfer_args, $transfer_opts);
 			$result_array = $transfer->jsonSerialize();
 			
-			// Updating withdrawal meta
+			 
 			$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $this->withdrawal_id, 'withdraw_amount', $this->withdraw_amount );
 			$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $this->withdrawal_id, 'currency', $this->currency );
 			$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $this->withdrawal_id, 'transaction_id', $result_array['id'] );
@@ -174,7 +177,7 @@ class WCFMmp_Gateway_Stripe extends WCFMmp_Abstract_Gateway {
 	
 	private function get_stripe_amount() {
 		switch( strtoupper( $this->currency ) ) {
-			// Zero decimal currencies.
+			 
 			case 'BIF' :
 			case 'CLP' :
 			case 'DJF' :
@@ -193,7 +196,7 @@ class WCFMmp_Gateway_Stripe extends WCFMmp_Abstract_Gateway {
 				$amount_to_pay = absint( $this->withdraw_amount );
 				break;
 			default :
-				$amount_to_pay = round( $this->withdraw_amount, 2 ) * 100; // In cents.
+				$amount_to_pay = round( $this->withdraw_amount, 2 ) * 100;  
 				break;
 		}
 		return $amount_to_pay;

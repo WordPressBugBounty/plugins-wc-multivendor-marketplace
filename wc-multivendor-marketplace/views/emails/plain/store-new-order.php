@@ -1,15 +1,15 @@
 <?php
-/**
- * The template for displaying demo plugin content.
- *
- * Override this template by copying it to yourtheme/wcfm/emails/store-new-order.php
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/views/emails
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 if (!defined('ABSPATH'))
-    return; // Exit if accessed directly
+    return;  
   
 global $WCFM, $WCFMmp;
 
@@ -17,7 +17,7 @@ if( !is_a( $order , 'WC_Order' ) ) return;
 
 do_action( 'woocommerce_email_header', $email_heading, $email );
 
-// Get line items
+ 
 $line_items          = $order->get_items( 'line_item' );
 $line_items_fee      = $order->get_items( 'fee' );
 $line_items_shipping = $order->get_items( 'shipping' );
@@ -35,7 +35,7 @@ if( $is_wcfm_order_details_tax_line_item = apply_filters( 'wcfm_order_details_ta
 			}
 		}
 	
-		// Older orders won't have line taxes so we need to handle them differently :(
+		 
 		$tax_data = '';
 		if ( $line_items ) {
 			$check_item = current( $line_items );
@@ -53,7 +53,7 @@ if( $is_wcfm_order_details_tax_line_item = apply_filters( 'wcfm_order_details_ta
 	}
 }
 
-// Marketplace Filters
+ 
 $line_items          = apply_filters( 'wcfm_valid_line_items', $line_items, $order->get_id() );
 $line_items_shipping = apply_filters( 'wcfm_valid_shipping_items', $line_items_shipping, $order->get_id() );
 
@@ -118,7 +118,7 @@ if( apply_filters( 'wcfm_is_allow_email_before_order_table', true ) ) {
 			<tr>
 				<td class="product" colspan="2">
 				  <?php
-				  // Show title/image etc.
+				   
 				  $image         = $_product->get_image( array( 32, 32 ) );
 					if ( apply_filters( 'wcfm_is_allow_store_order_email_product_thumb', true ) ) {
 						echo wp_kses_post( apply_filters( 'woocommerce_order_item_thumbnail', $image, $item ) );
@@ -155,7 +155,7 @@ if( apply_filters( 'wcfm_is_allow_email_before_order_table', true ) ) {
 							echo wc_price( $order->get_item_subtotal( $item, false, true ), array( 'currency' => $order->get_currency() ) );
 		
 							if ( $item->get_subtotal() != $item->get_total() ) {
-								//echo '<span class="wc-order-item-discount">-' . wc_price( wc_format_decimal( $order->get_item_subtotal( $item, false, false ) - $order->get_item_total( $item, false, false ), '' ), array( 'currency' => $order->get_currency() ) ) . '</span>';
+								 
 							}
 						}
 					?>
@@ -177,7 +177,7 @@ if( apply_filters( 'wcfm_is_allow_email_before_order_table', true ) ) {
 								}
 				
 								if ( $item->get_subtotal() !== $item->get_total() ) {
-									//echo '<span class="wc-order-item-discount">-' . wc_price( wc_format_decimal( $item->get_subtotal() - $item->get_total(), '' ), array( 'currency' => $order->get_currency() ) ) . '</span>';
+									 
 								}
 				
 								if ( $refunded = $order->get_total_refunded_for_item( $item_id ) ) {
@@ -206,7 +206,7 @@ if( apply_filters( 'wcfm_is_allow_email_before_order_table', true ) ) {
 											}
 				
 											if ( $item->get_subtotal() !== $item->get_total() ) {
-												//echo '<span class="wc-order-item-discount">-' . wc_price( wc_round_tax_total( $tax_item_subtotal - $tax_item_total ), array( 'currency' => $order->get_currency() ) ) . '</span>';
+												 
 											}
 				
 											if ( $refunded = $order->get_tax_refunded_for_item( $item_id, $tax_item_id ) ) {
@@ -371,7 +371,7 @@ if( apply_filters( 'wcfm_is_allow_email_before_order_table', true ) ) {
 				</tr>
 			<?php } ?>
 	
-			<?php //do_action( 'woocommerce_admin_order_totals_after_discount', $order->get_id() ); ?>
+			<?php  ?>
 	
 			<?php if( $order->get_formatted_shipping_address() && apply_filters( 'wcfm_order_details_shipping_line_item', true ) && apply_filters( 'wcfm_order_details_shipping_total', true ) ) { ?>
 				<tr>
@@ -386,7 +386,7 @@ if( apply_filters( 'wcfm_is_allow_email_before_order_table', true ) ) {
 				</tr>
 			<?php } ?>
 	
-			<?php //do_action( 'woocommerce_admin_order_totals_after_shipping', $order->get_id() ); ?>
+			<?php  ?>
 	
 			<?php if( $is_wcfm_order_details_tax_total = apply_filters( 'wcfm_order_details_tax_total', true ) ) { ?>
 				<?php if ( wc_tax_enabled() ) : ?>
@@ -405,7 +405,7 @@ if( apply_filters( 'wcfm_is_allow_email_before_order_table', true ) ) {
 				<?php endif; ?>
 			<?php } ?>
 	
-			<?php //do_action( 'woocommerce_admin_order_totals_after_tax', $order->get_id() ); ?>
+			<?php  ?>
 	
 			<?php if( apply_filters( 'wcfm_order_details_total', true ) ) { ?>
 			<tr>

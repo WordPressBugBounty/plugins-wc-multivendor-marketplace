@@ -1,14 +1,14 @@
 <?php
 
-/**
- * WCFM plugin controllers
- *
- * Plugin WCFM Marketplace Ledger Dashboard Controller
- *
- * @author 		WC Lovers
- * @package 	wcfm/ledger/wcfmmp/controllers
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Ledger_Controller {
 
@@ -67,7 +67,7 @@ class WCFMmp_Ledger_Controller {
 			$offset
 		]));
 
-		// Generate Ledger JSON
+		 
 		$wcfm_ledger_json = '';
 		$wcfm_ledger_json = '{
 															"draw": ' . absint($_POST['draw']) . ',
@@ -79,30 +79,30 @@ class WCFMmp_Ledger_Controller {
 			$wcfm_ledger_json_arr = array();
 			foreach ($wcfm_ledger_array as $wcfm_ledger_single) {
 
-				// Status
+				 
 				$wcfm_ledger_json_arr[$index][] =  '<span class="order-status tips wcicon-status-' . sanitize_title($wcfm_ledger_single->reference_status) . ' text_tip" data-tip="' . $WCFMmp->wcfmmp_vendor->wcfmmp_vendor_order_status_name($wcfm_ledger_single->reference_status) . '"></span>';
 
-				// Type
+				 
 				$wcfm_ledger_json_arr[$index][] = '<div class="wcfmmp-ledger-type wcfmmp-ledger-type-' . $wcfm_ledger_single->reference . '">' . $WCFMmp->wcfmmp_ledger->wcfmmp_vendor_ledger_reference_name($wcfm_ledger_single->reference) . '</div>';
 
-				// Details
+				 
 				$wcfm_ledger_json_arr[$index][] = $wcfm_ledger_single->reference_details;
 
-				// Credit
+				 
 				if ($wcfm_ledger_single->credit) {
 					$wcfm_ledger_json_arr[$index][] = '<div class="wcfmmp-ledger-credit">' . wc_price($wcfm_ledger_single->credit) . '</div>';
 				} else {
 					$wcfm_ledger_json_arr[$index][] = '';
 				}
 
-				// Debit
+				 
 				if ($wcfm_ledger_single->debit) {
 					$wcfm_ledger_json_arr[$index][] = '<div class="wcfmmp-ledger-debit">' . wc_price($wcfm_ledger_single->debit) . '</div>';
 				} else {
 					$wcfm_ledger_json_arr[$index][] = '';
 				}
 
-				// Dated
+				 
 				$wcfm_ledger_json_arr[$index][] = date_i18n(wc_date_format() . ' ' . wc_time_format(), strtotime($wcfm_ledger_single->created));
 
 				$index++;

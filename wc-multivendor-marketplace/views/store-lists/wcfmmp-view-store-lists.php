@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying store list.
- *
- * @package WCfM Markeplace Views Store Lists
- *
- * For edit coping this to yourtheme/wcfm/store-lists
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp, $post;
 
@@ -19,10 +19,10 @@ if( $post )
 $url = explode( '?', $pagination_base );
 $pagination_base = $url[0];
 
-//$search_country = '';
-//$search_state   = '';
+ 
+ 
 
-// GEO Locate Support
+ 
 if( apply_filters( 'wcfmmp_is_allow_store_list_by_user_location', true ) ) {
 	if( is_user_logged_in() && !$search_country ) {
 		$user_location = get_user_meta( get_current_user_id(), 'wcfm_user_location', true );

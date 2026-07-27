@@ -1,43 +1,43 @@
 <?php
 
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Shipping
- *
- * @author    WC Lovers
- * @package   wcfmmp/core
- * @version   1.1.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Shipping {
 
 	public function __construct() {
 		global $WCFM, $WCFMmp;
 
-		//Load Vendor Shipping Settings
+		 
 		add_action('wcfm_marketplace_shipping', array(&$this, 'wcfmmp_load_shipping_view'));
 
-		//Save Vendor Shipping Settings
+		 
 		add_action('wcfm_vendor_settings_before_update', array(&$this, 'wcfmmp_vendor_shipping_settings_update'), 10, 2);
 		add_action('wcfm_vendor_shipping_settings_update', array(&$this, 'wcfmmp_vendor_shipping_settings_update'), 10, 2);
 
-		// Single Product page Shipping Info
+		 
 		add_action('woocommerce_single_product_summary',  array(&$this, 'wcfmmp_shipping_info'), 32);
 
-		// split woocommerce shipping packages
+		 
 		add_filter('woocommerce_cart_shipping_packages', array(&$this, 'wcfmmp_split_shipping_packages'), 0);
 
-		// Add extra vendor_id to shipping packages
+		 
 		add_action('woocommerce_checkout_create_order_shipping_item', array(&$this, 'wcfmmp_add_meta_date_in_shipping_package'), 10, 3);
 
-		// Rename woocommerce shipping packages
+		 
 		add_filter('woocommerce_shipping_package_name', array(&$this, 'wcfmmp_shipping_package_name'), 500, 3);
 
-		//Hide Admin Shipping If vendor Shipping is available
+		 
 		add_filter('woocommerce_package_rates', array(&$this, 'wcfmmp_hide_admin_shipping'), 100, 2);
 
-		//Hide Order Shipping If local picup selected for all Vendors
+		 
 		add_filter('woocommerce_order_needs_shipping_address', array(&$this, 'wcfmmp_hide_shipping_address_if_local_pickup'), 100, 3);
 	}
 
@@ -63,13 +63,13 @@ class WCFMmp_Shipping {
 
 		update_user_meta($user_id, '_wcfmmp_shipping', $wcfm_settings_form['wcfmmp_shipping']);
 
-		// By Country settings save
+		 
 		if (!empty($wcfm_settings_form['wcfmmp_shipping']['_wcfmmp_user_shipping_type']) && $wcfm_settings_form['wcfmmp_shipping']['_wcfmmp_user_shipping_type'] == 'by_country') {
-			//print_r($wcfm_settings_form);
+			 
 			if (isset($wcfm_settings_form['wcfmmp_shipping_by_country'])) {
 				update_user_meta($user_id, '_wcfmmp_shipping_by_country', $wcfm_settings_form['wcfmmp_shipping_by_country']);
 			}
-			// Shipping Rates
+			 
 			if (isset($wcfm_settings_form['wcfmmp_shipping_rates']) && !empty($wcfm_settings_form['wcfmmp_shipping_rates'])) {
 				$wcfmmp_country_rates = array();
 				$wcfmmp_state_rates   = array();
@@ -90,14 +90,14 @@ class WCFMmp_Shipping {
 			}
 		}
 
-		// By zone settings save
+		 
 		if (!empty($wcfm_settings_form['wcfmmp_shipping']['_wcfmmp_user_shipping_type']) && $wcfm_settings_form['wcfmmp_shipping']['_wcfmmp_user_shipping_type'] == 'by_zone') {
 
-			//print_r($wcfm_settings_form);
+			 
 			$all_allowed_countries = WC()->countries->get_allowed_countries();
 			$location = array();
 			$zone_id = 0;
-			//print_r($all_allowed_countries);
+			 
 			if (!empty($wcfm_settings_form['wcfmmp_shipping_zone'])) {
 				foreach ($wcfm_settings_form['wcfmmp_shipping_zone'] as $shipping_zone) {
 					if (isset($shipping_zone['_zone_id']) && $shipping_zone['_zone_id'] != 0) {
@@ -149,13 +149,13 @@ class WCFMmp_Shipping {
 						}
 					}
 				}
-				//print_r($location);
+				 
 			}
 			WCFMmp_Shipping_Zone::save_location($location, $zone_id, $user_id);
 		}
-		// By weight settings save
+		 
 		if (!empty($wcfm_settings_form['wcfmmp_shipping']['_wcfmmp_user_shipping_type']) && $wcfm_settings_form['wcfmmp_shipping']['_wcfmmp_user_shipping_type'] == 'by_weight') {
-			//print_r($wcfm_settings_form);
+			 
 
 			if (isset($wcfm_settings_form['wcfmmp_shipping_by_weight'])) {
 				update_user_meta($user_id, '_wcfmmp_shipping_by_weight', $wcfm_settings_form['wcfmmp_shipping_by_weight']);
@@ -180,13 +180,13 @@ class WCFMmp_Shipping {
 			update_user_meta($user_id, '_wcfmmp_country_weight_mode', $wcfmmp_country_weight_mode);
 			update_user_meta($user_id, '_wcfmmp_country_weight_unit_cost', $wcfmmp_country_weight_unit_cost);
 			update_user_meta($user_id, '_wcfmmp_country_weight_default_costs', $wcfmmp_country_weight_default_costs);
-			//print_r($wcfmmp_country_rates);
+			 
 
 		}
 
-		// By Distance settings save
+		 
 		if (!empty($wcfm_settings_form['wcfmmp_shipping']['_wcfmmp_user_shipping_type']) && $wcfm_settings_form['wcfmmp_shipping']['_wcfmmp_user_shipping_type'] == 'by_distance') {
-			//print_r($wcfm_settings_form);
+			 
 
 			if (isset($wcfm_settings_form['wcfmmp_shipping_by_distance'])) {
 				update_user_meta($user_id, '_wcfmmp_shipping_by_distance', $wcfm_settings_form['wcfmmp_shipping_by_distance']);
@@ -198,9 +198,9 @@ class WCFMmp_Shipping {
 		}
 	}
 
-	/**
-	 * WCFM Shipping info at Single Product Page 
-	 */
+	
+
+
 	function wcfmmp_shipping_info() {
 		global $WCFM, $WCFMmp, $post;
 
@@ -226,14 +226,14 @@ class WCFMmp_Shipping {
 		}
 	}
 
-	/**
-	 * split woocommerce shipping packages 
-	 * @since 1.0.0
-	 * @param array $packages
-	 * @return array
-	 */
+	
+
+
+
+
+
 	public function wcfmmp_split_shipping_packages($packages) {
-		// Reset all packages
+		 
 		global $WCFM;
 
 		if (apply_filters('wcfm_is_allow_store_shipping', true) && class_exists('WCFMmp_Store')) {
@@ -327,11 +327,11 @@ class WCFMmp_Shipping {
 		return apply_filters('wcfmmp_split_shipping_packages', $packages);
 	}
 
-	/**
-	 * 
-	 * @param object $item
-	 * @param sting $package_key as $vendor_id
-	 */
+	
+
+
+
+
 	public function wcfmmp_add_meta_date_in_shipping_package($item, $package_key, $package) {
 
 		if (!apply_filters('wcfm_is_allow_store_shipping', true)) return;
@@ -345,10 +345,10 @@ class WCFMmp_Shipping {
 		$id = explode(":", $ship_method_id, 2);
 		$id = $id[0];
 
-		// Shipping Vendor Reference
+		 
 		if (isset($package['vendor_id']) && wcfm_is_vendor($package['vendor_id'])) {
 			$item->add_meta_data('vendor_id', $package['vendor_id'], true);
-		} else { // Fetch Vendor Reference from Item
+		} else {  
 			if (apply_filters('wcfmmp_is_allow_shipping_package_meta_from_item', true)) {
 				if (isset($package['contents'])) {
 					foreach ($package['contents'] as $key => $pkg_values) {
@@ -368,12 +368,12 @@ class WCFMmp_Shipping {
 		$item->add_meta_data('package_qty', $package_qty, true);
 		$item->add_meta_data('method_slug', $id, true);
 
-		// Local Pickup Address
+		 
 		if (($id == 'local_pickup') && isset($package['pickup_address']) && apply_filters('wcfmmp_is_allow_local_pickup_address', true)) {
 			$item->add_meta_data('pickup_address', $package['pickup_address'], true);
 		}
 
-		// Processing Time
+		 
 		if (isset($package['processing_time']) && apply_filters('wcfm_is_allow_shipping_processing_time_info', true)) {
 			$item->add_meta_data('processing_time', $package['processing_time'], true);
 		}
@@ -381,14 +381,14 @@ class WCFMmp_Shipping {
 		do_action('wcfmmp_add_shipping_package_meta_data', $id, $package_key, $package, $item);
 	}
 
-	/**
-	 * Rename shipping packages 
-	 * @since 1.0.0
-	 * @param string $package_name
-	 * @param string $vendor_id
-	 * @param array $package
-	 * @return string
-	 */
+	
+
+
+
+
+
+
+
 	public function wcfmmp_shipping_package_name($package_name, $vendor_id, $package) {
 		global $WCFM, $WCFMmp, $wcfmmp_radius_lat, $wcfmmp_radius_lng;
 
@@ -532,12 +532,12 @@ class WCFMmp_Shipping {
 		return $package_name;
 	}
 
-	/**
-	 * Rename vendor shipping for an order 
-	 * @since 1.0.0
-	 * @param object $order
-	 * @return array
-	 */
+	
+
+
+
+
+
 	public function get_order_vendor_shipping($order) {
 		global $WCFM, $WCFMmp;
 
@@ -573,14 +573,14 @@ class WCFMmp_Shipping {
 		return $vendor_shipping;
 	}
 
-	/**
-	 * Hide Admin Shipping If vendor Shipping is available callback
-	 * @since 1.0.2
-	 * @param array $rates
-	 * @return array
-	 */
+	
+
+
+
+
+
 	public function wcfmmp_hide_admin_shipping($rates, $package) {
-		//print_r($rates); die;
+		 
 		$free_shipping_available = false;
 		$wcfmmp_shipping = array();
 
@@ -617,11 +617,11 @@ class WCFMmp_Shipping {
 	}
 
 
-	/**
-	 * Hide Order Shipping If local picup selected for all Vendors
-	 * @since 1.1.0
-	 * @return boolean
-	 */
+	
+
+
+
+
 	public function wcfmmp_hide_shipping_address_if_local_pickup($needs_address, $hide, $order_object) {
 		$local_pickup_all = false;
 		foreach ($order_object->get_shipping_methods() as $shipping_method) {

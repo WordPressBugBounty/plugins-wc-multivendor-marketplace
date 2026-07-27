@@ -1,24 +1,24 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Shipping Zones
- *
- * @author    WC Lovers
- * @package   wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Shipping_Zone {
 
-  /**
-   * Resolve and authorize the vendor whose shipping settings are being accessed.
-   *
-   * @param int    $user_id Requested vendor ID.
-   * @param string $action  Shipping management action being performed.
-   *
-   * @return int|WP_Error
-   */
+  
+
+
+
+
+
+
+
   public static function get_authorized_vendor_id( $user_id = 0, $action = 'view' ) {
     $vendor_id = absint( $user_id );
     if ( ! $vendor_id ) {
@@ -42,13 +42,13 @@ class WCFMmp_Shipping_Zone {
     return new WP_Error( 'unauthorized-vendor', __( 'You don&#8217;t have permission to do this.', 'woocommerce' ) );
   }
 
-  /**
-   * Get All Zone
-   *
-   * @since 1.0.0
-   *
-   * @return []|WP_Error
-   */
+  
+
+
+
+
+
+
   public static function get_zones($user_id = 0) {
     $data_store = WC_Data_Store::load( 'shipping-zone' );
     $raw_zones  = $data_store->get_zones();
@@ -71,7 +71,7 @@ class WCFMmp_Shipping_Zone {
 			}
     }
 
-    // Everywhere zone if has method called vendor shipping
+     
     $overall_zone         = new WC_Shipping_Zone(0);
     $enabled_methods  = $overall_zone->get_shipping_methods( true );
     $methods_id = wp_list_pluck( $enabled_methods, 'id' );
@@ -86,14 +86,14 @@ class WCFMmp_Shipping_Zone {
     return $zones;
   }
 
-  /**
-   * Get single zone info
-   *
-   * @since 1.0.0
-   *
-   * @return WC_Shipping_Zone|WP_Error
+  
 
-   */
+
+
+
+
+
+
   public static function get_zone( $zone_id, $user_id = 0 ) {
     $zone = array();
     $vendor_id = self::get_authorized_vendor_id( $user_id, 'view' );
@@ -114,13 +114,13 @@ class WCFMmp_Shipping_Zone {
     return $zone;
   }
 
-  /**
-   * Add Shipping Method for a zone
-   *
-   * @since 1.0.0
-   *
-   * @return int|object
-   */
+  
+
+
+
+
+
+
   public static function add_shipping_methods( $data ) {
     global $wpdb;
 
@@ -157,13 +157,13 @@ class WCFMmp_Shipping_Zone {
     return $wpdb->insert_id;
   }
 
-  /**
-   * Delete shipping method
-   *
-   * @since 1.0.0
-   *
-   * @return int|object
-   */
+  
+
+
+
+
+
+
   public static function delete_shipping_methods( $data ) {
     global $wpdb;
 
@@ -181,13 +181,13 @@ class WCFMmp_Shipping_Zone {
     return $result;
   }
 
-  /**
-   * Get Shipping Methods for a zone
-   *
-   * @since 1.0.0
-   *
-   * @return array|WP_Error
-   */
+  
+
+
+
+
+
+
   public static function get_shipping_methods( $zone_id, $vendor_id ) {
     global $wpdb;
 
@@ -218,13 +218,13 @@ class WCFMmp_Shipping_Zone {
     return $method;
   }
 
-  /**
-   * Update shipping method settings
-   *
-   * @since 1.0.0
-   *
-   * @return array|object
-   */
+  
+
+
+
+
+
+
   public static function update_shipping_method( $args ) {
     global $wpdb;
     
@@ -237,7 +237,7 @@ class WCFMmp_Shipping_Zone {
     }
     $settings = $args['settings'];
     
-    // WPML Shipping Class Compatibility - 6.4.4
+     
     if ( defined( 'ICL_SITEPRESS_VERSION' ) && ! ICL_PLUGIN_INACTIVE && class_exists( 'SitePress' ) ) {
 			$old_settings = array();
 				$sql = "SELECT * FROM {$wpdb->prefix}wcfm_marketplace_shipping_zone_methods WHERE `instance_id`=%d AND `vendor_id`=%d";
@@ -275,13 +275,13 @@ class WCFMmp_Shipping_Zone {
 
   }
 
-  /**
-   * Toggle shipping method
-   *
-   * @since 1.0.0
-   *
-   * @return bool|object
-   */
+  
+
+
+
+
+
+
   public static function toggle_shipping_method( $data ) {
     global $wpdb;
     $table_name = "{$wpdb->prefix}wcfm_marketplace_shipping_zone_methods";
@@ -298,13 +298,13 @@ class WCFMmp_Shipping_Zone {
     return true;
   }
 
-  /**
-   * Get zone locations
-   *
-   * @since 1.0.0
-   *
-   * @return array
-   */
+  
+
+
+
+
+
+
   public static function get_locations( $zone_id, $vendor_id = null ) {
     global $wpdb;
 
@@ -333,17 +333,17 @@ class WCFMmp_Shipping_Zone {
     return $locations;
   }
 
-  /**
-   * Save zone location for seller
-   *
-   * @since 1.0.0
-   *
-   * @return void
-   */
+  
+
+
+
+
+
+
   public static function save_location( $location, $zone_id, $user_id = 0  ) {
     global $wpdb;
 
-    // Setup arrays for Actual Values, and Placeholders
+     
     $values        = array();
     $place_holders = array();
     $vendor_id = self::get_authorized_vendor_id( $user_id, 'update' );
@@ -376,13 +376,13 @@ class WCFMmp_Shipping_Zone {
     return false;
   }
 
-  /**
-   * get Shipping method label
-   *
-   * @since 1.0.0
-   *
-   * @return void
-   */
+  
+
+
+
+
+
+
   public static function get_method_label( $method_id ) {
     $vendor_shipping_methods = wcfmmp_get_shipping_methods();
     if ( 'flat_rate' == $method_id ) {

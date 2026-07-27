@@ -27,7 +27,7 @@ class WCFMmp_Gateway_By_Cash extends WCFMmp_Abstract_Gateway {
 		$this->currency = get_woocommerce_currency();
 		$this->transaction_mode = $transaction_mode;
 		if ( $this->validate_request() ) {
-			// Updating withdrawal meta
+			 
 			$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $this->withdrawal_id, 'withdraw_amount', $this->withdraw_amount );
 			$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $this->withdrawal_id, 'currency', $this->currency );
 			return array( 'status' => true, 'message' => __('New transaction has been initiated', 'wc-multivendor-marketplace') );

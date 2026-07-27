@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying store banner.
- *
- * @package WCfM Markeplace Views Store/products
- *
- * For edit coping this to yourtheme/wcfm/store 
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 

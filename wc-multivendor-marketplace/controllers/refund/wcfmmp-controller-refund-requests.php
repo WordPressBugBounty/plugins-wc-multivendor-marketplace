@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin controllers
- *
- * Plugin WCfM Marketplace Refund Requests Dashboard Controller
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/controllers/refund
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Refund_Requests_Controller {
 	
@@ -96,7 +96,7 @@ class WCFMmp_Refund_Requests_Controller {
 			$payment_gateways = array();
 		}
 		
-		// Generate Redund Request JSON
+		 
         $wcfm_refund_requests_json = [
             'draw'              => absint( $_POST['draw'] ),
             'recordsTotal'      => absint( $filtered_refund_requests_count ),
@@ -108,7 +108,7 @@ class WCFMmp_Refund_Requests_Controller {
 			$wcfm_refund_requests_json_arr = array();
 			foreach( $wcfm_refund_requests_array as $wcfm_refund_request_single ) {
 				
-				// Status
+				 
 				if( $wcfm_refund_request_single->refund_status == 'completed' ) {
 					$wcfm_refund_requests_json_arr[$index][] =  '<span class="payment-status tips wcicon-status-completed text_tip" data-tip="' . __( 'Refund Completed', 'wc-multivendor-marketplace') . '"></span>';
 				} elseif( $wcfm_refund_request_single->refund_status == 'cancelled' ) {
@@ -121,24 +121,24 @@ class WCFMmp_Refund_Requests_Controller {
 					}
 				}
 				
-				// Request ID
+				 
 				$wcfm_refund_requests_json_arr[$index][] = '<span class="wcfm_dashboard_item_title"># ' . $wcfm_refund_request_single->ID . '</span>';
 				
-				// Order ID
+				 
 				$wcfm_refund_requests_json_arr[$index][] =  '<a target="_blank" href="' . get_wcfm_view_order_url( $wcfm_refund_request_single->order_id ) . '" class="wcfm_dashboard_item_title transaction_order_id">#'.  $wcfm_refund_request_single->order_id . '</a>';
 				
-				// Store
+				 
 				if( $wcfm_refund_request_single->vendor_id ) {
 					$wcfm_refund_requests_json_arr[$index][] = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_by_vendor( absint($wcfm_refund_request_single->vendor_id) );
 				} else {
 					$wcfm_refund_requests_json_arr[$index][] = '&ndash;';
 				}
 				
-				// Amount
+				 
 				$refunded_amount    = $wcfm_refund_request_single->refunded_amount;
 				if( ( $wcfm_refund_request_single->refund_status != 'completed' ) ) {
 					if( !$wcfm_refund_request_single->is_partially_refunded ) {
-						// Item Shipping Refund Amount
+						 
 						$line_item       = new WC_Order_Item_Product( $wcfm_refund_request_single->item_id );
 						$product         = $line_item->get_product();
 						$vendor_id = absint($wcfm_refund_request_single->vendor_id);
@@ -181,20 +181,20 @@ class WCFMmp_Refund_Requests_Controller {
 				}
 				$wcfm_refund_requests_json_arr[$index][] = wc_price( $refunded_amount );
 				
-				// Mode
+				 
 				if( $wcfm_refund_request_single->is_partially_refunded ) {
 					$wcfm_refund_requests_json_arr[$index][] = __( 'Partial Refund', 'wc-multivendor-marketplace' );
 				} else {
 					$wcfm_refund_requests_json_arr[$index][] = __( 'Full Refund', 'wc-multivendor-marketplace' );
 				}
 				
-				// Reason
+				 
 				$wcfm_refund_requests_json_arr[$index][] = $wcfm_refund_request_single->refund_reason;
 				
-				// Date
+				 
 				$wcfm_refund_requests_json_arr[$index][] = date_i18n( wc_date_format() . ' ' . wc_time_format(), strtotime( $wcfm_refund_request_single->created ) );
 				
-				// Additional Info
+				 
 				$wcfm_refund_requests_json_arr[$index][] = apply_filters( 'wcfm_refund_request_additonal_data', '&ndash;', $wcfm_refund_request_single->ID );
 				
 				$index++;

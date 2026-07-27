@@ -1,21 +1,21 @@
 <?php
-/**
- * The Template for displaying store sidebar category.
- *
- * @package WCfM Markeplace Views Store Sidebar Category
- *
- * For edit coping this to yourtheme/wcfm/store/widgets
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 
 $display_parent_term = array();
 $display_vendor_term = array();
 
-//print_r($vendor_categories);
+ 
 ?>
 
 <div class="categories_list">

@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin view
- *
- * WCFM Marketplace Product Reviews List View
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/views/reviews/
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 global $WCFM, $WCFMmp;
 
@@ -25,11 +25,11 @@ $wcfmu_reviews_menus = apply_filters( 'wcfmu_reviews_menus', array( 'approved' =
 $reviews_status = ! empty( $_GET['reviews_status'] ) ? sanitize_text_field( $_GET['reviews_status'] ) : '';
 
 if( wcfm_is_vendor() ) {
-	//$review_counts['approved'] = $WCFMmp->wcfmmp_reviews->get_vendor_reviews_count( $vendor_id );
-	//$review_counts['pending']  = $WCFMmp->wcfmmp_reviews->get_vendor_reviews_count( $vendor_id, 'pending' );
+	 
+	 
 } else {
-	//$review_counts['approved'] = $WCFMmp->wcfmmp_reviews->get_vendor_reviews_count();
-	//$review_counts['pending']  = $WCFMmp->wcfmmp_reviews->get_vendor_reviews_count( 0, 'pending' );
+	 
+	 
 }
 ?>
 <div class="collapse wcfm-collapse" id="wcfm_reviews_listing">
@@ -71,7 +71,7 @@ if( wcfm_is_vendor() ) {
 	  
 		<div class="wcfm_reviews_filter_wrap wcfm_filters_wrap">
 			<?php 
-			// Vendor Filter
+			 
 			if( !wcfm_is_vendor() ) {
 				$vendor_arr = array();
 				$WCFM->wcfm_fields->wcfm_generate_form_field( array(
@@ -79,7 +79,7 @@ if( wcfm_is_vendor() ) {
 																									 ) );
 			}
 			
-			// Product Filter
+			 
 			$WCFM->wcfm_fields->wcfm_generate_form_field( array( "review_product" => array( 'type' => 'select', 'attributes' => array( 'style' => 'width: 150px;' ), 'class' => 'wcfm-select wcfm_ele', 'label_class' => 'wcfm_title', 'options' => array() ) ) );
 			?>
 		</div>

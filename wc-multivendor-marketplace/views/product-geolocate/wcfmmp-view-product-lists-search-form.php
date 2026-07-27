@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying product list radius search form.
- *
- * @package WCfM Markeplace Views Product List Search Form
- *
- * For edit coping this to yourtheme/wcfm/product-geolocate
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp, $post, $wp;
 

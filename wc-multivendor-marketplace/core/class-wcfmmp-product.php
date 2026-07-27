@@ -1,47 +1,47 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Product
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Product {
 	
 	public function __construct() {
 		global $WCFM;
 		
-		// Update Vendor Categories
+		 
 		add_action( 'after_wcfm_products_manage_meta_save', array( &$this, 'wcfmmp_update_vendor_categories' ), 10, 2 );
 		
-		// Update Vendor Coupon Products
+		 
 		add_action( 'after_wcfm_products_manage_meta_save', array( &$this, 'wcfmmp_update_vendor_coupon_products' ), 10, 2 );
 		
 		apply_filters( 'wcfm_is_allow_new_product_notification_email', array( &$this, 'wcfmmp_new_product_notification_email' ) );
 		
-		// Product Manage Page
+		 
 		if( !wcfm_is_vendor() && apply_filters( 'wcfm_is_allow_commission_manage', true ) ) {
 			add_action( 'after_wcfm_products_manage_tabs_content', array( &$this, 'wcfmmp_product_commission' ), 500, 4 );
 			add_action( 'after_wcfm_products_manage_meta_save', array( &$this, 'wcfmmp_product_commission_save' ), 500, 2 );
 			
-			// Variation Commission
+			 
 			add_filter( 'wcfm_product_manage_fields_variations', array( &$this, 'wcfmmp_commission_fields_variations' ), 500, 7 );
 			add_filter( 'wcfm_variation_edit_data', array( &$this, 'wcfmmp_commission_data_variations' ), 500, 3 );
 			add_filter( 'wcfm_product_variation_data_factory', array( &$this, 'wcfmmp_product_variation_commission_save' ), 500, 5 );
 		}
 		
-		// Product Specific Shipping Settings
+		 
 		add_filter( 'wcfm_product_manage_fields_shipping', array( &$this, 'wcfmmp_product_manage_fields_shipping' ), 10, 2 );
 		add_action( 'after_wcfm_products_manage_meta_save', array( &$this, 'wcfmmp_shipping_product_meta_save' ), 150, 2 );
 		
 	}
 	
-	/**
-	 * Update vendor category list
-	 */
+	
+
+
 	function wcfmmp_update_vendor_categories( $new_product_id, $wcfm_products_manage_form_data ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -62,7 +62,7 @@ class WCFMmp_Product {
 				}
 			}
 			
-			// Custom Taxonomies
+			 
 			if(isset($wcfm_products_manage_form_data['product_custom_taxonomies']) && !empty($wcfm_products_manage_form_data['product_custom_taxonomies'])) {
 				foreach($wcfm_products_manage_form_data['product_custom_taxonomies'] as $taxonomy => $taxonomy_values) {
 					if( !empty( $taxonomy_values ) ) {
@@ -75,9 +75,9 @@ class WCFMmp_Product {
 		}
 	}
 	
-	/**
-	 * Update vendor coupon prodicts
-	 */
+	
+
+
 	function wcfmmp_update_vendor_coupon_products( $new_product_id, $wcfm_products_manage_form_data ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -115,14 +115,14 @@ class WCFMmp_Product {
 		
 	}
 	
-	/**
-	 * Product waiting for approval notificatiion email to Admin
-	 */
+	
+
+
 	function wcfmmp_new_product_notification_email( $is_allow ) {
 		return true;
 	}
 	
-	// Commision setup
+	 
 	function wcfmmp_product_commission( $product_id, $product_type, $wcfm_is_translated_product = false, $wcfm_wpml_edit_disable_element = '' ) {
 		global $WCFM, $WCFMmp;
 		
@@ -146,7 +146,7 @@ class WCFMmp_Product {
 			$product_commission_data = get_post_meta( $product_id, '_wcfmmp_commission', true );
 			if( empty($product_commission_data) ) $product_commission_data = array();
 			
-			//print_r( $product_commission_data );
+			 
 			
 			$vendor_commission_mode        = isset( $product_commission_data['commission_mode'] ) ? $product_commission_data['commission_mode'] : 'global';
 			$vendor_commission_fixed       = isset( $product_commission_data['commission_fixed'] ) ? $product_commission_data['commission_fixed'] : '';
@@ -183,14 +183,14 @@ class WCFMmp_Product {
 		<?php
 	}
 	
-	// Commision Save
+	 
 	function wcfmmp_product_commission_save( $new_product_id, $wcfm_products_manage_form_data ) {
 		if( isset( $wcfm_products_manage_form_data['commission'] ) && !empty( $wcfm_products_manage_form_data['commission'] ) ) {
 			update_post_meta( $new_product_id, '_wcfmmp_commission', $wcfm_products_manage_form_data['commission'] );
 		}
 	}
 	
-	// Variation commission option
+	 
 	function wcfmmp_commission_fields_variations( $variation_fileds, $variations, $variation_shipping_option_array, $variation_tax_classes_options, $products_array, $product_id, $product_type ) {
 		global $WCFM, $WCFMmp;
 		
@@ -231,9 +231,9 @@ class WCFMmp_Product {
 		return $variations;
 	}
 	
-	/**
-	 * Variation Commission Save
-	 */
+	
+
+
 	function wcfmmp_product_variation_commission_save( $wcfm_variation_data, $new_product_id, $variation_id, $variations, $wcfm_products_manage_form_data ) {
 		global $WCFM, $WCFMmp;
 		
@@ -255,9 +255,9 @@ class WCFMmp_Product {
 		return $wcfm_variation_data;
 	}
 	
-	/**
-	 * Return commission rule for a Product
-	 */
+	
+
+
 	public function wcfmmp_get_product_commission_rule( $product_id, $variation_id = 0, $vendor_id = 0, $item_price = 0, $quantity = 1, $order_id = 0 ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -270,7 +270,7 @@ class WCFMmp_Product {
 		$vendor_commission_by_products = array();
 		$vendor_commission_by_quantity = array();
 		
-		// Variation Commission
+		 
 		if( $variation_id  ) {
 			$product_commission_data = get_post_meta( $variation_id, '_wcfmmp_commission', true );
 			if( empty($product_commission_data) ) $product_commission_data = array();
@@ -284,7 +284,7 @@ class WCFMmp_Product {
 			$tax_percent                   = isset( $product_commission_data['tax_percent'] ) ? $product_commission_data['tax_percent'] : '';
 		}
 		
-		// Product Commission
+		 
 		if( $product_id && ( $vendor_commission_mode == 'global' )  ) {
 			$product_commission_data = function_exists( 'get_term_meta' ) ? get_post_meta( $product_id, '_wcfmmp_commission', true ) : get_metadata( 'woocommerce_term', $product_id, '_wcfmmp_commission', true );
 			if( empty($product_commission_data) ) $product_commission_data = array();
@@ -298,7 +298,7 @@ class WCFMmp_Product {
 			$tax_percent                   = isset( $product_commission_data['tax_percent'] ) ? $product_commission_data['tax_percent'] : '';
 		}
 		
-		// Category Commission
+		 
 		if( $product_id && ( $vendor_commission_mode == 'global' )  ) {
 			$product_terms = wp_get_post_terms( $product_id, 'product_cat', array( 'orderby' => 'term_id', 'order' => 'DESC' ) );
 			
@@ -338,7 +338,7 @@ class WCFMmp_Product {
 			$vendor_id = wcfm_get_vendor_id_by_post( $product_id );
 		}
 		
-		// Vendor Commission
+		 
 		$vendor_data = array();
 		if( $vendor_id && ( $vendor_commission_mode == 'global' ) ) {
 			$vendor_data = get_user_meta( $vendor_id, 'wcfmmp_profile_settings', true );
@@ -356,7 +356,7 @@ class WCFMmp_Product {
 			$tax_percent                   = isset( $vendor_data['commission']['tax_percent'] ) ? $vendor_data['commission']['tax_percent'] : '';
 		}
 		
-		// Membership Commission
+		 
 		if( $vendor_id && ( $vendor_commission_mode == 'global' ) && function_exists( 'wcfm_is_valid_membership' ) ) {
 			$wcfm_membership_id = get_user_meta( $vendor_id, 'wcfm_membership', true );
 			
@@ -376,7 +376,7 @@ class WCFMmp_Product {
 			}
 		}
 		
-		// Global Commission
+		 
 		if( $vendor_commission_mode == 'global' ) {
 			$wcfm_commission_options = $WCFMmp->wcfmmp_commission_options;
 			
@@ -394,7 +394,7 @@ class WCFMmp_Product {
 		
 		$product_commission_rule = array( 'rule' => $vendor_commission_mode, 'mode' => $vendor_commission_mode, 'percent' => 0, 'fixed' => 0, 'tax_enable' => $tax_enable, 'tax_name' => $tax_name, 'tax_percent' => $tax_percent );
 		
-		// Vendor's own product commission
+		 
 		if( $vendor_id && !apply_filters( 'wcfm_is_allow_vendor_own_product_commission', true ) ) {
 			$pvendor_id = wcfm_get_vendor_id_by_post( $product_id );
 			if( $pvendor_id == $vendor_id ) {
@@ -434,7 +434,7 @@ class WCFMmp_Product {
 			
 		}
 		
-		// Transaction Charge Adding to the Commission Rule
+		 
 		$product_commission_rule['transaction_charge_type'] = 'no';
 		$product_commission_rule['transaction_charge_percent'] = '0';
 		$product_commission_rule['transaction_charge_fixed'] = '0';
@@ -492,7 +492,7 @@ class WCFMmp_Product {
 			$wcfmmp_processing_time = '';
 			$vendor_id  = apply_filters( 'wcfm_current_vendor_id', get_current_user_id() );
 			if( $product_id ) {
-				//				$disable_shipping = get_post_meta( $product_id, '_disable_shipping', true ) ? get_post_meta( $product_id, '_disable_shipping', true ) : 'no';
+				 
 				$overwrite_shipping = get_post_meta( $product_id, '_overwrite_shipping', true ) ? get_post_meta( $product_id, '_overwrite_shipping', true ) : 'no';
 				$additional_price = get_post_meta( $product_id, '_additional_price', true ) ? get_post_meta( $product_id, '_additional_price', true ) : '';
 				$additional_qty = get_post_meta( $product_id, '_additional_qty', true ) ? get_post_meta( $product_id, '_additional_qty', true ) : '';
@@ -500,16 +500,16 @@ class WCFMmp_Product {
         $vendor_id = wcfm_get_vendor_id_by_post( $product_id );
 			}
 			
-			// Processing Time
+			 
 			$wcv_shipping_processing_fileds = apply_filters( 'wcfmmp_product_manager_shipping_processing_fileds', array( 
           																								"_wcfmmp_processing_time" => array('label' => __('Processing Time', 'wc-multivendor-marketplace'), 'type' => 'select', 'class' => 'wcfm-select', 'label_class' => 'wcfm_title', 'options' => $processing_time, 'value' => $wcfmmp_processing_time, 'hints' => __('The time required before sending the product for delivery', 'wc-multivendor-marketplace') ),
           																								) );
        $shipping_fields = array_merge( $shipping_fields, $wcv_shipping_processing_fileds );
 			
-			//			$wcv_shipping_fileds = array( 
-			//					"_disable_shipping" => array('label' => __('Disable Shipping', 'wc-frontend-manager') , 'type' => 'checkbox', 'class' => 'wcfm-checkbox', 'label_class' => 'wcfm_title checkbox_title', 'value' => 'yes', 'dfvalue' => $disable_shipping, 'hints' => __('Disable shipping for this product', 'wc-multivendor-marketplace') )
-			//				);
-			//			$shipping_fields = array_merge( $wcv_shipping_fileds, $shipping_fields );
+			 
+			 
+			 
+			 
     
     $vendor_shipping_details = get_user_meta( $vendor_id, '_wcfmmp_shipping', true );
     if( !empty($vendor_shipping_details) ) {
@@ -526,7 +526,7 @@ class WCFMmp_Product {
       
       if ( ( !empty($enabled) && $enabled == 'yes' ) && ( !empty($type) && ( ( 'by_zone' !== $type ) || !apply_filters( 'wcfmmp_is_allow_store_shipping_by_shipping_classes', true ) ) ) ) {
 				$shipping_fields = wcfm_hide_field( 'shipping_class', $shipping_fields );
-				//$shipping_fields['shipping_class']['hints'] = __( 'Shipping classes are used by certain shipping methods to group similar products.', 'wc-multivendor-marketplace' );
+				 
       }
     }
 			
@@ -540,11 +540,11 @@ class WCFMmp_Product {
 		global $wpdb, $WCFM, $WCFMmp, $_POST, $wpdb;
 		
 		if( apply_filters( 'wcfm_is_allow_shipping', true ) ) {
-//			if( isset( $wcfm_products_manage_form_data['_disable_shipping'] ) ) {
-//				update_post_meta( $new_product_id, '_disable_shipping', $wcfm_products_manage_form_data['_disable_shipping'] );
-//			} else {
-//				delete_post_meta( $new_product_id, '_disable_shipping' );
-//			}
+ 
+ 
+ 
+ 
+ 
 			if( isset( $wcfm_products_manage_form_data['_overwrite_shipping'] ) ) {
 				update_post_meta( $new_product_id, '_overwrite_shipping', $wcfm_products_manage_form_data['_overwrite_shipping'] );
 			} else {

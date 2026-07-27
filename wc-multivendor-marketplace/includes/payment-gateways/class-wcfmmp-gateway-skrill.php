@@ -29,7 +29,7 @@ class WCFMmp_Gateway_Skrill extends WCFMmp_Abstract_Gateway {
 		$this->reciver_email = $WCFMmp->wcfmmp_vendor->get_vendor_payment_account( $this->vendor_id, 'skrill' );
 		$this->transaction_mode = $transaction_mode;
 		if ( $this->validate_request() ) {
-			// Updating withdrawal meta
+			 
 			$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $this->withdrawal_id, 'withdraw_amount', $this->withdraw_amount );
 			$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $this->withdrawal_id, 'currency', $this->currency );
 			$WCFMmp->wcfmmp_withdraw->wcfmmp_update_withdrawal_meta( $this->withdrawal_id, 'reciver_email', $this->reciver_email );

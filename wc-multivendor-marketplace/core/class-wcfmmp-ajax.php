@@ -1,14 +1,14 @@
 <?php
 
-/**
- * WCFM Markeplace plugin core
- *
- * Plugin Ajax Controler
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Ajax {
 
@@ -17,18 +17,18 @@ class WCFMmp_Ajax {
     public function __construct() {
         global $WCFM, $WCFMa;
 
-        // Vendor Order Status Update
+         
         add_action('before_wcfm_order_status_update', array(&$this, 'wcfmmp_vendor_order_status_update'), 10, 2);
 
-        // Store List Search
+         
         add_action('wp_ajax_wcfmmp_stores_list_search', array($this, 'wcfmmp_stores_list_search'));
         add_action('wp_ajax_nopriv_wcfmmp_stores_list_search', array($this, 'wcfmmp_stores_list_search'));
 
-        // Store List Map markers
+         
         add_action('wp_ajax_wcfmmp_stores_list_map_markers', array($this, 'wcfmmp_stores_list_map_markers'));
         add_action('wp_ajax_nopriv_wcfmmp_stores_list_map_markers', array($this, 'wcfmmp_stores_list_map_markers'));
 
-        // Zone Shipping Ajax
+         
         add_action('wp_ajax_wcfmmp-get-shipping-zone', array($this, 'wcfmmp_get_shipping_zone'));
         add_action('wp_ajax_wcfmmp-add-shipping-method', array($this, 'wcfmmp_add_shipping_method'));
         add_action('wp_ajax_wcfmmp-toggle-shipping-method', array($this, 'wcfmmp_toggle_shipping_method'));
@@ -38,16 +38,16 @@ class WCFMmp_Ajax {
         add_action('wp_ajax_wcfmmp-remove-cart-vendor-product', array($this, 'wcfmmp_remove_cart_vendor_product'));
         add_action('wp_ajax_nopriv_wcfmmp-remove-cart-vendor-product', array($this, 'wcfmmp_remove_cart_vendor_product'));
 
-        // Vendor Store Offline
+         
         add_action('wp_ajax_wcfm_vendor_store_offline', array(&$this, 'wcfm_vendor_store_offline'));
 
-        // Vendor Store Online
+         
         add_action('wp_ajax_wcfm_vendor_store_online', array(&$this, 'wcfm_vendor_store_online'));
     }
 
-    /**
-     * Vendor Order - Commission Status Update
-     */
+    
+
+
     function wcfmmp_vendor_order_status_update($order_id, $order_status) {
         global $WCFM, $WCFMmp, $wpdb;
 
@@ -88,7 +88,7 @@ class WCFMmp_Ajax {
             $status = str_replace('wc-', '', $order_status);
             $wpdb->update("{$wpdb->prefix}wcfm_marketplace_orders", array('commission_status' => $status), array('order_id' => $order_id, 'vendor_id' => $vendor_id), array('%s'), array('%d', '%d'));
 
-            // Withdrawal Threshold check by Order Completed date 
+             
             if (apply_filters('wcfm_is_allow_withdrwal_check_by_order_complete_date', false) && ($status == 'completed')) {
                 $wpdb->update("{$wpdb->prefix}wcfm_marketplace_orders", array('created' => date('Y-m-d H:i:s', current_time('timestamp', 0))), array('order_id' => $order_id, 'vendor_id' => $vendor_id), array('%s'), array('%d', '%d'));
             }
@@ -96,14 +96,14 @@ class WCFMmp_Ajax {
 
             do_action('wcfmmp_vendor_order_status_updated', $order_id, $order_status, $vendor_id);
 
-            // Add Order Note for Log
+             
             if (apply_filters('wcfmmp_is_allow_sold_by_linked', true)) {
                 $shop_name = wcfm_get_vendor_store(absint($vendor_id));
             } else {
                 $shop_name = wcfm_get_vendor_store_name(absint($vendor_id));
             }
 
-            // Fetch Product ID
+             
             $is_all_complete = true;
             if (apply_filters('wcfm_is_allow_itemwise_notification', true)) {
                 $sql = 'SELECT product_id  FROM ' . $wpdb->prefix . 'wcfm_marketplace_orders AS commission';
@@ -193,11 +193,11 @@ class WCFMmp_Ajax {
                 }
             }
 
-            // Update Main Order status on all Commission Order Status Update
+             
             if (in_array($status, apply_filters('wcfm_change_main_order_on_child_order_statuses', array('completed', 'processing'))) && apply_filters('wcfm_is_allow_mark_complete_main_order_on_all_child_order_complete', true)) {
                 if (wc_is_order_status('wc-' . $status) && $order_id) {
 
-                    // Check is all vendor orders completed or not
+                     
                     $is_all_complete = true;
                     $sql = 'SELECT commission_status  FROM ' . $wpdb->prefix . 'wcfm_marketplace_orders AS commission';
                     $sql .= ' WHERE 1=1';
@@ -214,7 +214,7 @@ class WCFMmp_Ajax {
                     if ($is_all_complete) {
                         $order->update_status($status, '', true);
 
-                        // Add Order Note for Log
+                         
                         $wcfm_messages = sprintf(__('<b>%s</b> order status updated to <b>%s</b>', 'wc-multivendor-marketplace'), '#' . $order->get_order_number(), wc_get_order_status_name($status));
 
                         $raw_message = [
@@ -263,7 +263,7 @@ class WCFMmp_Ajax {
         $search_term     = isset($_REQUEST['search_term']) ? sanitize_text_field($_REQUEST['search_term']) : '';
         $search_category = isset($_REQUEST['wcfmmp_store_category']) ? sanitize_text_field($_REQUEST['wcfmmp_store_category']) : '';
         $pagination_base = isset($_REQUEST['pagination_base']) ? sanitize_text_field($_REQUEST['pagination_base']) : '';
-        $paged           = 1;                                                                                                             //isset( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : 1;
+        $paged           = 1;                                                                                                              
         $per_row         = isset($_REQUEST['per_row']) ? absint($_REQUEST['per_row']) : 3;
         $length          = isset($_REQUEST['per_page']) ? (int) $_REQUEST['per_page'] : 10;
         $includes        = isset($_REQUEST['includes']) ? sanitize_text_field($_REQUEST['includes']) : '';
@@ -287,6 +287,7 @@ class WCFMmp_Ajax {
         if ($includes) $includes = explode(",", $includes);
         else $includes = array();
 
+		$search_data['wcfmmp_query_context'] = 'store_list';
         $stores = $WCFMmp->wcfmmp_vendor->wcfmmp_get_vendors($offset, $length, $search_term, $includes, 'ASC', 'ID', $search_data, $search_category, $has_product);
 
         $template_args = apply_filters('wcfmmp_stores_args', array(
@@ -341,7 +342,7 @@ class WCFMmp_Ajax {
             $excludes        = isset($_REQUEST['excludes']) ? sanitize_text_field($_REQUEST['excludes']) : '';
             $has_product     = isset($_REQUEST['has_product']) ? sanitize_text_field($_REQUEST['has_product']) : '';
             $sidebar         = isset($_REQUEST['sidebar']) ? sanitize_text_field($_REQUEST['sidebar']) : '';
-            //$filter_vendor   = isset( $_REQUEST['filter_vendor'] ) ? sanitize_text_field( $_REQUEST['filter_vendor'] ) : '';
+             
             $search_data     = array();
 
             if (isset($_POST['search_data']))
@@ -355,7 +356,7 @@ class WCFMmp_Ajax {
 
             if ($includes) $includes = explode(",", $includes);
             else $includes = array();
-
+			$search_data['wcfmmp_query_context'] = 'store_list';
             $stores = $WCFMmp->wcfmmp_vendor->wcfmmp_get_vendors($offset, $length, $search_term, $includes, 'ASC', 'ID', $search_data, $search_category, $has_product);
         } else {
             $stores = $WCFMmp->wcfmmp_vendor->wcfmmp_get_vendors();
@@ -410,13 +411,13 @@ class WCFMmp_Ajax {
         wp_send_json_success($store_list_markers);
     }
 
-    /**
-     * Get shipping zone
-     *
-     * @since 1.0.0
-     *
-     * @return void
-     */
+    
+
+
+
+
+
+
     public function wcfmmp_get_shipping_zone() {
         global $WCFM, $WCFMmp;
 
@@ -447,14 +448,14 @@ class WCFMmp_Ajax {
             wp_send_json_error($zones->get_error_message());
             wp_die();
         }
-        //print_r($zones); die;
+         
         $show_post_code_list = $show_state_list = $show_post_code_list = false;
-        //print_r($zones);die;
+         
         $zone_id = $zones['data']['id'];
         $zone_locations = $zones['data']['zone_locations'];
-        //print_r($zone_locations);
+         
         $zone_location_types = array_column(array_map('wcfmmp_convert_to_array', $zone_locations), 'type', 'code');
-        //print_r($zone_location_types);
+         
         $selected_continent_codes = array_keys($zone_location_types, 'continent');
         if (!$selected_continent_codes) $selected_continent_codes = array();
 
@@ -469,13 +470,13 @@ class WCFMmp_Ajax {
         }
 
         $countries_by_continent = array_intersect_key($all_allowed_countries, array_flip($countries_key_by_continent));
-        //print_r($all_allowed_countries);
+         
         $selected_country_codes = array_keys($zone_location_types, 'country');
         $all_states = WC()->countries->get_states();
 
         $state_key_by_country = array();
         $state_key_by_country = array_intersect_key($all_states, array_flip($selected_country_codes));
-        //print_r($state_key_by_country);die;
+         
         array_walk($state_key_by_country, 'wcfmmp_state_key_alter');
 
         if ($state_key_by_country)
@@ -487,9 +488,9 @@ class WCFMmp_Ajax {
             global $wc_city_select;
             $all_cities = $wc_city_select->get_cities();
             $city_key_by_state = array();
-            //print_r($all_cities);
+             
             $selected_state_codes = array_keys($zone_location_types, 'state');
-            //$selected_countywise_states = array();
+             
             foreach ($selected_state_codes as $key => $value) {
                 $country_state_arr = explode(':', $value);
                 $exploded_country = $country_state_arr[0];
@@ -545,7 +546,7 @@ class WCFMmp_Ajax {
             }
             $postcodes = implode(',', $postcodes);
         }
-        //print_r($states);
+         
 
         ob_start();
 ?>
@@ -718,7 +719,7 @@ class WCFMmp_Ajax {
                                 </tr>
                                 <?php
                             } else {
-                                //print_r($vendor_shipping_methods);
+                                 
                                 foreach ($vendor_shipping_methods as $vendor_shipping_method) {
                                 ?>
                                     <tr>
@@ -785,13 +786,13 @@ class WCFMmp_Ajax {
         wp_send_json_success($zone_html);
     }
 
-    /**
-     * Add shipping Method
-     *
-     * @since 1.0.0
-     *
-     * @return void
-     */
+    
+
+
+
+
+
+
     public function wcfmmp_add_shipping_method() {
 
         if (!check_ajax_referer('wcfm_ajax_nonce', 'wcfm_ajax_nonce', false)) {
@@ -808,7 +809,7 @@ class WCFMmp_Ajax {
             wp_send_json_error($user_id->get_error_message());
         }
 
-        $zone_id   = isset($_POST['zoneID']) ? absint($_POST['zoneID']) : 0; // 0 for - "Locations not covered by your other zones" - zone
+        $zone_id   = isset($_POST['zoneID']) ? absint($_POST['zoneID']) : 0;  
         $method_id = isset($_POST['method']) ? sanitize_text_field($_POST['method']) : '';
 
         if ( !$method_id ) {
@@ -830,13 +831,13 @@ class WCFMmp_Ajax {
         wp_send_json_success(__('Shipping method added successfully', 'wc-multivendor-marketplace'));
     }
 
-    /**
-     * Toggle shipping Method
-     *
-     * @since 1.0.0
-     *
-     * @return void
-     */
+    
+
+
+
+
+
+
     public function wcfmmp_toggle_shipping_method() {
 
         if (!check_ajax_referer('wcfm_ajax_nonce', 'wcfm_ajax_nonce', false)) {
@@ -876,13 +877,13 @@ class WCFMmp_Ajax {
         wp_send_json_success($message);
     }
 
-    /**
-     * Delete shipping Method
-     *
-     * @since 1.0.0
-     *
-     * @return void
-     */
+    
+
+
+
+
+
+
     public function wcfmmp_delete_shipping_method() {
 
         if (!check_ajax_referer('wcfm_ajax_nonce', 'wcfm_ajax_nonce', false)) {
@@ -924,13 +925,13 @@ class WCFMmp_Ajax {
         wp_send_json_success($resp);
     }
 
-    /**
-     * Update shipping Method
-     *
-     * @since 1.0.0
-     *
-     * @return void
-     */
+    
+
+
+
+
+
+
     public function wcfmmp_update_shipping_method() {
 
         if (!check_ajax_referer('wcfm_ajax_nonce', 'wcfm_ajax_nonce', false)) {
@@ -977,10 +978,10 @@ class WCFMmp_Ajax {
 
         foreach (WC()->cart->get_cart() as $cart_item_key => $item) {
             if ($item['data']->needs_shipping()) {
-                //print_r($item['data']->name); die;
+                 
                 $product_id = $item['product_id'];
                 $vendor_id = wcfm_get_vendor_id_by_post($product_id);
-                //WC()->cart->remove_cart_item($cart_item_key);
+                 
                 $vendor_data = get_user_meta($vendor_id, 'wcfmmp_profile_settings', true);
                 if ($vendor_data && !empty($vendor_data['shop_shipping_countries'])) {
                     $shop_shipping_countries = $vendor_data['shop_shipping_countries'];
@@ -1000,12 +1001,12 @@ class WCFMmp_Ajax {
         }
 
         wp_send_json_success($response);
-        //die;
+         
     }
 
-    /**
-     * Vendor Store Offline
-     */
+    
+
+
     function wcfm_vendor_store_offline() {
         global $WCFM, $_POST, $wpdb;
 
@@ -1025,7 +1026,7 @@ class WCFMmp_Ajax {
 
             update_user_meta($member_id, '_wcfm_store_offline', 'yes');
 
-            // Vendor Notification
+             
             $wcfm_messages = sprintf(__('Your Store: <b>%s</b> has been set off-line.', 'wc-multivendor-marketplace'), $vendor_store);
 
             $raw_message = [
@@ -1050,9 +1051,9 @@ class WCFMmp_Ajax {
         }
     }
 
-    /**
-     * Vendor Store Offline
-     */
+    
+
+
     function wcfm_vendor_store_online() {
         global $WCFM, $_POST, $wpdb;
 
@@ -1072,7 +1073,7 @@ class WCFMmp_Ajax {
 
             delete_user_meta($member_id, '_wcfm_store_offline');
 
-            // Vendor Notification
+             
             $wcfm_messages = sprintf(__('Your Store: <b>%s</b> has been set on-line.', 'wc-multivendor-marketplace'), $vendor_store);
 
             $raw_message = [

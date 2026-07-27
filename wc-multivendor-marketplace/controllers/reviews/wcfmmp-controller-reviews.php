@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM plugin controllers
- *
- * Plugin WCFM Marketplace Reviews Dashboard Controller
- *
- * @author 		WC Lovers
- * @package 	wcfm/reviews/wcfmmp/controllers
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 class WCFMmp_Reviews_Controller {
 	
@@ -71,7 +71,7 @@ class WCFMmp_Reviews_Controller {
 			return $wcfm_reviews_array;
 		}
 		
-		// Generate Reviews JSON
+		 
 		$wcfm_reviews_json = '';
 		$wcfm_reviews_json = '{
 															"draw": ' . absint( $_POST['draw'] ) . ',
@@ -89,17 +89,17 @@ class WCFMmp_Reviews_Controller {
 					$wp_user_avatar = $WCFM->plugin_url . 'assets/images/avatar.png';
 				}
 				
-				// Status
+				 
 				if( $wcfm_review_single->approved == 1 ) {
 					$wcfm_reviews_json_arr[$index][] =  '<span class="payment-status tips wcicon-status-completed text_tip" data-tip="' . __( 'Approved', 'wc-multivendor-marketplace') . '"></span>';
 				} else {
 					$wcfm_reviews_json_arr[$index][] =  '<span class="payment-status tips wcicon-status-pending text_tip" data-tip="' . __( 'Waiting Approval', 'wc-multivendor-marketplace') . '"></span>';
 				}
 				
-				// Image
+				 
 				$wcfm_reviews_json_arr[$index][] = '<div class="wcfmmp-author-img"><img width="40" src="' . esc_url($wp_user_avatar) . '" /></div>';
 				
-        // Author
+         
         $author = '<div class="wcfmmp-author-meta">' . $wcfm_review_single->author_name;
         if( apply_filters( 'wcfm_allow_view_customer_email', true ) ) {
         	$author .= '<br />' . $wcfm_review_single->author_email;
@@ -107,23 +107,23 @@ class WCFMmp_Reviews_Controller {
         $author .= '</div>';
         $wcfm_reviews_json_arr[$index][] = $author; 
         
-        // Comment
+         
         $wcfm_reviews_json_arr[$index][] = '<div class="wcfmmp-comments-content">' . $wcfm_review_single->review_description . '</div>';
         
-        // Rating
+         
         $wcfm_reviews_json_arr[$index][] = '<div class="wcfmmp-rating"><div style="margin: auto;" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" class="star-rating" title="' . sprintf( __( 'Rated %d out of 5', 'wc-multivendor-marketplace' ), $wcfm_review_single->review_rating ) . '"><span style="width:' . ( ( $wcfm_review_single->review_rating / 5 ) * 100 ) . '%"><strong itemprop="ratingValue">' . $wcfm_review_single->review_rating . '</strong> ' . __( 'out of 5', 'wc-multivendor-marketplace' ). '</span></div></div>';
         
-        // Store
+         
 				if( $wcfm_review_single->vendor_id ) {
 					$wcfm_reviews_json_arr[$index][] = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_by_vendor( absint($wcfm_review_single->vendor_id) );
 				} else {
 					$wcfm_reviews_json_arr[$index][] = '&ndash;';
 				}
         
-        // Dated
+         
         $wcfm_reviews_json_arr[$index][] = date_i18n( wc_date_format() . ' ' . wc_time_format(), strtotime($wcfm_review_single->created) );
         
-				// Status
+				 
 				$actions = '';
 				if( !wcfm_is_vendor() || apply_filters( 'wcfm_is_allow_manage_review', true ) ) {
 					if( $wcfm_review_single->approved == 1 ) {

@@ -1,14 +1,14 @@
 <?php
 
-/**
- * WCFMmp plugin Install
- *
- * Plugin install script which adds default pages, taxonomies, and database tables to WordPress. Runs on activation and upgrade.
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/helpers
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Install {
 
@@ -19,16 +19,16 @@ class WCFMmp_Install {
 		if ( get_option("wcfmmp_page_install") == 1 ) {
 			$wcfm_page_options = get_option( 'wcfm_page_options', array() );
 			if( isset($wcfm_page_options['wcfm_vendor_membership_page_id']) ) {
-				//wp_update_post(array('ID' => $wcfm_page_options['wcfm_vendor_membership_page_id'], 'post_content' => '[wcfm_vendor_membership]'));
+				 
 			}
 			if( isset($wcfm_page_options['wcfm_vendor_registration_page_id']) ) {
-				//wp_update_post(array('ID' => $wcfm_page_options['wcfm_vendor_registration_page_id'], 'post_content' => '[wcfm_vendor_registration]'));
+				 
 			}
-			//update_option('wcfm_page_options', $wcfm_page_options);
+			 
 		}
 		
 		if ( !get_option("wcfmmp_page_install") ) {
-			//$this->wcfmmp_create_pages();
+			 
 			update_option("wcfmmp_page_install", 1);
 		}
 		
@@ -40,12 +40,12 @@ class WCFMmp_Install {
 		
 		self::wcfmmp_user_role();
 		
-		// Intialize WCFMfm End points
+		 
 		if( class_exists( 'WCFMmp_Rewrites' )) {
 			WCFMmp_Rewrites::init()->register_rule();
 		}
 		
-		// Flush rules after install
+		 
 		flush_rewrite_rules();
 		
 		if( !get_option( 'wcfmmp_installed' ) && apply_filters( 'wcfmmp_enable_setup_wizard', true ) ) {
@@ -53,17 +53,17 @@ class WCFMmp_Install {
 		}
 	}
 	
-	/**
-	 * Create a page
-	 *
-	 * @access public
-	 * @param mixed $slug Slug for the new page
-	 * @param mixed $option Option name to store the page's ID
-	 * @param string $page_title (default: '') Title for the new page
-	 * @param string $page_content (default: '') Content for the new page
-	 * @param int $post_parent (default: 0) Parent for the new page
-	 * @return void
-	 */
+	
+
+
+
+
+
+
+
+
+
+
 	function wcfmmp_create_page($slug, $option, $page_title = '', $page_content = '', $post_parent = 0) {
 		global $wpdb;
 		$option_value = get_option($option);
@@ -89,16 +89,16 @@ class WCFMmp_Install {
 		update_option($option, $page_id);
 	}
 
-	/**
-	 * Create pages that the plugin relies on, storing page id's in variables.
-	 *
-	 * @access public
-	 * @return void
-	 */
+	
+
+
+
+
+
 	function wcfmmp_create_pages() {
 			global $WCFM;
 
-			// WCFM page
+			 
 			$this->wcfmmp_create_page(esc_sql(_x('vendor-membership', 'page_slug', 'vendor-membership')), 'wcfm_vendor_membership_page_id', __('Vendor Membership', 'wc-multivendor-membership'), '[wcfm_vendor_membership]');
 			$this->wcfmmp_create_page(esc_sql(_x('vendor-register', 'page_slug', 'vendor-register')), 'wcfm_vendor_registration_page_id', __('Vendor Registration', 'wc-multivendor-membership'), '[wcfm_vendor_registration]');
 			
@@ -109,11 +109,11 @@ class WCFMmp_Install {
 			update_option('wcfm_page_options', $array_pages);
 	}
 	
-	/**
-	 * Create WCFMmp Membership Subscription tables
-	 * @global object $wpdb
-	 * From Version 1.0.0
-	 */
+	
+
+
+
+
 	function wcfmmp_create_tables() {
 		global $wpdb;
 		$collate = '';
@@ -355,12 +355,12 @@ class WCFMmp_Install {
 		}
 	}
 	
-	/**
-	 * Register vendor user role
-	 *
-	 * @access public
-	 * @return void
-	 */
+	
+
+
+
+
+
 	public static function wcfmmp_user_role() {
 
 		add_role('wcfm_vendor', apply_filters('wcfm_vendor_role', __('Store Vendor', 'wc-multivendor-marketplace')), array(

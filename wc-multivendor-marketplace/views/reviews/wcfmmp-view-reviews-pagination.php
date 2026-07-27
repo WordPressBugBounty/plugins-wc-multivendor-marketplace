@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying reviews pagination.
- *
- * @package WCfM Markeplace Views Reviews Pagination
- *
- * For edit coping this to yourtheme/wcfm/reviews
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp, $post;
 ?>

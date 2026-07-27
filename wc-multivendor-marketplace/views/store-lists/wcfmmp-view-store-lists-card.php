@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying store sidebar category.
- *
- * @package WCfM Markeplace Views Store List Card
- *
- * For edit coping this to yourtheme/wcfm/store-lists
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 
@@ -39,7 +39,7 @@ if( $banner_type == 'video' ) {
 }
 $store_name      = isset( $store_info['store_name'] ) ? esc_html( $store_info['store_name'] ) : __( 'N/A', 'wc-multivendor-marketplace' );
 $store_name      = apply_filters( 'wcfmmp_store_title', $store_name , $store_id );
-$store_url       = wcfmmp_get_store_url( $store_id );
+$store_url       = apply_filters( 'wcfmmp_store_list_card_url', wcfmmp_get_store_url( $store_id ), $store_id, $store_info );
 if(!empty($stores[$store_id][0]['branch_id']) && apply_filters('wcfm_is_pref_multi_store', true)) {
 	global $WCFMu;
 	$store_address   = $WCFMu->wcfmu_multi_store->formatted_store_address($stores[$store_id][0]); 
@@ -105,7 +105,7 @@ $store_description = $store_user->get_shop_description();
 						if($distance) {
 							$msg = apply_filters('wcfmmp_user_vendor_distance_label', $distance . ' ' . $radius_unit . ' ' . __( 'away', 'wc-multivendor-marketplace' ), $distance, $radius_unit);
 						} else {
-							//$msg = __('Store is at the search location', 'wc-multivendor-marketplace');
+							 
 							$msg = __('You are here!', 'wc-multivendor-marketplace');
 						}
 						?>

@@ -1,37 +1,37 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Withdraw
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Withdraw {
 
 	public function __construct() {
 		global $WCFM, $WCFMmp;
 		
-		// Auto Withdrawal Request
-		//add_action( 'woocommerce_order_edit_status', array( &$this, 'wcfmmp_auto_generate_withdrawal_request' ), 50, 2 );
+		 
+		 
 		add_action( 'wcfmmp_vendor_order_status_updated', array( &$this, 'wcfmmp_auto_generate_withdrawal_request' ), 50, 3 );
 		add_action( 'woocommerce_order_status_changed', array( &$this, 'wcfmmp_order_status_changed_auto_generate_withdrawal_request' ), 50, 3 );
 		
 		add_action( 'wcfmmp_order_item_processed', array( &$this, 'wcfmmp_order_item_auto_withdrawal_processed' ), 300, 9 ); 
 		
-		// Withdrawal Request Rest on Refund
+		 
 		add_action( 'wcfmmp_commission_refund_status_completed', array( &$this, 'wcfmmp_withdrawal_requests_reset_on_refund' ), 50, 5 );
 		
-		// Reverse Withdrawal Request Rest on Refund
+		 
 		add_action( 'wcfmmp_commission_refund_status_completed', array( &$this, 'wcfmmp_reverse_withdrawal_requests_reset_on_refund' ), 60, 5 );
 	}
 	
-	/**
-	 * Return Withdrawal request auto approve or not
-	 * @return boolean
-	 */
+	
+
+
+
 	function is_withdrawal_auto_approve( $vendor_id = 0 ) {
 		global $WCFM, $WCFMmp;
 		$request_auto_approve = isset( $WCFMmp->wcfmmp_withdrawal_options['request_auto_approve'] ) ? $WCFMmp->wcfmmp_withdrawal_options['request_auto_approve'] : 'no';
@@ -39,35 +39,35 @@ class WCFMmp_Withdraw {
 		return apply_filters( 'wcfmmp_is_withdrawal_auto_approve', false, $vendor_id );
 	}
 	
-	/**
-	 * Return Withdrawal Limit
-	 * @return boolean
-	 */
+	
+
+
+
 	function get_withdrawal_limit( $vendor_id = 0 ) {
 		global $WCFM, $WCFMmp;
 		$withdrawal_limit = isset( $WCFMmp->wcfmmp_withdrawal_options['withdrawal_limit'] ) ? $WCFMmp->wcfmmp_withdrawal_options['withdrawal_limit'] : '';
 		return apply_filters( 'wcfmmp_withdrawal_limit', $withdrawal_limit, $vendor_id );
 	}
 	
-	/**
-	 * Return Withdrawal Thresold
-	 * @return boolean
-	 */
+	
+
+
+
 	function get_withdrawal_thresold( $vendor_id = 0 ) {
 		global $WCFM, $WCFMmp;
 		$withdrawal_thresold = isset( $WCFMmp->wcfmmp_withdrawal_options['withdrawal_thresold'] ) ? $WCFMmp->wcfmmp_withdrawal_options['withdrawal_thresold'] : '';
 		return apply_filters( 'wcfmmp_withdrawal_thresold', $withdrawal_thresold, $vendor_id );
 	}
 	
-	/**
-	 * Order Status Change Auto-withdrawal request
-	 */
+	
+
+
 	function wcfmmp_order_status_changed_auto_generate_withdrawal_request( $order_id, $status_from, $status_to ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
 		$order = wc_get_order( $order_id );
 
-		// Store New Order Email to Vendors
+		 
 		$wcfmmp_order_email_triggered = $order->get_meta('_wcfmmp_order_email_triggered');
 		if( !$wcfmmp_order_email_triggered ) {
 			$store_new_order_email_allowed_order_status = get_wcfm_store_new_order_email_allowed_order_status();
@@ -85,9 +85,9 @@ class WCFMmp_Withdraw {
 		$this->wcfmmp_auto_generate_withdrawal_request( $order_id, $status_to );
 	}
 	
-	/**
-	 * Auto generate withdrawal request on order statue change
-	 */
+	
+
+
 	function wcfmmp_auto_generate_withdrawal_request( $order_id, $order_status, $processed_vendor_id = 0 ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -108,7 +108,7 @@ class WCFMmp_Withdraw {
 		
 		if( !in_array( $order_status, $auto_withdrawal_status ) ) return;
 		
-		// By Pass Stripe Split Pay
+		 
 		$order = wc_get_order( $order_id );
 		$order_payment_method = ! empty( $order->get_payment_method() ) ? $order->get_payment_method() : '';
 		if( in_array( $order_payment_method, apply_filters( 'wcfmmp_auto_withdrawal_exclude_payment_methods', array( 'stripe_split' ) ) ) ) return;
@@ -123,7 +123,7 @@ class WCFMmp_Withdraw {
 			foreach( $commission_infos as $commission_info ) {
 				
 				if( $commission_info->withdraw_status != 'pending' ) continue;
-				//if( $commission_info->order_status == $auto_withdrawal_status ) continue;
+				 
 				
 				$vendor_id = absint($commission_info->vendor_id);
 				
@@ -134,10 +134,10 @@ class WCFMmp_Withdraw {
 				
 				if ( !array_key_exists( $payment_method, $WCFMmp->wcfmmp_gateways->payment_gateways ) ) continue;
 				
-				// Reset Commission withdrawal charges as per total withdrawal charge
+				 
 				$withdraw_charges = $this->calculate_withdrawal_charges( $commission_info->total_commission, $vendor_id );
 				
-				// Update Commission withdrawal Status
+				 
 				$commissions = explode( ",", $commission_info->commission_ids );
 				$no_of_commission = count($commissions);
 				$withdraw_charge_per_commission = (float)$withdraw_charges/$no_of_commission;
@@ -152,12 +152,12 @@ class WCFMmp_Withdraw {
 					if( $is_auto_approve ) {
 						$payment_processesing_status = $this->wcfmmp_withdrawal_payment_processesing( $withdraw_request_id, $vendor_id, $payment_method, $commission_info->total_commission, $withdraw_charges );
 						if( $payment_processesing_status ) {
-							//wcfm_log( __('Auto Withdrawal Request successfully processed.', 'wc-multivendor-marketplace') . ': #' . sprintf( '%06u', $withdraw_request_id ) );
+							 
 						} else {
 							wcfm_log( __('Auto Withdrawal Request processing failed, please contact Store Admin.', 'wc-multivendor-marketplace') . ': #' . sprintf( '%06u', $withdraw_request_id ) );
 						}
 					} else {
-						// Admin Notification
+						 
 						$shop_name = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_by_vendor( absint($vendor_id) );
 						$wcfm_messages = sprintf( __( 'Vendor <b>%s</b> has placed a Withdrawal Request #%s.', 'wc-multivendor-marketplace' ), $shop_name, '<a target="_blank" class="wcfm_dashboard_item_title" href="' . add_query_arg( 'transaction_id', $withdraw_request_id, wcfm_withdrawal_requests_url() ) . '">' . sprintf( '%06u', $withdraw_request_id ) . '</a>' );
 
@@ -176,7 +176,7 @@ class WCFMmp_Withdraw {
 						];
 
 						$WCFM->wcfm_notification->wcfm_send_direct_message( $vendor_id, 0, 0, 1, $wcfm_messages, 'withdraw-request', true, $raw_message );
-						//wcfm_log( __('Auto withdrawal request successfully sent.', 'wc-frontend-manager') . ': #' . sprintf( '%06u', $withdraw_request_id ) );
+						 
 					}
 					
 					do_action( 'wcfmmp_withdrawal_request_submited', $withdraw_request_id, $vendor_id );
@@ -187,9 +187,9 @@ class WCFMmp_Withdraw {
 		}
 	}
 	
-	/**
-	 * Auto withdrawal Order item process as withdrawal request
-	 */
+	
+
+
 	function wcfmmp_order_item_auto_withdrawal_processed( $commission_id, $order_id, $order, $vendor_id, $product_id, $order_item_id, $grosse_total, $total_commission, $is_auto_withdrawal ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -197,7 +197,7 @@ class WCFMmp_Withdraw {
 		if( !$vendor_id ) return;
 		if( !$commission_id ) return;
 		if( !$is_auto_withdrawal ) {
-			// Check Auto withdrawal by Order Status
+			 
 			$this->wcfmmp_auto_generate_withdrawal_request( $order_id, $order->get_status(), $vendor_id );
 			return;
 		}
@@ -205,9 +205,9 @@ class WCFMmp_Withdraw {
 		$payment_method  = ! empty( $order->get_payment_method() ) ? $order->get_payment_method() : '';
 		$withdraw_mode   = 'by_paymode';
 		$withdraw_status = 'pending';
-		//$this->wcfmmp_withdrawal_processed( $vendor_id, $order_id, $commission_id, $payment_method, $grosse_total, $total_commission, 0, $withdraw_status, $withdraw_mode, $is_auto_withdrawal );
+		 
 		
-		// Reverse Withdrwal Process
+		 
 		$withdrawal_reverse = isset( $WCFMmp->wcfmmp_withdrawal_options['withdrawal_reverse'] ) ? 'yes' : '';
 		if( $withdrawal_reverse ) {
 			$sql = 'SELECT commission.total_commission, vendor_id, withdraw_status, order_status  FROM ' . $wpdb->prefix . 'wcfm_marketplace_orders AS commission';
@@ -223,9 +223,9 @@ class WCFMmp_Withdraw {
 		}
 	}
 	
-	/**
-	 * Withdrawal Request Reset on Refund
-	 */
+	
+
+
 	function wcfmmp_withdrawal_requests_reset_on_refund( $refund_id, $commission_id, $order_id, $vendor_id, $refund ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -238,9 +238,9 @@ class WCFMmp_Withdraw {
 		
 	}
 	
-	/**
-	 * Reverse Withdrawal Request Reset on Refund
-	 */
+	
+
+
 	function wcfmmp_reverse_withdrawal_requests_reset_on_refund( $refund_id, $commission_id, $order_id, $vendor_id, $refund ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -333,7 +333,7 @@ class WCFMmp_Withdraw {
 		$balance = (float) $grosse_total - (float) $withdraw_amount;
 		$balance = round($balance, 2);
 		
-		$withdraw_note = ''; //__( 'Reverse pay for auto withdrawal.', 'wc-multivendor-marketplace' );
+		$withdraw_note = '';  
 		
 		$wpdb->query(
 						$wpdb->prepare(
@@ -377,9 +377,9 @@ class WCFMmp_Withdraw {
 		return $reverse_withdraw_request_id;
 	}
 	
-	/**
-	 * Reverse Withdrawal amount for a vendor
-	 */
+	
+
+
 	function wcfm_get_pending_reverse_withdrawal_by_vendor( $vendor_id ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -424,9 +424,9 @@ class WCFMmp_Withdraw {
 		return $withdraw_meta_id;
 	}
 	
-	/**
-	 * Withdrawal Payment Processing
-	 */
+	
+
+
 	public function wcfmmp_withdrawal_payment_processesing( $withdrawal_id, $vendor_id, $payment_method, $withdraw_amount, $withdraw_charges = 0, $withdraw_note = '' ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -446,7 +446,7 @@ class WCFMmp_Withdraw {
 				if ($response) {
 					if( isset( $response['status'] ) && $response['status'] ) {
 						
-						// Update withdrawal status
+						 
 						$this->wcfmmp_withdraw_status_update_by_withdrawal( $withdrawal_id, 'completed', $withdraw_note );
 						
 						do_action( 'wcfmmp_withdrawal_request_approved', $withdrawal_id );
@@ -474,9 +474,9 @@ class WCFMmp_Withdraw {
 		return $payment_processesing_status;
 	}
 	
-	/**
-	 * Withdraw status update by Withdrawal ID
-	 */
+	
+
+
 	public function wcfmmp_withdraw_status_update_by_withdrawal( $withdrawal_id, $status = 'completed', $note = '' ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -487,7 +487,7 @@ class WCFMmp_Withdraw {
 		
 		$vendor_id = 0;
 			
-		// Commission table update
+		 
 		$sql = 'SELECT commission_ids, vendor_id FROM ' . $wpdb->prefix . 'wcfm_marketplace_withdraw_request';
 		$sql .= ' WHERE 1=1';
 		$sql .= " AND ID = %d";
@@ -500,15 +500,15 @@ class WCFMmp_Withdraw {
 					foreach( $commission_ids as $commission_id ) {
 						$wpdb->update("{$wpdb->prefix}wcfm_marketplace_orders", array('withdraw_status' => $status, 'commission_paid_date' => date('Y-m-d H:i:s', current_time( 'timestamp', 0 ))), array('ID' => $commission_id), array('%s', '%s'), array('%d'));
 						
-						// Update commission ledger status
-						//$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update( $commission_id, $status );
+						 
+						 
 						
 						do_action( 'wcfmmp_withdraw_status_'.$status.'_by_commission', $withdrawal_id, $commission_id );
 					}
 				}
 			}
 			
-			// Vendor Notification
+			 
 			if( $vendor_id ) {
 				$wcfm_messages = apply_filters( 'wcfmmp_withdrawal_update_message', sprintf( __( 'Your withdrawal request #%s %s.', 'wc-multivendor-marketplace' ), '<a target="_blank" class="wcfm_dashboard_item_title" href="' . wcfm_transaction_details_url( $withdrawal_id ) . '">' . sprintf( '%06u', $withdrawal_id ) . '</a>', wcfmmp_status_labels( $status ) ),  $withdrawal_id, $status );
 
@@ -539,7 +539,7 @@ class WCFMmp_Withdraw {
 				$WCFM->wcfm_notification->wcfm_send_direct_message( -1, $vendor_id, 1, 0, $wcfm_messages, 'withdraw-request', true, $raw_message );
 			}
 			
-			// On withdrawal update ledge entry status update
+			 
 			$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update( $withdrawal_id, $status, 'withdraw' );
 			$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update( $withdrawal_id, $status, 'withdraw-charges' );
 			
@@ -547,9 +547,9 @@ class WCFMmp_Withdraw {
 		}
 	}
 	
-	/**
-	 * Withdraw status update by commission ID
-	 */
+	
+
+
 	public function wcfmmp_withdraw_status_update_by_commission( $commission_id, $status = 'completed', $note = '' ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -557,7 +557,7 @@ class WCFMmp_Withdraw {
 		
 		$wpdb->update("{$wpdb->prefix}wcfm_marketplace_withdraw_request", array('withdraw_status' => $status, 'withdraw_note' => $note, 'withdraw_paid_date' => date('Y-m-d H:i:s', current_time( 'timestamp', 0 ))), array('commission_ids' => $commission_id), array('%s', '%s', '%s'), array('%d'));
 		
-		// ledge entry status update
+		 
 		$sql = 'SELECT ID, vendor_id  FROM ' . $wpdb->prefix . 'wcfm_marketplace_withdraw_request AS withdraw';
 		$sql .= ' WHERE 1=1';
 		$sql .= " AND `commission_ids` = %s";
@@ -566,11 +566,11 @@ class WCFMmp_Withdraw {
 		if( !empty( $withdrawals ) ) {
 			foreach( $withdrawals as $withdrawal ) {
 				
-				// Ledger Status Update
+				 
 				$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update( $withdrawal->ID, $status, 'withdraw' );
 				$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update( $withdrawal->ID, $status, 'withdraw-charges' );
 				
-				// Vendor Notification
+				 
 				$wcfm_messages = apply_filters( 'wcfmmp_withdrawal_update_message', sprintf( __( 'Your withdrawal request #%s %s.', 'wc-multivendor-marketplace' ), '<a target="_blank" class="wcfm_dashboard_item_title" href="' . wcfm_transaction_details_url( $withdrawal->ID ) . '">' . sprintf( '%06u', $withdrawal->ID ) . '</a>', wcfmmp_status_labels( $status ) ), $withdrawal->ID, $status );
 
 				$raw_message = [
@@ -605,9 +605,9 @@ class WCFMmp_Withdraw {
 		}
 	}
 	
-	/**
-	 * Reverse Withdraw status update by Withdrawal ID
-	 */
+	
+
+
 	public function wcfmmp_reverse_withdraw_status_update( $reverse_withdrawal_id, $status = 'completed', $note = '' ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -621,7 +621,7 @@ class WCFMmp_Withdraw {
 		
 		$vendor_id = 0;
 			
-		// Commission table update
+		 
 		$sql = 'SELECT order_id, commission_id, vendor_id FROM ' . $wpdb->prefix . 'wcfm_marketplace_reverse_withdrawal';
 		$sql .= ' WHERE 1=1';
 		$sql .= " AND ID = %d";
@@ -635,7 +635,7 @@ class WCFMmp_Withdraw {
 				if( $commission_id ) {
 					$wpdb->update("{$wpdb->prefix}wcfm_marketplace_orders", array('withdraw_status' => $status, 'commission_paid_date' => date('Y-m-d H:i:s', current_time( 'timestamp', 0 ))), array('ID' => $commission_id), array('%s', '%s'), array('%d'));
 					
-					// Vendor Notification
+					 
 					if( $vendor_id ) {
 						$wcfm_messages = sprintf( __( 'Reverse withdrawal for order #%s %s.', 'wc-multivendor-marketplace' ), '<a target="_blank" class="wcfm_dashboard_item_title" href="' . get_wcfm_view_order_url( $order_id ) . '">' . $order->get_order_number() . '</a>', wcfmmp_status_labels( $status ) );
 
@@ -659,7 +659,7 @@ class WCFMmp_Withdraw {
 						$WCFM->wcfm_notification->wcfm_send_direct_message( -1, $vendor_id, 1, 0, $wcfm_messages, 'withdraw-request', true, $raw_message );
 					}
 					
-					// On withdrawal update ledge entry status update
+					 
 					$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update( $reverse_withdrawal_id, $status, 'reverse-withdraw' );
 					
 					do_action( 'wcfmmp_reverse_withdraw_status_'.$status, $reverse_withdrawal_id );
@@ -668,9 +668,9 @@ class WCFMmp_Withdraw {
 		}
 	}
 	
-	/**
-	 * Reverse Withdraw status update by Withdrawal ID
-	 */
+	
+
+
 	public function wcfmmp_reverse_withdraw_status_update_by_commission( $commission_id, $status = 'completed', $note = '' ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -684,7 +684,7 @@ class WCFMmp_Withdraw {
 		
 		$vendor_id = 0;
 			
-		// Commission table update
+		 
 		$sql = 'SELECT ID, order_id, vendor_id FROM ' . $wpdb->prefix . 'wcfm_marketplace_reverse_withdrawal';
 		$sql .= ' WHERE 1=1';
 		$sql .= " AND commission_id = %d";
@@ -696,7 +696,7 @@ class WCFMmp_Withdraw {
 				$reverse_withdrawal_id = $withdrawal_info->ID;
 				$order                 = wc_get_order( $order_id );
 				if( $commission_id ) {
-					// Vendor Notification
+					 
 					if( $vendor_id ) {
 						$wcfm_messages = sprintf( __( 'Reverse withdrawal for order #%s %s.', 'wc-multivendor-marketplace' ), '<a target="_blank" class="wcfm_dashboard_item_title" href="' . get_wcfm_view_order_url( $order_id ) . '">' . $order->get_order_number() . '</a>', wcfmmp_status_labels( $status ) );
 
@@ -720,7 +720,7 @@ class WCFMmp_Withdraw {
 						$WCFM->wcfm_notification->wcfm_send_direct_message( -1, $vendor_id, 1, 0, $wcfm_messages, 'withdraw-request', true, $raw_message );
 					}
 					
-					// On withdrawal update ledge entry status update
+					 
 					$WCFMmp->wcfmmp_ledger->wcfmmp_ledger_status_update( $reverse_withdrawal_id, $status, 'reverse-withdraw' );
 					
 					do_action( 'wcfmmp_reverse_withdraw_status_'.$status, $reverse_withdrawal_id );
@@ -729,9 +729,9 @@ class WCFMmp_Withdraw {
 		}
 	}
 	
-	/**
-	 * Calculate and Reture Withdrawal charges
-	 */
+	
+
+
 	public function calculate_withdrawal_charges( $amount, $vendor_id = 0 ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -748,7 +748,7 @@ class WCFMmp_Withdraw {
 				$withdrawal_fixed_charge    = isset( $withdrawal_charge_gateway['fixed'] ) ? $withdrawal_charge_gateway['fixed'] : 0;
 				$withdrawal_charge_tax      = isset( $withdrawal_charge_gateway['tax'] ) ? $withdrawal_charge_gateway['tax'] : 0;
 				
-				// Vendor Wise Overrided Setting Check 
+				 
 				
 				switch( $withdrawal_charge_type ) {
 					case 'no':

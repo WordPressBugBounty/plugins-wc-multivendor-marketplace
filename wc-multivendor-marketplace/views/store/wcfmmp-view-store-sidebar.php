@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying store sidebar.
- *
- * @package WCfM Markeplace Views Store Sidebar
- *
- * For edit coping this to yourtheme/wcfm/store 
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 
@@ -36,7 +36,7 @@ $widget_args = apply_filters( 'wcfmmp_store_sidebar_args', array(
 		<?php the_widget( 'WCFMmp_Store_Location', array( 'title' => __( 'Store Location', 'wc-multivendor-marketplace' ) ), $widget_args ); ?>
 		
 	<?php } else { ?>
-		<?php //get_sidebar( 'store' ); ?>
+		<?php  ?>
 	<?php } ?>
 	
 	<?php do_action( 'wcfmmp_store_after_sidebar', $store_user->get_id() ); ?>

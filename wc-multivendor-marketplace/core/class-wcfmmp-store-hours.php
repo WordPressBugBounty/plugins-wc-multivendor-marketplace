@@ -1,19 +1,19 @@
 <?php
-/**
- * WCFMmp plugin core
- *
- * WCfMmp Store Hours
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.1.4
- */
+
+
+
+
+
+
+
+
+
 class WCFMmp_Store_Hours {
 	
 	public function __construct() {
 		global $WCFM, $WCFMmp;
 		
-		// Store Hours Default Settings
+		 
 		add_action( 'end_wcfm_settings', array( &$this, 'wcfm_store_hours_global_settings' ), 17 );
 		add_action( 'wcfm_settings_update', array( &$this, 'wcfm_store_hours_global_settings_update' ), 17 );
 		
@@ -21,28 +21,28 @@ class WCFMmp_Store_Hours {
 			add_action( 'end_wcfm_vendor_settings', array( &$this, 'wcfm_store_hours_vendor_settings' ), 5 );
 		}
 		
-		// Store Hours Setting Update
+		 
 		add_action( 'wcfm_vendor_settings_update', array( &$this, 'wcfm_store_hours_vendor_settings_update' ), 5, 2 );
 		
-		// Store Hours Checking
+		 
 		add_filter( 'woocommerce_is_purchasable', array( &$this, 'wcfmmp_store_product_is_purchasable' ), 500, 2 );
 		
-		// Product Loop Add to Cart Disable by Store Hours
+		 
 		add_action( 'woocommerce_after_shop_loop_item', array( &$this, 'wcfmmp_store_product_after_shop_loop_item' ), 9 );
 		
-		// Store Close Message Show
+		 
 		add_action( 'woocommerce_single_product_summary', array( &$this, 'wcfmmp_store_close_message' ), 29 );
 		
-		// YiTH Quick View Store Close Message Show
+		 
 		add_action( 'yith_wcqv_product_summary', array( &$this, 'wcfmmp_store_close_message' ), 30 );
 		
-		// Flatsome Quick View Store Close Message Show
+		 
 		add_action( 'woocommerce_single_product_lightbox_summary', array( &$this, 'wcfmmp_store_close_message' ), 30 );
 		
-		// WooCommerce Quick View Pro Store Close Message Show
+		 
 		add_action( 'wc_quick_view_pro_quick_view_product_details', array( &$this, 'wcfmmp_store_close_message' ), 30 );
 		
-		// Store Page Close Message
+		 
 		add_action( 'wcfmmp_before_store_product', array( &$this, 'wcfmmp_store_close_message' ), 25 );
 	}
 	
@@ -146,13 +146,13 @@ class WCFMmp_Store_Hours {
 		
 		if( !apply_filters( 'wcfm_is_allow_store_hours', true ) || !apply_filters( 'wcfm_is_allow_store_hours_settings', true ) ) return;
 		
-		// Global Setting
+		 
 		$wcfm_store_hours = get_option( 'wcfm_store_hours_options', array() );
 		
 		$wcfm_global_store_hours_off_days  = isset( $wcfm_store_hours['off_days'] ) ? $wcfm_store_hours['off_days'] : array();
 		$wcfm_global_store_hours_day_times = isset( $wcfm_store_hours['day_times'] ) ? $wcfm_store_hours['day_times'] : array();
 		
-		// Vendor wise Setting
+		 
 		$wcfm_vendor_store_hours = (array) get_user_meta( $vendor_id, 'wcfm_vendor_store_hours', true );
 		
 		$wcfm_store_hours_enable = isset( $wcfm_vendor_store_hours['enable'] ) ? 'yes' : 'no';
@@ -160,7 +160,7 @@ class WCFMmp_Store_Hours {
 		$wcfm_store_hours_off_days = isset( $wcfm_vendor_store_hours['off_days'] ) ? $wcfm_vendor_store_hours['off_days'] : $wcfm_global_store_hours_off_days;
 		$wcfm_store_hours_day_times = isset( $wcfm_vendor_store_hours['day_times'] ) ? $wcfm_vendor_store_hours['day_times'] : $wcfm_global_store_hours_day_times;
 		
-		// Old Store Hours Migrating
+		 
 		if( apply_filters( 'wcfmmp_is_allow_store_hours_old_data_migrate', false ) ) {
 			$wcfm_vendor_store_hours_migrated = get_user_meta( $vendor_id, 'wcfm_vendor_store_hours_migrated', true );
 			if( !empty( array_filter( $wcfm_vendor_store_hours ) ) && !$wcfm_vendor_store_hours_migrated ) {
@@ -278,9 +278,9 @@ class WCFMmp_Store_Hours {
 		}
 	}
 	
-	/**
-	 * Restrict Store Product Purchase at OFF Time
-	 */
+	
+
+
 	function wcfmmp_store_product_is_purchasable( $is_purchasable, $product ) {
 		global $WCFM, $WCFMmp;
 		
@@ -299,9 +299,9 @@ class WCFMmp_Store_Hours {
 		return $is_purchasable;
 	}
 	
-	/**
-	 * Product Loop Add to Cart button Disable
-	 */
+	
+
+
 	function wcfmmp_store_product_after_shop_loop_item() {
 		global $WCFM, $WCFMmp, $product;
 		
@@ -329,9 +329,9 @@ class WCFMmp_Store_Hours {
 		}
 	}
 	
-	/**
-	 * WCFM Marketplace Store Close Message
-	 */
+	
+
+
 	function wcfmmp_store_close_message() {
 		global $WCFM, $WCFMmp, $product;
 		
@@ -359,13 +359,13 @@ class WCFMmp_Store_Hours {
 			if( $is_store_close ) {
 				remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
 				
-				// YiTH Quick View Support
+				 
 				remove_action( 'yith_wcqv_product_summary', 'woocommerce_template_single_add_to_cart', 25 );
 				
-				// Flatsome Quick View Support
+				 
 				remove_action( 'woocommerce_single_product_lightbox_summary', 'woocommerce_template_single_add_to_cart', 30 );
 				
-				// WooCommerce Quick View Pro Support
+				 
 				remove_action( 'wc_quick_view_pro_quick_view_product_details', 'woocommerce_template_single_add_to_cart', 30 );
 				
 				echo '<div class="wcfm_store_close_msg">';
@@ -375,9 +375,9 @@ class WCFMmp_Store_Hours {
 		}
 	}
 	
-	/**
-	 * Check is Store CLose Now
-	 */
+	
+
+
 	function wcfmmp_is_store_close( $vendor_id ) {
 		global $WCFM, $WCFMmp;
 		
@@ -402,12 +402,12 @@ class WCFMmp_Store_Hours {
 						
 						$today_date = date( 'Y-m-d', $current_time );
 						
-						// OFF Day Check
+						 
 						if( !empty( $wcfm_store_hours_off_days ) ) {
 							if( in_array( $today,  $wcfm_store_hours_off_days ) )  $is_store_close = true;
 						}
 						
-						// Closing Hours Check
+						 
 						if( !$is_store_close && !empty( $wcfm_store_hours_day_times ) ) {
 							if( isset( $wcfm_store_hours_day_times[$today] ) ) {
 								$wcfm_store_hours_day_time_slots = $wcfm_store_hours_day_times[$today];
@@ -418,8 +418,8 @@ class WCFMmp_Store_Hours {
 											foreach( $wcfm_store_hours_day_time_slots as $slot => $wcfm_store_hours_day_time_slot ) {
 												$open_hours  = isset( $wcfm_store_hours_day_time_slot['start'] ) ? strtotime( $today_date . ' ' . $wcfm_store_hours_day_time_slot['start'] ) : '';
 												$close_hours = isset( $wcfm_store_hours_day_time_slot['end'] ) ? strtotime( $today_date . ' ' . $wcfm_store_hours_day_time_slot['end'] ) : '';
-												//wcfm_log( $current_time . " => " . $open_hours . " ::" . $close_hours );
-												//wcfm_log( date( wc_date_format() . ' ' . wc_time_format(), $current_time ) . " => " . date( wc_date_format() . ' ' . wc_time_format(), $open_hours ) . " ::" . date( wc_date_format() . ' ' . wc_time_format(), $close_hours ) );
+												 
+												 
 												if( $open_hours && $close_hours ) {
 													if( ( $current_time > $open_hours ) && ( $current_time < $close_hours ) )  {
 														$is_store_close = false;

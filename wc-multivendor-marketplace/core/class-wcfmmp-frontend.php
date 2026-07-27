@@ -1,13 +1,13 @@
 <?php
-/**
- * WCFM Marketplace plugin core
- *
- * Plugin Frontend Controler
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
  
 class WCFMmp_Frontend {
 	
@@ -18,7 +18,7 @@ class WCFMmp_Frontend {
 		
 		$is_look_hook_defined = false;
 		
-		// ReHUB Theme Compatibility
+		 
 		if( function_exists( 'rehub_option' ) ) {
 			$is_look_hook_defined = true;
 			if( $vendor_sold_by_position == 'bellow_title' ) {
@@ -36,7 +36,7 @@ class WCFMmp_Frontend {
 			add_action( 'rehub_vendor_show_action', array( &$this, 'wcfmmp_sold_by_product' ), 50 );
 		} 
 		
-		// Show Product Sold By Label
+		 
 		if( !$is_look_hook_defined ) {
 			if( $vendor_sold_by_position == 'bellow_title' ) {
 				add_action( 'woocommerce_single_product_summary',	array( &$this, 'wcfmmp_sold_by_single_product' ), 6 );
@@ -51,44 +51,44 @@ class WCFMmp_Frontend {
 		
 		if( ( $vendor_sold_by_position == 'bellow_title' ) || ( $vendor_sold_by_position == 'bellow_price' ) || ( $vendor_sold_by_position == 'bellow_sc' ) ) {
 			if( apply_filters( 'wcfm_is_allow_quick_view_sold_by', true ) ) {
-				// YiTH Quick Product View Sold By
+				 
 				add_action( 'yith_wcqv_product_summary',	array( &$this, 'wcfmmp_sold_by_single_product' ), 35 );
 			
-				// Flatsome Quick Product View Sold by
+				 
 				add_action( 'woocommerce_single_product_lightbox_summary', array( &$this, 'wcfmmp_sold_by_single_product' ), 35 );
 				
-				// WooCommerce Quick View Pro View Sold by
+				 
 				add_action( 'wc_quick_view_pro_quick_view_product_details', array( &$this, 'wcfmmp_sold_by_single_product' ), 35 );
 			}
 		}
 		
-		// Martfury Theme Compatibility
+		 
 		if( function_exists( 'martfury_is_vendor_page' ) ) {
 			$is_look_hook_defined = true;
 			add_action('woocommerce_after_shop_loop_item_title', array( $this, 'wcfmmp_sold_by_product' ), 140 );
 			add_action( 'martfury_woo_after_shop_loop_item_title', array( $this, 'wcfmmp_sold_by_product' ), 20 );
 		}
 		
-		// Ocean WP Theme Compatibility
+		 
 		if( function_exists( 'oceanwp_woo_product_elements_positioning' ) ) {
 			$is_look_hook_defined = true;
 			add_action('ocean_before_archive_product_add_to_cart_inner', array( $this, 'wcfmmp_sold_by_product' ), 50 );
 		}
 		
-		// SW WooCommerce Compatibility
+		 
 		if( function_exists( 'sw_woocommerce_construct' ) ) {
 			$is_look_hook_defined = true;
 			add_action('woocommerce_after_shop_loop_item', array( $this, 'wcfmmp_sold_by_product' ), 50 );
 			add_action('sw_custom_mobile', array( $this, 'wcfmmp_sold_by_product' ), 50 );
 		}
 		
-		// Tech Market Theme Compatibility
+		 
 		add_action('woocommerce_after_grid_extended_item_title', array( $this, 'wcfmmp_sold_by_product' ), 80 );
 		add_action('woocommerce_after_list_view_item_title', array( $this, 'wcfmmp_sold_by_product' ), 80 );
 		add_action('woocommerce_after_list_view_large_item_title', array( $this, 'wcfmmp_sold_by_product' ), 80 );
 		add_action('woocommerce_after_list_view_small_item_title', array( $this, 'wcfmmp_sold_by_product' ), 80 );
 		
-		// Show Product Sold By in Loop
+		 
 		if( !$is_look_hook_defined ) {
 			if( $vendor_sold_by_position == 'bellow_title' ) {
 				add_action('woocommerce_after_shop_loop_item_title', array( $this, 'wcfmmp_sold_by_product' ), 9 );
@@ -99,20 +99,20 @@ class WCFMmp_Frontend {
 			}
 		}
 		
-		// Show Product Sold By in Cart
+		 
 		add_filter('woocommerce_get_item_data', array( &$this, 'wcfmmp_sold_by_cart' ), 50, 2 );
 		
-		// Checkout Location Field
+		 
 		add_filter( 'wcfmmp_is_allow_checkout_user_location', array( &$this, 'wcfmmp_is_allow_checkout_user_location' ), 50 );
 		add_filter( 'woocommerce_checkout_fields', array( &$this, 'wcfmmp_checkout_user_location_fields' ), 50 );
 		add_action( 'woocommerce_after_checkout_billing_form', array( &$this, 'wcfmmp_checkout_user_location_map' ), 50 );
 		add_action( 'woocommerce_checkout_update_order_review', array( &$this, 'wcfmmp_checkout_user_location_session_set' ), 50 );
 		add_action( 'woocommerce_checkout_update_order_meta', array( &$this, 'wcfmmp_checkout_user_location_save' ), 50 );
 		add_action( 'wcfm_order_details_after_address', array( &$this, 'wcfmmp_order_details_user_location_show' ), 50 );
-		//add_action( 'woocommerce_admin_order_data_after_shipping_address', array( &$this, 'wcfmmp_order_details_user_location_show' ), 50 );
+		 
 		add_action( 'wcfm_orderlist_shipping_address', array( &$this, 'wcfmmp_order_list_user_location_show' ), 50, 2 );
 		
-		// WC Products Short Code Store Attribute Compatibility
+		 
 		add_filter( 'shortcode_atts_products', array( $this, 'wcfmmp_shortcode_atts_products' ), 50, 4 );
 		add_filter( 'shortcode_atts_sale_products', array( $this, 'wcfmmp_shortcode_atts_products' ), 50, 4 );
 		add_filter( 'shortcode_atts_recent_products', array( $this, 'wcfmmp_shortcode_atts_products' ), 50, 4 );
@@ -121,55 +121,55 @@ class WCFMmp_Frontend {
 		add_filter( 'shortcode_atts_best_selling_products', array( $this, 'wcfmmp_shortcode_atts_products' ), 50, 4 );
 		add_filter( 'woocommerce_shortcode_products_query', array( $this, 'wcfmmp_woocommerce_shortcode_products_query' ), 50, 3 );
 		
-		// Store Related Product Rule
+		 
 		add_filter( 'woocommerce_product_related_posts_query', array( &$this, 'wcfmmp_store_related_products' ), 99, 2 );
 		
-		// Store Order Next-Previous Link
+		 
 		if( apply_filters( 'wcfm_is_allow_header_store_order_related_orders', false ) ) { 
 			add_action( 'begin_wcfm_orders_details', array( &$this, 'wcfmmp_store_order_related_orders' ),500, 1 );
 		}
 		add_action( 'end_wcfm_orders_details', array( &$this, 'wcfmmp_store_order_related_orders' ),500, 1 );
 		
-		// My Account Vendor Registration URL
+		 
 		add_action( 'woocommerce_register_form_end', array( &$this, 'wcfmmp_become_vendor_link' ) );
 		add_action( 'woocommerce_after_my_account', array( &$this, 'wcfmmp_become_vendor_link' ) );
 		
-		// My Account Dashboard Menu
+		 
 		add_filter( 'woocommerce_account_menu_items', array( &$this, 'wcfm_dashboard_my_account_menu_items' ), 999 );
 		add_filter( 'woocommerce_get_endpoint_url', array( &$this,  'wcfm_dashboard_my_account_endpoint_redirect'), 10, 4 );
 		
-		// Membership Commission Rules
+		 
 		add_filter( 'membership_manager_fields_commission', array( &$this, 'wcfmmp_membership_manager_fields_commission' ) );
 		
-		// Product List Page Geo Location Filter
+		 
 		add_action( 'woocommerce_before_shop_loop', array( $this, 'wcfmmp_product_list_geo_location_filter' ), 1 );
 		add_action( 'woolentor_woocommerce_archive_product_content', array( $this, 'wcfmmp_product_list_geo_location_filter' ), 1 );
 		add_action( 'woocommerce_no_products_found', array( $this, 'wcfmmp_product_list_geo_location_filter' ), 1 );
 		add_filter( 'posts_clauses', array( $this, 'wcfmmp_product_list_geo_location_filter_post_clauses' ), 500, 2 );
 		
-		// GEO Location Disable
+		 
 		add_filter( 'wcfmmp_is_allow_store_list_by_user_location', array( &$this, 'wcfmmp_is_allow_geo_locate' ) );
 		
-		// Store Default Logo
+		 
 		add_filter( 'wcfmmp_store_default_logo', array( &$this, 'wcfmmp_store_default_logo' ) );
 		
-		// WCFM Store Page Body Class
+		 
 		add_filter('body_class', array( &$this, 'wcfm_store_body_classes' ) );	
 		
-		// WCFM Store Page Title
- 		//add_filter( 'the_title', array( &$this, 'wcfm_store_page_title' ) );
+		 
+ 		 
 		
-		//enqueue scripts
+		 
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wcfmmp_scripts' ), 20 );
 		
-		//enqueue styles
+		 
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wcfmmp_styles' ), 20 );
 		
 	}
 	
-	/**
-	 * Show Sold by at Single Product Page
-	 */
+	
+
+
 	public static function wcfmmp_sold_by_single_product() {
 		global $WCFM, $WCFMmp, $product;
 		
@@ -194,9 +194,9 @@ class WCFMmp_Frontend {
 		}
 	}
 	
-	/**
-	 * Show Sold by as Tab at Single Product Page
-	 */
+	
+
+
 	public static function wcfmmp_sold_by_tab_single_product() {
 		global $WCFM, $WCFMmp, $product;
 		
@@ -212,9 +212,9 @@ class WCFMmp_Frontend {
 		}
 	}
 	
-	/**
-	 * Show sold by at Product Page
-	 */
+	
+
+
 	public static function wcfmmp_sold_by_product() {
 		global $WCFM, $WCFMmp, $product;
 		
@@ -237,9 +237,9 @@ class WCFMmp_Frontend {
 		}
 	}
 	
-	/**
-	 * Show sold by at Cart Page
-	 */
+	
+
+
 	public function wcfmmp_sold_by_cart( $cart_item_meta = array(), $cart_item = array() ) {
 		global $WCFM, $WCFMmp;
 		
@@ -256,7 +256,7 @@ class WCFMmp_Frontend {
 			$vendor_id = wcfm_get_vendor_id_by_post( $product_id );
 			if( $vendor_id ) {
 				if( apply_filters( 'wcfmmp_is_allow_sold_by', true, $vendor_id ) && wcfm_vendor_has_capability( $vendor_id, 'sold_by' ) ) {
-					// Check is store Online
+					 
 					$is_store_offline = get_user_meta( $vendor_id, '_wcfm_store_offline', true );
 					if ( !$is_store_offline ) {
 						$sold_by_text = $WCFMmp->wcfmmp_vendor->sold_by_label( absint($vendor_id) );
@@ -303,9 +303,9 @@ class WCFMmp_Frontend {
 		return $is_allow;
 	}
 	
-	/**
-	 * Checkout User Location Field
-	 */
+	
+
+
 	function wcfmmp_checkout_user_location_fields( $fields ) {
 		global $WCFM, $WCFMmp;
 		if( ! WC()->is_rest_api_request() ) {
@@ -335,9 +335,9 @@ class WCFMmp_Frontend {
      return $fields;
 	}
 	
-	/**
-	 * Checkout User Location Map
-	 */
+	
+
+
 	function wcfmmp_checkout_user_location_map( $checkout ) {
 		global $WCFM, $WCFMmp;
 		if( ( true === WC()->cart->needs_shipping() ) && apply_filters( 'wcfmmp_is_allow_checkout_user_location', true ) ) {
@@ -349,9 +349,9 @@ class WCFMmp_Frontend {
 		}
 	}
 	
-	/**
-	 * Checkout User Location Field Save in Session
-	 */
+	
+
+
 	function wcfmmp_checkout_user_location_session_set( $post_data_raw ) {
 		global $WCFM, $WCFMmp;
 		if( apply_filters( 'wcfmmp_is_allow_checkout_user_location', true ) ) {
@@ -369,9 +369,9 @@ class WCFMmp_Frontend {
 		}
 	}
 	
-	/**
-	 * Checkout User Location Field Save
-	 */
+	
+
+
 	function wcfmmp_checkout_user_location_save( $order_id ) {
 		if( apply_filters( 'wcfmmp_is_allow_checkout_user_location', true ) ) {
 			$order = wc_get_order( $order_id );
@@ -390,9 +390,9 @@ class WCFMmp_Frontend {
 		}
 	}
 	
-	/**
-	 * Checkout User Location Show under Order Details
-	 */
+	
+
+
 	function wcfmmp_order_details_user_location_show( $order ) {
 		if( apply_filters( 'wcfmmp_is_allow_checkout_user_location', true ) ) {
 			$address = $order->get_meta('_wcfmmp_user_location');
@@ -419,9 +419,9 @@ class WCFMmp_Frontend {
 		return $shipping_address;
 	}
 	
-	/**
-	 * WC Products short code "store" attribute support added
-	 */
+	
+
+
 	function wcfmmp_shortcode_atts_products( $attributes, $pairs, $atts, $shortcode ) {
 		if ( array_key_exists( 'store', $atts ) ) {
 			$attributes['store'] = $atts['store'];
@@ -429,9 +429,9 @@ class WCFMmp_Frontend {
 		return $attributes;
 	}
 	
-	/**
-	 * WC Products short codde store filter
-	 */
+	
+
+
 	function wcfmmp_woocommerce_shortcode_products_query( $query_args, $attributes, $type = 'products' ) {
 		if( isset( $attributes['store'] ) ) {
 			$store = absint( $attributes['store'] );
@@ -441,9 +441,9 @@ class WCFMmp_Frontend {
 		return $query_args;
 	}
 	
-	/**
-	 * Store related product rule
-	 */
+	
+
+
 	function wcfmmp_store_related_products( $query, $product_id ) {
 		global $WCFM, $WCFMmp;
 		
@@ -457,9 +457,9 @@ class WCFMmp_Frontend {
 		return $query;
 	}
 	
-	/**
-	 * Store order related orders
-	 */
+	
+
+
 	function wcfmmp_store_order_related_orders( $order_id ) {
 		global $WCFM, $WCFMmp, $wpdb;
 		
@@ -521,9 +521,9 @@ class WCFMmp_Frontend {
 		}
 	}
 	
-	/**
-	 * WC Registration Become Vendor link
-	 */
+	
+
+
 	function wcfmmp_become_vendor_link() {
 		global $WCFM, $WCFMmp;
 		
@@ -543,9 +543,9 @@ class WCFMmp_Frontend {
 		}
 	}
 	
-	/**
-	 * WC My Account Dashboard Link
-	 */
+	
+
+
 	function wcfm_dashboard_my_account_menu_items( $items ) {
 		global $WCFM, $WCFMmp;
 		
@@ -575,9 +575,9 @@ class WCFMmp_Frontend {
     return $url;
 	}
 	
-	/**
-	 * Membership commission rules 
-	 */
+	
+
+
 	function wcfmmp_membership_manager_fields_commission( $commission_fileds ) {
 		global $WCFM, $WCFMmp, $wp;
 		
@@ -586,7 +586,7 @@ class WCFMmp_Frontend {
 			$membership_id = absint( $wp->query_vars['wcfm-memberships-manage'] );
 		}
 		
-		// Commission
+		 
 		$wcfm_commission_options = get_option( 'wcfm_commission_options', array() );
 		$wcfm_commission_for = isset( $wcfm_commission_options['commission_for'] ) ? $wcfm_commission_options['commission_for'] : 'vendor';
 		
@@ -671,9 +671,9 @@ class WCFMmp_Frontend {
 		return $commission_fileds;
 	}
 	
-	/**
-	 * WooCommerce Product List GEO Location Filter
-	 */
+	
+
+
 	function wcfmmp_product_list_geo_location_filter() {
 		global $WCFM, $WCFMmp, $wpdb, $wcfmmp_radius_lat, $wcfmmp_radius_lng, $wcfmmp_radius_range;
 		
@@ -713,7 +713,7 @@ class WCFMmp_Frontend {
 				'fields'       => array( 'ID', 'display_name' ),
 			 ); 
 			
-			// For Taxonomy Page
+			 
 			if( is_product_taxonomy() ) {
 				$term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) ); 
 				$term_id = $term->term_id;
@@ -767,13 +767,13 @@ class WCFMmp_Frontend {
 		echo '<div class="wcfm-clearfix"></div></div>';
 	}
 	
-	/**
-	 * WooCommerce Product List GEO Location Filter Post Clause
-	 */
+	
+
+
 	function wcfmmp_product_list_geo_location_filter_post_clauses( $args, $wp_query ) {
 		global $WCFM, $WCFMmp, $wpdb, $wcfmmp_radius_lat, $wcfmmp_radius_lng, $wcfmmp_radius_range;
 		
-		// Filter by Vendor
+		 
 		if ( $wp_query->is_main_query() && isset( $_GET['filter_vendor'] ) && !empty( $_GET['filter_vendor'] ) ) {
 			$args['where'] .= $wpdb->prepare(" AND $wpdb->posts.post_author = %d", absint($_GET['filter_vendor']));
 		}
@@ -826,9 +826,9 @@ class WCFMmp_Frontend {
 		return $args;
 	}
 	
-	/**
-	 * WCFM GEO Locate
-	 */
+	
+
+
 	function wcfmmp_is_allow_geo_locate( $is_allow ) {
 		global $WCFMmp;
 		$enable_wcfm_geo_locate = isset( $WCFMmp->wcfmmp_marketplace_options['enable_wcfm_geo_locate'] ) ? $WCFMmp->wcfmmp_marketplace_options['enable_wcfm_geo_locate'] : 'no';
@@ -836,25 +836,25 @@ class WCFMmp_Frontend {
 		return false;
 	}
 	
-	/**
-	 * WCFM Default Store Logo
-	 */
+	
+
+
 	function wcfmmp_store_default_logo( $default_logo ) {
 		global $WCFMmp;
 		$default_logo = !empty( $WCFMmp->wcfmmp_marketplace_options['store_default_logo'] ) ? wcfm_get_attachment_url($WCFMmp->wcfmmp_marketplace_options['store_default_logo']) : $default_logo;
 		return $default_logo;
 	}
 	
-	/**
-	 * WCFM Store Page Body Class
-	 */
+	
+
+
 	function wcfm_store_body_classes($classes) {
 		if( wcfm_is_store_page() ) {
 			$classes[] = 'wcfm-store-page';
 			$classes[] = 'wcfmmp-store-page';
 			$classes[] = 'tax-dc_vendor_shop';
 			
-			// Martfury Compatibility
+			 
 			if ( function_exists( 'martfury_is_vendor_page' ) && martfury_is_vendor_page() ) {
 				$shop_view = isset( $_COOKIE['shop_view'] ) ? $_COOKIE['shop_view'] : martfury_get_option( 'catalog_view_12' );
 				$classes[] = 'shop-view-' . $shop_view;
@@ -870,9 +870,9 @@ class WCFMmp_Frontend {
 		return $classes;
 	}
 	
-	/**
-	 * WCFM Store Page Title
-	 */
+	
+
+
 	function wcfm_store_page_title( $title ) {
 		global $WCFM, $WCFM_Query, $wp_query;
 		if( ! is_null( $wp_query ) && !is_admin() && is_main_query() && in_the_loop() && wcfmmp_is_store_page() ) {
@@ -887,9 +887,9 @@ class WCFMmp_Frontend {
 		return $title;
 	}
 	
-	/**
-	 * WCFMmp Store JS
-	 */
+	
+
+
 	function wcfmmp_scripts() {
  		global $WCFM, $WCFMmp, $wp, $WCFM_Query;
  		
@@ -899,7 +899,7 @@ class WCFMmp_Frontend {
 		$wcfm_map_lib = isset( $WCFMmp->wcfmmp_marketplace_options['wcfm_map_lib'] ) ? $WCFMmp->wcfmmp_marketplace_options['wcfm_map_lib'] : '';
 		if( !$wcfm_map_lib && $wcfm_google_map_api ) { $wcfm_map_lib = 'google'; } elseif( !$wcfm_map_lib && !$wcfm_google_map_api ) { $wcfm_map_lib = 'leaftlet'; }
 		
-		// Default Map Location
+		 
 		$default_geolocation = isset( $WCFMmp->wcfmmp_marketplace_options['default_geolocation'] ) ? $WCFMmp->wcfmmp_marketplace_options['default_geolocation'] : array();
 		$store_location      = isset( $default_geolocation['location'] ) ? esc_attr( $default_geolocation['location'] ) : '';
 		$map_address         = isset( $default_geolocation['address'] ) ? esc_attr( $default_geolocation['address'] ) : '';
@@ -915,7 +915,7 @@ class WCFMmp_Frontend {
  			$WCFM->library->load_blockui_lib();
  			$WCFM->library->load_datepicker_lib();
  			
-			// Store JS
+			 
 			wp_enqueue_script( 'wcfmmp_store_js', $WCFMmp->library->js_lib_url_min . 'store/wcfmmp-script-store.js', array('jquery' ), $WCFMmp->version, true );
 			
 			$WCFMmp->library->load_map_lib();
@@ -942,7 +942,7 @@ class WCFMmp_Frontend {
 			wp_localize_script( 'wcfmmp_store_list_js', 'wcfmmp_store_list_options', array( 'search_location' => __( 'Insert your address ..', 'wc-multivendor-marketplace' ), 'is_geolocate' => apply_filters( 'wcfmmp_is_allow_store_list_by_user_location', true ), 'max_radius' => apply_filters( 'wcfmmp_radius_filter_max_distance', $max_radius_to_search ), 'radius_unit' => ucfirst( $radius_unit ), 'start_radius' => apply_filters( 'wcfmmp_radius_filter_start_distance', 10 ), 'default_lat' => $default_lat, 'default_lng' => $default_lng, 'default_zoom' => absint( $default_zoom ), 'icon_width' => apply_filters( 'wcfmmp_map_icon_width', 40 ), 'icon_height' => apply_filters( 'wcfmmp_map_icon_height', 57 ), 'is_poi' => apply_filters( 'wcfmmp_is_allow_map_poi', true ), 'is_allow_scroll_zoom' => apply_filters( 'wcfmmp_is_allow_map_scroll_zoom', true ), 'is_cluster' => apply_filters( 'wcfmmp_is_allow_map_pointer_cluster', true ), 'cluster_image' => apply_filters( 'wcfmmp_is_cluster_image', 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' ), 'is_rtl' => is_rtl() ) );
 		}
 		
-		// Product List Geo Locate Filter 
+		 
 		if ( is_shop() || is_product_taxonomy() ) {
 			$enable_wcfm_product_radius    = isset( $WCFMmp->wcfmmp_marketplace_options['enable_wcfm_product_radius'] ) ? $WCFMmp->wcfmmp_marketplace_options['enable_wcfm_product_radius'] : 'no';
 			
@@ -976,9 +976,9 @@ class WCFMmp_Frontend {
     }
  	}
  	
- 	/**
- 	 * WCFMmp Core CSS
- 	 */
+ 	
+
+
  	function wcfmmp_styles() {
  		global $WCFM, $WCFMmp, $wp, $WCFM_Query;
  		
@@ -989,14 +989,14 @@ class WCFMmp_Frontend {
 		}
  		
  		if( wcfmmp_is_store_page() ) {
-			// Store CSS
+			 
 			if( apply_filters( 'wcfmmp_is_allow_legacy_header', false ) ) {
 				wp_enqueue_style( 'wcfmmp_store_css',  $WCFMmp->library->css_lib_url_min . 'store/legacy/wcfmmp-style-store.css', array(), $WCFMmp->version );
 			} else {
 				wp_enqueue_style( 'wcfmmp_store_css',  $WCFMmp->library->css_lib_url_min . 'store/wcfmmp-style-store.css', array(), $WCFMmp->version );
 			}
 
-			// RTL CSS
+			 
       if( is_rtl() ) {
       	if( apply_filters( 'wcfmmp_is_allow_legacy_header', false ) ) {
          wp_enqueue_style( 'wcfmmp_store_rtl_css',  $WCFMmp->library->css_lib_url_min . 'store/legacy/wcfmmp-style-store-rtl.css', array('wcfmmp_store_css'), $WCFMmp->version );
@@ -1005,7 +1005,7 @@ class WCFMmp_Frontend {
         }
       }
 			
-			// Store Responsive CSS
+			 
 			if( apply_filters( 'wcfmmp_is_allow_legacy_header', false ) ) {
 			 wp_enqueue_style( 'wcfmmp_store_responsive_css',  $WCFMmp->library->css_lib_url_min . 'store/legacy/wcfmmp-style-store-responsive.css', array(), $WCFMmp->version );
 			} else {
@@ -1021,7 +1021,7 @@ class WCFMmp_Frontend {
       }
 		}
 		
-		// Product List Geo Locate Filter 
+		 
 		if ( is_shop() || is_product_taxonomy() ) {
 			$wcfm_google_map_api           = isset( $WCFMmp->wcfmmp_marketplace_options['wcfm_google_map_api'] ) ? $WCFMmp->wcfmmp_marketplace_options['wcfm_google_map_api'] : '';
 			$wcfm_map_lib = isset( $WCFMmp->wcfmmp_marketplace_options['wcfm_map_lib'] ) ? $WCFMmp->wcfmmp_marketplace_options['wcfm_map_lib'] : '';
@@ -1039,7 +1039,7 @@ class WCFMmp_Frontend {
 		if( wcfmmp_is_store_page() || wcfmmp_is_stores_list_page() || is_singular( 'wcfm_vendor_groups' ) ) {
 			$upload_dir      = wp_upload_dir();
 			
-			// WCFMmp Custom CSS
+			 
 			$wcfmmp_style_custom = get_option( 'wcfmmp_style_custom' );
 			if( $wcfmmp_style_custom && file_exists( trailingslashit( $upload_dir['basedir'] ) . 'wcfm/' . $wcfmmp_style_custom ) ) {
 				if( wcfmmp_is_store_page() ) {

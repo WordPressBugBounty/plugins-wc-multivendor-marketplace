@@ -1,14 +1,14 @@
 <?php
 
-/**
- * WCFM Marketplace plugin
- *
- * WCFM Marketplace Core
- *
- * @author 		WC Lovers
- * @package 	wcfmmp/core
- * @version   1.0.0
- */
+
+
+
+
+
+
+
+
+
 
 use Automattic\WooCommerce\Utilities\OrderUtil;
 
@@ -77,12 +77,12 @@ class WCFMmp {
 		$this->text_domain = WCFMmp_TEXT_DOMAIN;
 		$this->version = WCFMmp_VERSION;
 
-		// Loads text-domain and other helper functions
+		 
 		add_action('init', array(&$this, 'init_plugin'), 0);
 		
 		add_action('init', array(&$this, 'init'), 8);
 
-		// Installer Hook
+		 
 		add_action('init', array(&$this, 'run_wcfmmp_installer'));
 
 		add_action('wcfm_init', array(&$this, 'init_wcfmmp'), 11);
@@ -91,26 +91,26 @@ class WCFMmp {
 
 		add_filter('wcfm_modules',  array(&$this, 'get_wcfmmp_modules'));
 
-		// Generating Marketplace Order for Subscription Renewal Order
+		 
 		add_filter('wcs_renewal_order_created', array(&$this, 'wcfmmp_renewal_order_processed'), 20, 2);
 
-		// Periodic Withdrawal Scheduler Check
+		 
 		add_action('wcfmmp_withdrawal_periodic_scheduler', array(&$this, 'wcfmmp_withdrawal_periodic_scheduler_check'));
 
-		// Periodic Data Cleanup Scheduler Check
+		 
 		add_action('wcfmmp_data_cleanup_periodic_scheduler', array(&$this, 'wcfmmp_data_cleanup_periodic_scheduler_check'));
 
 		add_action( 'plugins_loaded', array($this, 'load_stripe_split_pay_gateway_class') );
 	}
 
 	public function init_plugin() {
-		// Init Text Domain
+		 
 		$this->load_plugin_textdomain();
 	}
 
-	/**
-	 * 	Load WCFMmp_Gateway_Stripe_Split class
-	 */
+	
+
+
 	public function load_stripe_split_pay_gateway_class() {
 		global $WCFMmp;
 
@@ -134,13 +134,27 @@ class WCFMmp {
 				if( file_exists( $file_name ) ) {
 					require_once ( $file_name );
 				}
+
+			 
+			 
+			 
+			 
+			$wcfmmp_stripe_lib = $WCFMmp->plugin_path . 'includes/wcfm-stripe/';
+			foreach( array( 'class-wcfmmp-stripe-client-factory', 'class-wcfmmp-stripe-payment-engine', 'class-wcfmmp-stripe-transfer-queue', 'class-wcfmmp-stripe-preflight', 'class-wcfmmp-stripe-webhook-handler', 'class-wcfmmp-stripe-diagnostics' ) as $wcfmmp_stripe_class ) {
+				if( file_exists( $wcfmmp_stripe_lib . $wcfmmp_stripe_class . '.php' ) ) {
+					require_once( $wcfmmp_stripe_lib . $wcfmmp_stripe_class . '.php' );
+				}
+			}
+			if( class_exists( 'WCFMmp_Stripe_Webhook_Handler' ) ) {
+				WCFMmp_Stripe_Webhook_Handler::init();
+			}
 			}
 		}
 	}
 
-	/**
-	 * 	Set class variables
-	 */
+	
+
+
 	public function setup_properties() {
 		$this->vendor_id = apply_filters('wcfm_current_vendor_id', get_current_user_id());
 
@@ -160,16 +174,16 @@ class WCFMmp {
 		$this->wcfmmp_notification_options  = get_option('wcfmmp_notification_options', array());
 	}
 
-	/**
-	 * Initilize plugin on WP init
-	 */
+	
+
+
 	function init() {
 		global $WCFM, $WCFMmp;
 
 		$this->setup_properties();
 
-		// Load WCFM Marketplace setup class
-		// http://localhost/wwd/wp-admin/?page=wcfmmp-setup&step=dashboard
+		 
+		 
 		if (is_admin()) {
 			$current_page = filter_input(INPUT_GET, 'page');
 			if ($current_page && $current_page == 'wcfmmp-setup') {
@@ -184,75 +198,75 @@ class WCFMmp {
 			}
 		}
 
-		// Init Admin class
+		 
 		if (is_admin()) {
 			$this->load_class('admin');
 			$this->admin = new WCFMmp_Admin();
 		}
 
-		// Rewrite rules loader
+		 
 		if (!class_exists('WCFMmp_Rewrites')) {
 			$this->load_class('rewrite');
 			$this->wcfmmp_rewrite = new WCFMmp_Rewrites();
 		}
 
-		// Marketplace Abstract Gateway Load
+		 
 		$this->load_class('abstract-gateway');
 	}
 
-	/**
-	 * Load WCFMmp
-	 */
+	
+
+
 	function load_wcfmmp() {
 
 		if (WCFMmp_Dependencies::woocommerce_plugin_active_check() && WCFMmp_Dependencies::wcfm_plugin_active_check()) {
-			// Sidebar and Widgets loader
+			 
 			$this->load_class('sidebar-widgets');
 			$this->wcfmmp_sidebar_widgets = new WCFMmp_Sidebar_Widgets();
 
-			// Marketplace Shipping Load
+			 
 			$this->load_class('shipping');
 			$this->wcfmmp_shipping = new WCFMmp_Shipping();
 
-			// Marketplace Shipping Gateway Load
+			 
 			$this->load_class('shipping-gateway');
 			$this->wcfmmp_shipping_gateways = new WCFMmp_Shipping_Gateway();
 
-			// Marketplace Shipping Zone Load
+			 
 			$this->load_class('shipping-zone');
 			$this->wcfmmp_shipping_zone = new WCFMmp_Shipping_Zone();
 
-			// Marketplace Emails Load
+			 
 			$this->load_class('emails');
 			$this->wcfmmp_emails = new WCFMmp_Emails();
 
-			// Marketplace Store SEO Load
+			 
 			$this->load_class('store-seo');
 			$this->wcfmmp_store_seo = new WCFMmp_Store_SEO();
 
-			/**
-			 * 	This action hook registers our PHP class as a WooCommerce payment gateway
-			 */
+			
+
+
 			add_filter( 'woocommerce_payment_gateways', array( $this, 'add_stripe_split_pay_gateway' ) );
 		}
 
 		do_action('wcfmmp_loaded');
 	}
 
-	/**
-	 * 	Register WCFM Stripe Split Pay Gateway
-	 * 	
-	 * 	@param array $gateways
-	 * 	@return array $gateways
-	 */
+	
+
+
+
+
+
 	public function add_stripe_split_pay_gateway($gateways) {
 		$gateways[] = 'WCFMmp_Gateway_Stripe_Split';
 		return $gateways;
 	}
 
-	/**
-	 * Initilize plugin on WCFM init
-	 */
+	
+
+
 	function init_wcfmmp() {
 		global $WCFM, $WCFMmp;
 
@@ -266,17 +280,17 @@ class WCFMmp {
 			return;
 		}
 
-		// Init library
+		 
 		$this->load_class('library');
 		$this->library = new WCFMmp_Library();
 
-		// Init ajax
+		 
 		if (defined('DOING_AJAX') || defined('WCFM_REST_API_CALL')) {
 			$this->load_class('ajax');
 			$this->ajax = new WCFMmp_Ajax();
 		}
 
-		// Marketplace Setting Load
+		 
 		if (!is_admin() || defined('DOING_AJAX')) {
 			$this->load_class('settings');
 			$this->wcfmmp_settings = new WCFMmp_Settings();
@@ -287,54 +301,54 @@ class WCFMmp {
 			$this->wcfmmp_notification_manager = new WCFMmp_Notification_Manager();
 		}
 
-		// Marketplace Commission Load
+		 
 		$this->load_class('commission');
 		$this->wcfmmp_commission = new WCFMmp_Commission();
 
 
-		// Marketplace Withdrawal Load
+		 
 		$this->load_class('withdraw');
 		$this->wcfmmp_withdraw = new WCFMmp_Withdraw();
 
-		// Marketplace Refund module Load
+		 
 		if (apply_filters('wcfm_is_pref_refund', true)) {
 			$this->load_class('refund');
 			$this->wcfmmp_refund = new WCFMmp_Refund();
 		}
 
-		// Marketplace Reviews module Load
+		 
 		if (apply_filters('wcfm_is_pref_vendor_reviews', true)) {
 			$this->load_class('reviews');
 			$this->wcfmmp_reviews = new WCFMmp_Reviews();
 		}
 
-		// Marketplace Vendor Load
+		 
 		$this->load_class('vendor');
 		$this->wcfmmp_vendor = new WCFMmp_Vendor();
 
-		// Marketplace Store Load
+		 
 		$this->load_class('store');
 		$this->wcfmmp_store = new WCFMmp_Store();
 
-		// Marketplace Store SEO Load
-		//$this->load_class('store-seo');
-		//$this->wcfmmp_store_seo = new WCFMmp_Store_SEO();
+		 
+		 
+		 
 
-		// Marketplace Product Load
+		 
 		$this->load_class('product');
 		$this->wcfmmp_product = new WCFMmp_Product();
 
-		// Marketplace Single Product Multiple Vendor
+		 
 		if (apply_filters('wcfm_is_pref_product_multivendor', true)) {
 			$this->load_class('product-multivendor');
 			$this->wcfmmp_product_multivendor = new WCFMmp_Product_Multivendor();
 		}
 
-		// Marketplace Ledger Load
+		 
 		$this->load_class('ledger');
 		$this->wcfmmp_ledger = new WCFMmp_Ledger();
 
-		// Marketplace Store Hours Load
+		 
 		if (apply_filters('wcfm_is_pref_store_hours', true)) {
 			if (!is_admin() || defined('DOING_AJAX')) {
 				$this->load_class('store-hours');
@@ -342,20 +356,20 @@ class WCFMmp {
 			}
 		}
 
-		// Load Frontend
+		 
 		if (!is_admin() || defined('DOING_AJAX')) {
 			$this->load_class('frontend');
 			$this->frontend = new WCFMmp_Frontend();
 		}
 
-		// Load Non-ajax
+		 
 		if (!defined('DOING_AJAX')) {
 			$this->load_class('non-ajax');
 			$this->wcfmmp_non_ajax = new WCFMmp_Non_Ajax();
 		}
 
 
-		// Load Media Manager
+		 
 		if (apply_filters('wcfm_is_pref_media_manager', true)) {
 			if (!is_admin() || defined('DOING_AJAX')) {
 				$this->load_class('media');
@@ -363,43 +377,43 @@ class WCFMmp {
 			}
 		}
 
-		// Template loader
+		 
 		$this->load_class('template');
 		$this->template = new WCFMmp_Template();
 
-		// Short codes loader
-		//if ( !is_admin() ) {
+		 
+		 
 		$this->load_class('shortcode');
 		$this->wcfmmp_shortcodes = new WCFMmp_Shortcode();
-		//}
+		 
 
-		// Marketplace Gateways Load
+		 
 		$this->load_class('gateways');
 		$this->wcfmmp_gateways = new WCFMmp_Gateways();
 
-		//$this->wcfmmp_fields = $WCFM->wcfm_fields;
+		 
 	}
 
-	/**
-	 * Load Localisation files.
-	 *
-	 * Note: the first-loaded translation file overrides any following ones if the same translation is present
-	 *
-	 * @access public
-	 * @return void
-	 */
+	
+
+
+
+
+
+
+
 	public function load_plugin_textdomain() {
 		$locale = function_exists('get_user_locale') ? get_user_locale() : get_locale();
 		$locale = apply_filters('plugin_locale', $locale, 'wc-multivendor-marketplace');
 
-		//load_textdomain( 'wc-multivendor-marketplace', WP_LANG_DIR . "/wc-multivendor-marketplace/wc-multivendor-marketplace-$locale.mo");
+		 
 		load_textdomain('wc-multivendor-marketplace', $this->plugin_path . "lang/wc-multivendor-marketplace-$locale.mo");
 		load_textdomain('wc-multivendor-marketplace', WP_LANG_DIR . "/plugins/wc-multivendor-marketplace-$locale.mo");
 	}
 
-	/**
-	 * List of WCFM Marketplace modules
-	 */
+	
+
+
 	function get_wcfmmp_modules($wcfm_modules) {
 
 		$wcfmmp_module_index = array_search('refund', array_keys($wcfm_modules));
@@ -425,9 +439,9 @@ class WCFMmp {
 		return $wcfm_modules;
 	}
 
-	/**
-	 * Marketplace Order for WC Subscription Renewal Order
-	 */
+	
+
+
 	function wcfmmp_renewal_order_processed($renewal_order, $subscription) {
 		global $WCFM, $WCFMmp, $wpdb;
 		wcfm_log("RENEWAL ORDER CORE ::" . $renewal_order->get_id());
@@ -444,9 +458,9 @@ class WCFMmp {
 		return $renewal_order;
 	}
 
-	/**
-	 * Periodic Withdrwal Scheduler Check 
-	 */
+	
+
+
 	function wcfmmp_withdrawal_periodic_scheduler_check() {
 		global $WCFM, $WCFMmp, $wpdb;
 
@@ -460,7 +474,7 @@ class WCFMmp {
 
 
 		if ($withdrawal_mode && ($withdrawal_mode == 'by_schedule')) {
-			wcfm_withdrawal_log("PERIODIC WITHDRAWAL SCHEDULER START :: " . date_i18n(wc_date_format() . ' ' . wc_time_format(), current_time('timestamp', 0))); // Start Log
+			wcfm_withdrawal_log("PERIODIC WITHDRAWAL SCHEDULER START :: " . date_i18n(wc_date_format() . ' ' . wc_time_format(), current_time('timestamp', 0)));  
 
 			$args = array(
 				'role__in'     => array('wcfm_vendor'),
@@ -506,7 +520,7 @@ class WCFMmp {
 										try {
 											$line_item = new WC_Order_Item_Product(absint($wcfm_commission->item_id));
 
-											// Refunded Items Skipping
+											 
 											if ($refunded_qty = $order->get_qty_refunded_for_item(absint($wcfm_commission->item_id))) {
 												$refunded_qty = $refunded_qty * -1;
 												if ($line_item->get_quantity() == $refunded_qty) {
@@ -528,7 +542,7 @@ class WCFMmp {
 
 									if ($total_commission && ((float) $total_commission >= (float) $withdrawal_limit)) {
 
-										// Reset Commission withdrawal charges as per total withdrawal charge
+										 
 										$withdraw_charges = $WCFMmp->wcfmmp_withdraw->calculate_withdrawal_charges($total_commission, $vendor->ID);
 										if ($withdraw_charges) {
 											$withdraw_charge_per_commission = (float)$withdraw_charges / $no_of_commission;
@@ -537,17 +551,17 @@ class WCFMmp {
 											}
 										}
 
-										// Generate Withdrawal Request
+										 
 										$withdraw_request_id = $WCFMmp->wcfmmp_withdraw->wcfmmp_withdrawal_processed($vendor->ID, $order_ids, $commission_ids, $payment_method, 0, $total_commission, $withdraw_charges, 'requested', 'by_schedule');
 
 										if ($withdraw_request_id && !is_wp_error($withdraw_request_id)) {
 
-											// Set Vendor Order Withdrawal Status Requested 
+											 
 											foreach ($wcfm_commissions as $commission_info) {
 												$wpdb->update("{$wpdb->prefix}wcfm_marketplace_orders", array('withdraw_status' => 'requested'), array('ID' => $commission_info->ID), array('%s'), array('%d'));
 											}
 
-											// If Auto-approve ON, process withdrawal request
+											 
 											$is_auto_approve = $WCFMmp->wcfmmp_withdraw->is_withdrawal_auto_approve($vendor->ID);
 											if ($is_auto_approve) {
 												$payment_processesing_status = $WCFMmp->wcfmmp_withdraw->wcfmmp_withdrawal_payment_processesing($withdraw_request_id, $vendor->ID, $payment_method, $total_commission, $withdraw_charges);
@@ -557,7 +571,7 @@ class WCFMmp {
 													wcfm_withdrawal_log('Periodic withdrawal request processing failed. Withdrawal ID :: ' . sprintf('%06u', $withdraw_request_id) . ' Vendor :: ' . $vendor->ID . ' Store :: ' . $shop_name);
 												}
 											} else {
-												// Admin Notification
+												 
 												$store_name = $WCFM->wcfm_vendor_support->wcfm_get_vendor_store_by_vendor(absint($vendor->ID));
 												$wcfm_messages = sprintf(__('Vendor <b>%s</b> has placed a Withdrawal Request #%s.', 'wc-frontend-manager'), $store_name, '<a target="_blank" class="wcfm_dashboard_item_title" href="' . add_query_arg('transaction_id', $withdraw_request_id, wcfm_withdrawal_requests_url()) . '">' . sprintf('%06u', $withdraw_request_id) . '</a>');
 
@@ -601,13 +615,13 @@ class WCFMmp {
 			}
 
 
-			wcfm_withdrawal_log("PERIODIC WITHDRAWAL SCHEDULER END :: " . date_i18n(wc_date_format() . ' ' . wc_time_format(), current_time('timestamp', 0))); // End Log
+			wcfm_withdrawal_log("PERIODIC WITHDRAWAL SCHEDULER END :: " . date_i18n(wc_date_format() . ' ' . wc_time_format(), current_time('timestamp', 0)));  
 		}
 	}
 
-	/**
-	 * Periodic Data Cleanup Schduler Check
-	 */
+	
+
+
 	function wcfmmp_data_cleanup_periodic_scheduler_check() {
 		global $WCFM, $WCFMmp, $wpdb;
 
@@ -625,19 +639,19 @@ class WCFMmp {
 		$analytics_data_cleanup_more_than = isset($wcfm_data_cleanup_options['analytics_data_cleanup_more_than']) ? $wcfm_data_cleanup_options['analytics_data_cleanup_more_than'] : '90';
 
 		if ($enable_data_cleanup == 'yes') {
-			wcfm_cleanup_log("PERIODIC DATA CLEANUP SCHEDULER START :: " . date_i18n(wc_date_format() . ' ' . wc_time_format(), current_time('timestamp', 0))); // Start Log
+			wcfm_cleanup_log("PERIODIC DATA CLEANUP SCHEDULER START :: " . date_i18n(wc_date_format() . ' ' . wc_time_format(), current_time('timestamp', 0)));  
 
-			// Notification data cleaup
+			 
 			if ($enable_data_cleanup_messages == 'yes') {
 				wcfm_cleanup_log("PERIODIC NOTIFICATION DATA CLEANUP SCHEDULER START. Older than :: " . $messages_data_cleanup_more_than);
 
-				// Fetching Old Messages
+				 
 				$messages = $wpdb->get_results($wpdb->prepare("SELECT ID, created FROM {$wpdb->prefix}wcfm_messages WHERE `created` <= DATE_SUB(SYSDATE(), INTERVAL %s DAY)", $messages_data_cleanup_more_than));
 				if (!empty($messages)) {
 					foreach ($messages as $message) {
 						$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->prefix}wcfm_messages WHERE ID = %d", $message->ID));
 
-						// Meta Cleanup
+						 
 						$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->prefix}wcfm_messages_modifier WHERE `message` = %d", $message->ID));
 
 						wcfm_cleanup_log("Notification data cleanup processed. ID :: " . $message->ID . " Created :: " . date_i18n(wc_date_format() . ' ' . wc_time_format(), strtotime($message->created)));
@@ -649,26 +663,26 @@ class WCFMmp {
 				wcfm_cleanup_log("Notification data cleanup disabled.");
 			}
 
-			// Inquiry data cleaup
+			 
 			if ($enable_data_cleanup_inquiry == 'yes') {
 				wcfm_cleanup_log("PERIODIC INQUIRY DATA CLEANUP SCHEDULER START. Older than :: " . $inquiry_data_cleanup_more_than);
 
-				// Fetching Old Inquiries
+				 
 				$inquiries = $wpdb->get_results($wpdb->prepare("SELECT ID, posted FROM {$wpdb->prefix}wcfm_enquiries WHERE `posted` <= DATE_SUB(SYSDATE(), INTERVAL %s DAY)", $inquiry_data_cleanup_more_than));
 				if (!empty($inquiries)) {
 					foreach ($inquiries as $inquiry) {
 						$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->prefix}wcfm_enquiries WHERE ID = %d", $inquiry->ID));
 
-						// Meta Cleanup
+						 
 						$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->prefix}wcfm_enquiries_meta WHERE `enquiry_id` = %d", $inquiry->ID));
 
-						// Inquiry Reply Cleanup
+						 
 						$inquiry_replies = $wpdb->get_results($wpdb->prepare("SELECT ID FROM {$wpdb->prefix}wcfm_enquiries_response WHERE `enquiry_id` = %d", $inquiry->ID));
 						if (!empty($inquiry_replies)) {
 							foreach ($inquiry_replies as $inquiry_reply) {
 								$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->prefix}wcfm_enquiries_response WHERE `ID` = %d", $inquiry_reply->ID));
 
-								// Reply Meta Cleanup
+								 
 								$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->prefix}wcfm_enquiries_response_meta WHERE `enquiry_response_id` = %d", $inquiry_reply->ID));
 							}
 						}
@@ -682,12 +696,12 @@ class WCFMmp {
 				wcfm_cleanup_log("Inquiry data cleanup disabled.");
 			}
 
-			// Analytics data cleaup
-			//if( WCFM_Dependencies::wcfma_plugin_active_check() ) {
+			 
+			 
 			if ($enable_data_cleanup_analytics == 'yes') {
 				wcfm_cleanup_log("PERIODIC ANALYTICS DATA CLEANUP SCHEDULER START. Older than :: " . $analytics_data_cleanup_more_than);
 
-				// Daily Analytics Data Cleanup
+				 
 				$analytics = $wpdb->get_results($wpdb->prepare("SELECT ID, visited FROM {$wpdb->prefix}wcfm_daily_analysis WHERE `visited` <= DATE_SUB(SYSDATE(), INTERVAL %s DAY)",$analytics_data_cleanup_more_than));
 				if (!empty($analytics)) {
 					foreach ($analytics as $analytic) {
@@ -696,7 +710,7 @@ class WCFMmp {
 					}
 				}
 
-				// Detailed Analytics Data Cleanup
+				 
 				$analytics = $wpdb->get_results($wpdb->prepare("SELECT ID, visited FROM {$wpdb->prefix}wcfm_detailed_analysis WHERE `visited` <= DATE_SUB(SYSDATE(), INTERVAL %s DAY)",$analytics_data_cleanup_more_than));
 				if (!empty($analytics)) {
 					foreach ($analytics as $analytic) {
@@ -709,30 +723,30 @@ class WCFMmp {
 			} else {
 				wcfm_cleanup_log("Analytics data cleanup disabled.");
 			}
-			//}
+			 
 
-			wcfm_cleanup_log("PERIODIC DATA CLEANUP SCHEDULER END :: " . date_i18n(wc_date_format() . ' ' . wc_time_format(), current_time('timestamp', 0))); // End Log
+			wcfm_cleanup_log("PERIODIC DATA CLEANUP SCHEDULER END :: " . date_i18n(wc_date_format() . ' ' . wc_time_format(), current_time('timestamp', 0)));  
 		}
 	}
 
 	public function load_class($class_name = '') {
 		if ('' != $class_name && '' != $this->token) {
 			require_once('class-' . esc_attr($this->token) . '-' . esc_attr($class_name) . '.php');
-		} // End If Statement
+		}  
 	}
 
-	// End load_class()
+	 
 
-	/**
-	 * Install upon activation.
-	 *
-	 * @access public
-	 * @return void
-	 */
+	
+
+
+
+
+
 	static function activate_wcfmmp() {
 		global $WCFM, $WCFMmp, $wp_roles;
 
-		// Rewrite rules loader
+		 
 		$WCFMmp->load_class('rewrite');
 		$WCFMmp->wcfmmp_rewrite = new WCFMmp_Rewrites();
 
@@ -743,12 +757,12 @@ class WCFMmp {
 		update_option('wcfmmp_installed', 1);
 	}
 
-	/**
-	 * Check Installer upon load.
-	 *
-	 * @access public
-	 * @return void
-	 */
+	
+
+
+
+
+
 	function run_wcfmmp_installer() {
 		global $WCFM, $WCFMmp, $wpdb;
 
@@ -772,14 +786,14 @@ class WCFMmp {
 			update_option('wcfmmp_installed', 1);
 		}
 
-		// Removing old Schedule
+		 
 		if (class_exists('WooCommerce')) {
 			$next = WC()->queue()->get_next('wcfmmp_periodic_withdrawal_scheduler');
 			if ($next) {
 				WC()->queue()->cancel_all('wcfmmp_periodic_withdrawal_scheduler');
 			}
 
-			// Init Periodic Withdrawal Scheduler
+			 
 			$wcfm_withdrawal_options = get_option('wcfm_withdrawal_options', array());
 
 			$withdrawal_mode         = isset($wcfm_withdrawal_options['withdrawal_mode']) ? $wcfm_withdrawal_options['withdrawal_mode'] : '';
@@ -800,7 +814,7 @@ class WCFMmp {
 				}
 			}
 
-			// Init Periodic Data Cleanup Scheduler
+			 
 			$wcfm_data_cleanup_options = get_option('wcfm_data_cleanup_options', array());
 
 			$enable_data_cleanup = isset($wcfm_data_cleanup_options['enable_data_cleanup']) ? $wcfm_data_cleanup_options['enable_data_cleanup'] : 'no';
@@ -819,16 +833,16 @@ class WCFMmp {
 		}
 	}
 
-	/**
-	 * UnInstall upon deactivation.
-	 *
-	 * @access public
-	 * @return void
-	 */
+	
+
+
+
+
+
 	static function deactivate_wcfmmp() {
 		global $WCFM, $WCFMmp;
 
-		// Delete Periodic Scheduler
+		 
 		if (class_exists('WooCommerce')) {
 			$next = WC()->queue()->get_next('wcfmmp_withdrawal_periodic_scheduler');
 			if ($next) {

@@ -1,15 +1,15 @@
 <?php
 
-/**
- * The Template for displaying product list.
- *
- * @package WCfM Markeplace Views Product Lists Geo locate
- *
- * For edit coping this to yourtheme/wcfm/product-geolocate
- *
- */
 
-if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if (!defined('ABSPATH')) exit;  
 
 global $WCFM, $WCFMmp, $post;
 

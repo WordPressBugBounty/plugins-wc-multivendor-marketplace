@@ -1,18 +1,18 @@
 <?php
-/**
- * The Template for displaying all single posts.
- *
- * @package WCfM Markeplace Views Store review ratings
- *
- * For edit coping this to yourtheme/wcfm/reviews 
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 
-//$total_review_rating = $store_user->get_total_review_rating();
+ 
 $avg_review_rating = $store_user->get_avg_review_rating();
 
 if( !apply_filters( 'wcfm_is_allow_review_rating', true ) ) return;

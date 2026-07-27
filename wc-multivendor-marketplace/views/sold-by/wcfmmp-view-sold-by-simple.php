@@ -1,14 +1,14 @@
 <?php
-/**
- * The Template for displaying store.
- *
- * @package WCfM Markeplace Views Store Sold By Simple
- *
- * For edit coping this to yourtheme/wcfm/sold-by
- *
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+
+
+
+
+
+
+
+if ( ! defined( 'ABSPATH' ) ) exit;  
 
 global $WCFM, $WCFMmp;
 
@@ -21,7 +21,7 @@ if( !$vendor_id ) return;
 
 if( $vendor_id ) {
 	if( apply_filters( 'wcfmmp_is_allow_sold_by', true, $vendor_id ) && wcfm_vendor_has_capability( $vendor_id, 'sold_by' ) ) {
-		// Check is store Online
+		 
 		$is_store_offline = get_user_meta( $vendor_id, '_wcfm_store_offline', true );
 		if ( $is_store_offline ) {
 			return;

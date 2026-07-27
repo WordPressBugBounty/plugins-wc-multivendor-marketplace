@@ -1,21 +1,21 @@
 <?php
-/**
- * WCFM Marketplace Vendor Store Setup Class
- * 
- * @since 1.0.0
- * @package wcfm/helpers
- * @author WC Lovers
- */
+
+
+
+
+
+
+
 if (!defined('ABSPATH')) {
     exit;
 }
 
 class WCFMmp_Store_Setup {
 
-	/** @var string Currenct Step */
+	 
 	private $step = '';
 
-	/** @var array Steps for the setup wizard */
+	 
 	private $steps = array();
 
 	public function __construct() {
@@ -23,21 +23,21 @@ class WCFMmp_Store_Setup {
 		add_action( 'init', array( $this, 'wcfmmp_store_setup' ) );
 	}
 
-	/**
-	 * Add admin menus/screens.
-	 */
+	
+
+
 	public function wcfm_admin_menus() {
 		add_dashboard_page( '', '', 'manage_products', 'store-setup', '' );
 	}
 	
-	/**
-	 * Show the setup wizard.
-	 */
+	
+
+
 	public function wcfmmp_store_setup() {
 		global $WCFM, $WCFMmp;
-		//if ( filter_input(INPUT_GET, 'page') != 'store-setup') {
-			//return;
-		//}
+		 
+			 
+		 
 		
 		if ( function_exists('icl_object_id') ) {
 			global $sitepress;
@@ -115,8 +115,8 @@ class WCFMmp_Store_Setup {
 		$this->step = $current_step ? sanitize_key($current_step) : current(array_keys($this->steps));
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 		wp_register_script('jquery-blockui', WC()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array('jquery'), '2.70', true);
-		//wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '1.0.0' );
-		//wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', array( 'jquery', 'selectWoo' ), WC_VERSION );
+		 
+		 
 		wp_localize_script(
 			'wc-enhanced-select',
 			'wc_enhanced_select_params',
@@ -144,7 +144,7 @@ class WCFMmp_Store_Setup {
 			wp_enqueue_style( 'wcfm-setup-rtl', $WCFM->plugin_url . 'assets/css/setup/wcfm-style-dashboard-setup-rtl.css', array('wcfm-setup'), $WCFM->version );
 		}
 		
-		// WCFM Custom CSS
+		 
 		$upload_dir      = wp_upload_dir();
 		$wcfm_style_custom = get_option( 'wcfm_style_custom' );
 		if( $wcfm_style_custom && file_exists( trailingslashit( $upload_dir['basedir'] ) . 'wcfm/' . $wcfm_style_custom ) ) {
@@ -152,7 +152,7 @@ class WCFMmp_Store_Setup {
 		}
 		
 		wp_register_script('wcfm-setup', $WCFM->plugin_url . 'assets/js/setup/wcfm-script-setup.js', array('jquery'), $WCFM->version);
-		//wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', array( 'jquery', 'selectWoo' ), WC_VERSION );
+		 
 		wp_register_script('wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup' . $suffix . '.js', array('jquery', 'jquery-blockui', 'wp-util', 'jquery-tiptip'), WC_VERSION);
 		wp_localize_script('wc-setup', 'wc_setup_params', array(
 				'locale_info' => json_encode(include( WC()->plugin_path() . '/i18n/locale-info.php' )),
@@ -163,7 +163,7 @@ class WCFMmp_Store_Setup {
 				'i18n_select_state_text'  => _x( 'Select an option...', 'woocommerce' )
 		));
 		
-		//wp_enqueue_editor();
+		 
 		
 		$WCFM->library->load_collapsible_lib();
 		$WCFM->library->load_select2_lib();
@@ -188,7 +188,7 @@ class WCFMmp_Store_Setup {
 		wp_register_script( 'wcfm_settings_js', $WCFM->library->js_lib_url . 'settings/wcfm-script-settings.js', array('jquery'), $WCFM->version, true );
 		wp_localize_script( 'wcfm_settings_js', 'wcfm_setting_options', array( 'default_tab' => apply_filters( 'wcfm_setting_default_tab', 'wcfm_settings_dashboard_head' ) ) );
 		
-		// Default Map Location
+		 
 		$default_geolocation = isset( $WCFMmp->wcfmmp_marketplace_options['default_geolocation'] ) ? $WCFMmp->wcfmmp_marketplace_options['default_geolocation'] : array();
 		$default_lat         = isset( $default_geolocation['lat'] ) ? esc_attr( $default_geolocation['lat'] ) : apply_filters( 'wcfmmp_map_default_lat', 30.0599153 );
 		$default_lng         = isset( $default_geolocation['lng'] ) ? esc_attr( $default_geolocation['lng'] ) : apply_filters( 'wcfmmp_map_default_lng', 31.2620199 );
@@ -210,25 +210,25 @@ class WCFMmp_Store_Setup {
 		exit();
 	}
 
-	/**
-	 * Get slug from path
-	 * @param  string $key
-	 * @return string
-	 */
+	
+
+
+
+
 	private static function format_plugin_slug($key) {
 			$slug = explode('/', $key);
 			$slug = explode('.', end($slug));
 			return $slug[0];
 	}
 
-	/**
-	 * Get the URL for the next step's screen.
-	 * @param string step   slug (default: current step)
-	 * @return string       URL for next step if a next step exists.
-	 *                      Admin URL if it's the last step.
-	 *                      Empty string on failure.
-	 * @since 1.0.0
-	 */
+	
+
+
+
+
+
+
+
 	public function get_next_step_link($step = '') {
 		if (!$step) {
 			$step = $this->step;
@@ -247,9 +247,9 @@ class WCFMmp_Store_Setup {
 		return add_query_arg('step', $keys[$step_index + 1]);
 	}
 
-	/**
-	 * Setup Wizard Header.
-	 */
+	
+
+
 	public function wcfmmp_store_setup_header() {
 		global $WCFM, $WCFMmp;
 		
@@ -275,7 +275,7 @@ class WCFMmp_Store_Setup {
 				<?php wp_head(); ?>
 				
 				<?php
-				//wp_enqueue_script( 'wc-enhanced-select' );
+				 
 				wp_enqueue_script( 'wc-setup' );
 				wp_enqueue_script( 'wcfm-setup' );
 				wp_enqueue_script( 'collapsible_js');
@@ -298,9 +298,9 @@ class WCFMmp_Store_Setup {
 			<?php
 	}
 
-	/**
-	 * Output the steps.
-	 */
+	
+
+
 	public function wcfmmp_store_setup_steps() {
 		$ouput_steps = $this->steps;
 		array_shift($ouput_steps);
@@ -321,18 +321,18 @@ class WCFMmp_Store_Setup {
 		<?php
 	}
 
-	/**
-	 * Output the content for the current step.
-	 */
+	
+
+
 	public function wcfmmp_store_setup_content() {
 		echo '<div class="wc-setup-content">';
 		call_user_func($this->steps[$this->step]['view'], $this);
 		echo '</div>';
 	}
 
-	/**
-	 * Introduction step.
-	 */
+	
+
+
 	public function wcfmmp_store_setup_introduction() {
 		?>
 		<h1><?php echo apply_filters( 'wcfm_store_setup_welcome_heading', sprintf( __("Welcome to %s!", 'wc-multivendor-marketplace'), get_bloginfo('title') ) ); ?></h1>
@@ -347,9 +347,9 @@ class WCFMmp_Store_Setup {
 		<?php
 	}
 
-	/**
-	 * Store setup content
-	 */
+	
+
+
 	public function wcfmmp_store_setup_store() {
 		global $WCFM, $WCFMmp;
 		
@@ -358,7 +358,7 @@ class WCFMmp_Store_Setup {
 		$the_user = get_user_by( 'id', $user_id );
 		$vendor_data = get_user_meta( $user_id, 'wcfmmp_profile_settings', true );
 		
-		// Store Genral
+		 
 		$gravatar       = isset( $vendor_data['gravatar'] ) ? absint( $vendor_data['gravatar'] ) : 0;
 		$banner         = isset( $vendor_data['banner'] ) ? absint( $vendor_data['banner'] ) : 0;
 		$store_name     = isset( $vendor_data['store_name'] ) ? esc_attr( $vendor_data['store_name'] ) : '';
@@ -366,7 +366,7 @@ class WCFMmp_Store_Setup {
 		$store_email    = isset( $vendor_data['store_email'] ) ? esc_attr( $vendor_data['store_email'] ) : $the_user->user_email;
 		$phone          = isset( $vendor_data['phone'] ) ? esc_attr( $vendor_data['phone'] ) : '';
 		
-		// Address
+		 
 		$address         = isset( $vendor_data['address'] ) ? $vendor_data['address'] : '';
 		$street_1 = isset( $vendor_data['address']['street_1'] ) ? $vendor_data['address']['street_1'] : '';
 		$street_2 = isset( $vendor_data['address']['street_2'] ) ? $vendor_data['address']['street_2'] : '';
@@ -375,13 +375,13 @@ class WCFMmp_Store_Setup {
 		$country = isset( $vendor_data['address']['country'] ) ? $vendor_data['address']['country'] : '';
 		$state   = isset( $vendor_data['address']['state'] ) ? $vendor_data['address']['state'] : '';
 		
-		// Location
+		 
 		$store_location   = isset( $vendor_data['store_location'] ) ? esc_attr( $vendor_data['store_location'] ) : '';
 		$map_address    = isset( $vendor_data['find_address'] ) ? esc_attr( $vendor_data['find_address'] ) : '';
 		$store_lat    = isset( $vendor_data['store_lat'] ) ? esc_attr( $vendor_data['store_lat'] ) : 0;
 		$store_lng    = isset( $vendor_data['store_lng'] ) ? esc_attr( $vendor_data['store_lng'] ) : 0;
 		
-		// Country -> States
+		 
 		$country_obj   = new WC_Countries();
 		$countries     = $country_obj->countries;
 		$states        = $country_obj->states;
@@ -391,10 +391,10 @@ class WCFMmp_Store_Setup {
 		}
 		if( $state ) $state_options[$state] = $state;
 		
-		// Gravatar image
+		 
 		$gravatar_url = $gravatar ? wp_get_attachment_url( $gravatar ) : '';
 		
-		// banner URL
+		 
 		$banner_url = $banner ? wp_get_attachment_url( $banner ) : '';
 		
 		$store_banner_width = isset( $WCFMmp->wcfmmp_marketplace_options['store_banner_width'] ) ? $WCFMmp->wcfmmp_marketplace_options['store_banner_width'] : '1650';
@@ -404,7 +404,7 @@ class WCFMmp_Store_Setup {
 				$store_banner_width, $store_banner_height
 		);
 		
-		// Shop Description
+		 
 		$shop_description = wcfm_get_user_meta( $user_id, '_store_description', true );
 		
 		?>
@@ -489,9 +489,9 @@ class WCFMmp_Store_Setup {
 		<?php
 	}
 	
-	/**
-	 * Payment setup content
-	 */
+	
+
+
 	public function wcfmmp_store_setup_payment() {
 		global $WCFM, $WCFMmp;
 		
@@ -503,7 +503,7 @@ class WCFMmp_Store_Setup {
 		$store_name     = isset( $vendor_data['store_name'] ) ? esc_attr( $vendor_data['store_name'] ) : '';
 		$store_name     = empty( $store_name ) ? $the_user->display_name : $store_name;
 		
-		// Payment
+		 
 		$payment_mode = isset( $vendor_data['payment']['method'] ) ? esc_attr( $vendor_data['payment']['method'] ) : '' ;
 		$paypal = isset( $vendor_data['payment']['paypal']['email'] ) ? esc_attr( $vendor_data['payment']['paypal']['email'] ) : '' ;
 		$skrill = isset( $vendor_data['payment']['skrill']['email'] ) ? esc_attr( $vendor_data['payment']['skrill']['email'] ) : '' ;
@@ -559,11 +559,22 @@ class WCFMmp_Store_Setup {
 					$client_id = sanitize_text_field($testmode ? $WCFMmp->wcfmmp_withdrawal_options['stripe_test_client_id'] : $WCFMmp->wcfmmp_withdrawal_options['stripe_client_id']);
 					$secret_key = sanitize_text_field($testmode ? $WCFMmp->wcfmmp_withdrawal_options['stripe_test_secret_key'] : $WCFMmp->wcfmmp_withdrawal_options['stripe_secret_key']);
 
+					 
+					 
+					 
+					$stripe_client_available = false;
 					if ( $client_id && $secret_key ) {
 						if (!class_exists('WCFM_Stripe_Connect_Client')) {
-							include_once $WCFM->plugin_path . "helpers/class-wcfm-stripe-connect-client.php";
+							$wcfm_stripe_connect_client = $WCFM->plugin_path . "helpers/class-wcfm-stripe-connect-client.php";
+							if ( file_exists( $wcfm_stripe_connect_client ) ) {
+								include_once $wcfm_stripe_connect_client;
+							}
 						}
-						
+
+						$stripe_client_available = class_exists('WCFM_Stripe_Connect_Client');
+					}
+
+					if ( $stripe_client_available ) {
 						$stripe_client = new WCFM_Stripe_Connect_Client($client_id, $secret_key);
 						$stripe_client->set_user_id($user_id);
 					
@@ -590,7 +601,7 @@ class WCFMmp_Store_Setup {
 								$stripe_account_links_args['refresh_url'] = add_query_arg( array( 'stripe_action' => 'refresh' ), $payment_url );
 								$stripe_account_links_args['return_url'] = $payment_url;
 								
-								// create account_url & redirect
+								 
 								$link = $stripe_client->create_account_link($stripe_account_links_args);
 							}
 							
@@ -666,7 +677,7 @@ class WCFMmp_Store_Setup {
 															}
 														}
 
-														// Sort the array by country name (values)
+														 
 														asort($supported_transfer_countries);
 
 														?>
@@ -799,7 +810,7 @@ class WCFMmp_Store_Setup {
 							
 								$user_email = $the_user->user_email;
 
-								// Show OAuth link
+								 
 								$authorize_request_body = apply_filters('wcfm_stripe_authorize_request_params', array(
 									'response_type' => 'code',
 									'scope' => 'read_write',
@@ -861,9 +872,9 @@ class WCFMmp_Store_Setup {
 		<?php
 	}
 	
-	/**
-	 * Policy setup content
-	 */
+	
+
+
 	public function wcfmmp_store_setup_policy() {
 		global $WCFM, $WCFMmp;
 		
@@ -923,9 +934,9 @@ class WCFMmp_Store_Setup {
 		<?php
 	}
 	
-	/**
-	 * Support setup content
-	 */
+	
+
+
 	public function wcfmmp_store_setup_customer_support() {
 		global $WCFM, $WCFMmp;
 		
@@ -933,7 +944,7 @@ class WCFMmp_Store_Setup {
 
 		$vendor_data = get_user_meta( $user_id, 'wcfmmp_profile_settings', true );
 		
-		// Customer Support
+		 
 		$vendor_customer_phone = isset( $vendor_data['customer_support']['phone'] ) ? $vendor_data['customer_support']['phone'] : '';
 		$vendor_customer_email = isset( $vendor_data['customer_support']['email'] ) ? $vendor_data['customer_support']['email'] : '';
 		$vendor_csd_return_address1 = isset( $vendor_data['customer_support']['address1'] ) ? $vendor_data['customer_support']['address1'] : '';
@@ -943,7 +954,7 @@ class WCFMmp_Store_Setup {
 		$vendor_csd_return_state = isset( $vendor_data['customer_support']['state'] ) ? $vendor_data['customer_support']['state'] : '';
 		$vendor_csd_return_zip = isset( $vendor_data['customer_support']['zip'] ) ? $vendor_data['customer_support']['zip'] : '';
 		
-		// Country -> States
+		 
 		$country_obj   = new WC_Countries();
 		$countries     = $country_obj->countries;
 		$states        = $country_obj->states;
@@ -986,9 +997,9 @@ class WCFMmp_Store_Setup {
 		<?php
 	}
 	
-	/**
-	 * SEO setup content
-	 */
+	
+
+
 	public function wcfmmp_store_setup_seo() {
 		global $WCFM, $WCFMmp;
 		
@@ -996,7 +1007,7 @@ class WCFMmp_Store_Setup {
 
 		$vendor_data = get_user_meta( $vendor_id, 'wcfmmp_profile_settings', true );
 		
-		// SEO
+		 
 		$wcfmmp_seo_meta_title        = isset( $vendor_data['store_seo']['wcfmmp-seo-meta-title'] ) ? $vendor_data['store_seo']['wcfmmp-seo-meta-title'] : '';
 		$wcfmmp_seo_meta_desc         = isset( $vendor_data['store_seo']['wcfmmp-seo-meta-desc'] ) ? $vendor_data['store_seo']['wcfmmp-seo-meta-desc'] : '';
 		$wcfmmp_seo_meta_keywords     = isset( $vendor_data['store_seo']['wcfmmp-seo-meta-keywords'] ) ? $vendor_data['store_seo']['wcfmmp-seo-meta-keywords'] : '';
@@ -1007,10 +1018,10 @@ class WCFMmp_Store_Setup {
 		$wcfmmp_seo_twitter_desc      = isset( $vendor_data['store_seo']['wcfmmp-seo-twitter-desc'] ) ? $vendor_data['store_seo']['wcfmmp-seo-twitter-desc'] : '';
 		$wcfmmp_seo_twitter_image     = isset( $vendor_data['store_seo']['wcfmmp-seo-twitter-image'] ) ? $vendor_data['store_seo']['wcfmmp-seo-twitter-image'] : 0;
 		
-		// Facebook image
+		 
 		$wcfmmp_seo_og_image_url      = $wcfmmp_seo_og_image ? wp_get_attachment_thumb_url( $wcfmmp_seo_og_image ) : '';
 		
-		// Twitter URL
+		 
 		$wcfmmp_seo_twitter_image_url = $wcfmmp_seo_twitter_image ? wp_get_attachment_thumb_url( $wcfmmp_seo_twitter_image ) : '';
 		
 		?>
@@ -1070,9 +1081,9 @@ class WCFMmp_Store_Setup {
 		<?php
 	}
 	
-	/**
-	 * Social setup content
-	 */
+	
+
+
 	public function wcfmmp_store_setup_social() {
 		global $WCFM, $WCFMmp;
 		
@@ -1080,7 +1091,7 @@ class WCFMmp_Store_Setup {
 
 		$vendor_data = get_user_meta( $vendor_id, 'wcfmmp_profile_settings', true );
 		
-		// Social
+		 
 		$social_fields = isset( $vendor_data['social'] ) ? $vendor_data['social'] : array();
 		$twitter       = isset( $social_fields['twitter'] ) ? $social_fields['twitter'] : '';
 		$facebook      = isset( $social_fields['fb'] ) ? $social_fields['fb'] : '';
@@ -1119,9 +1130,9 @@ class WCFMmp_Store_Setup {
 		<?php
 	}
 	
-	/**
-	 * Ready to go content
-	 */
+	
+
+
 	public function wcfmmp_store_setup_ready() {
 		global $WCFM;
 		?>
@@ -1137,9 +1148,9 @@ class WCFMmp_Store_Setup {
 		<?php
 	}
 
-	/**
-	 * Save store settings
-	 */
+	
+
+
 	public function wcfmmp_store_setup_store_save() {
 		global $WCFM, $WCFMmp;
 		
@@ -1151,7 +1162,7 @@ class WCFMmp_Store_Setup {
 		
 		$wcfm_setup_data = wc_clean( wp_unslash( $_POST['vendor_data'] ) );
 		
-		// Set Gravatar
+		 
 		if( apply_filters( 'wcfm_is_allow_store_logo', true ) ) {
 			if(isset($wcfm_setup_data['gravatar']) && !empty($wcfm_setup_data['gravatar'])) {
 				$wcfm_setup_data['gravatar'] = $WCFM->wcfm_get_attachment_id($wcfm_setup_data['gravatar']);
@@ -1160,7 +1171,7 @@ class WCFMmp_Store_Setup {
 			}
 		}
 		
-		// Set Banner
+		 
 		if( apply_filters( 'wcfm_is_allow_store_banner', true ) ) {
 			if(isset($wcfm_setup_data['banner']) && !empty($wcfm_setup_data['banner'])) {
 				$wcfm_setup_data['banner'] = $WCFM->wcfm_get_attachment_id($wcfm_setup_data['banner']);
@@ -1173,26 +1184,26 @@ class WCFMmp_Store_Setup {
 			$wcfm_setup_data['address']['state'] = sanitize_text_field($_POST['address']['state']);
 		}
 		
-		// Merge the changes with existing settings
+		 
 		if( $vendor_data ) {
 			$wcfm_setup_data = array_merge( $vendor_data, $wcfm_setup_data );
 		}
 		
-		// Save Store Address as User Meta
+		 
 		if( isset( $wcfm_setup_data['address'] ) ) {
 			foreach( $wcfm_setup_data['address'] as $address_field => $address_val ) {
 				update_user_meta( $user_id, '_wcfm_' . $address_field, $address_val );
 			}
 		}
 		
-		// Save Store GEO Location as User Meta
+		 
 		if( isset( $wcfm_setup_data['geolocation'] ) ) {
 			foreach( $wcfm_setup_data['geolocation'] as $address_field => $address_val ) {
 				update_user_meta( $user_id, '_wcfm_' . $address_field, $address_val );
 			}
 		}
 		
-		// Save Store Name
+		 
 		if(isset($wcfm_setup_data['store_name']) && !empty($wcfm_setup_data['store_name'])) {
 			update_user_meta( $user_id, 'store_name', $wcfm_setup_data['store_name'] );
 			update_user_meta( $user_id, 'wcfmmp_store_name', $wcfm_setup_data['store_name'] );
@@ -1212,9 +1223,9 @@ class WCFMmp_Store_Setup {
 		exit;
 	}
 	
-	/**
-	 * Save payment settings
-	 */
+	
+
+
 	public function wcfmmp_store_setup_payment_save() {
 		global $WCFM, $WCFMmp;
 		
@@ -1226,7 +1237,7 @@ class WCFMmp_Store_Setup {
 		
 		$wcfm_setup_data = wc_clean( wp_unslash( $_POST['vendor_data'] ) );
 		
-		// merge the changes with existing settings
+		 
 		$wcfm_setup_data = array_merge( $vendor_data, $wcfm_setup_data );
 		
 		update_user_meta( $user_id, 'wcfmmp_profile_settings', $wcfm_setup_data );
@@ -1238,9 +1249,9 @@ class WCFMmp_Store_Setup {
 		exit;
 	}
 	
-	/**
-	 * Save policy settings
-	 */
+	
+
+
 	public function wcfmmp_store_setup_policy_save() {
 		global $WCFM, $WCFMmp;
 		
@@ -1268,16 +1279,16 @@ class WCFMmp_Store_Setup {
 		
 		update_user_meta( $user_id, 'wcfm_policy_vendor_options', $wcfm_policy_vendor_options );
 		
-		//do_action( 'wcfm_vendor_settings_update', $user_id, $wcfm_setup_data );
-		//do_action( 'wcfm_wcfmmp_settings_update', $user_id, $wcfm_setup_data );
+		 
+		 
 		
 		wp_redirect(esc_url_raw($this->get_next_step_link()));
 		exit;
 	}
 	
-	/**
-	 * Save customer support settings
-	 */
+	
+
+
 	public function wcfmmp_store_setup_customer_support_save() {
 		global $WCFM, $WCFMmp;
 		
@@ -1293,7 +1304,7 @@ class WCFMmp_Store_Setup {
 			$wcfm_setup_data['customer_support']['state'] = sanitize_text_field($_POST['customer_support']['state']);
 		}
 		
-		// merge the changes with existing settings
+		 
 		$wcfm_setup_data = array_merge( $vendor_data, $wcfm_setup_data );
 		
 		update_user_meta( $user_id, 'wcfmmp_profile_settings', $wcfm_setup_data );
@@ -1305,9 +1316,9 @@ class WCFMmp_Store_Setup {
 		exit;
 	}
 	
-	/**
-	 * Save seo settings
-	 */
+	
+
+
 	public function wcfmmp_store_setup_seo_save() {
 		global $WCFM, $WCFMmp;
 		
@@ -1331,7 +1342,7 @@ class WCFMmp_Store_Setup {
 			$wcfm_setup_data['store_seo']['wcfmmp-seo-twitter-image'] = '';
 		}
 		
-		// merge the changes with existing settings
+		 
 		$wcfm_setup_data = array_merge( $vendor_data, $wcfm_setup_data );
 		
 		update_user_meta( $user_id, 'wcfmmp_profile_settings', $wcfm_setup_data );
@@ -1345,9 +1356,9 @@ class WCFMmp_Store_Setup {
 		exit;
 	}
 	
-	/**
-	 * Save social settings
-	 */
+	
+
+
 	public function wcfmmp_store_setup_social_save() {
 		global $WCFM, $WCFMmp;
 		
@@ -1359,7 +1370,7 @@ class WCFMmp_Store_Setup {
 		
 		$wcfm_setup_data = wc_clean( wp_unslash( $_POST['vendor_data'] ) );
 		
-		// merge the changes with existing settings
+		 
 		$wcfm_setup_data = array_merge( $vendor_data, $wcfm_setup_data );
 		
 		update_user_meta( $user_id, 'wcfmmp_profile_settings', $wcfm_setup_data );
@@ -1371,9 +1382,9 @@ class WCFMmp_Store_Setup {
 		exit;
 	}
 	
-	/**
-	 * Setup Wizard Footer.
-	 */
+	
+
+
 	public function wcfmmp_store_setup_footer() {
 				if ('next_steps' === $this->step) :
 				  if( apply_filters( 'wcfm_is_pref_knowledgebase', true ) && apply_filters( 'wcfm_is_allow_knowledgebase', true ) ) {
