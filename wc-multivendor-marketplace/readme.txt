@@ -5,9 +5,9 @@ Donate link: https://www.paypal.me/wclovers/25usd
 Requires at least: 5.5
 Tested up to: 7.0.2
 WC requires at least: 7.0
-WC tested up to: 10.9
+WC tested up to: 11.0
 Requires PHP: 7.4
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -253,8 +253,14 @@ Explore the frontend interfaces and management screens included in WCFM Marketpl
 
 Below is a record of updates, features, and fixes across all releases.
 
+= 3.8.1 =
+*Updated - 14/08/2026*
+
+* Fixed   - Insecure Direct Object Reference allowing a vendor to unapprove or delete another vendor's store review, reported by Mustafa Ahmed, Credit goes to Mustafa Ahmed for identifying this issue.
+* Security - Strengthened product review status updates to prevent cross-vendor manipulation.
+
 = 3.8.0 =
-*Updated - 27/07/2026*
+*Updated - 28/07/2026*
 
 * Feature - Stripe Split Pay: brand-new payment engine built on Stripe's Payment Element and PaymentIntents, with up-to-date SCA / 3D Secure authentication for marketplace split payments.
 * Feature - Stripe Split Pay: full multi-vendor cart support, including Direct and Destination charge flows across sellers within a single order.
@@ -1804,6 +1810,6 @@ Below is a record of updates, features, and fixes across all releases.
 
 == Upgrade Notice ==
 
-= 3.8.0 =
+= 3.8.1 =
 
-* Major update to Stripe Split Pay: a new Payment Element / PaymentIntents engine with modern SCA / 3D Secure and multi-vendor Direct & Destination charges. Existing installs continue on the current (legacy) engine by default — review and test your Stripe Split Pay checkout after updating.
+* Insecure Direct Object Reference vulnerability reported by Mustafa Ahmed, Credit goes to Mustafa Ahmed for identifying this issue. A marketplace vendor could unapprove or delete another vendor's store review without any ownership check. Update recommended for all sites.
