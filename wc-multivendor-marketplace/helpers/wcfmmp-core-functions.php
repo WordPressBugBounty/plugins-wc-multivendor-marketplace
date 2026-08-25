@@ -976,9 +976,15 @@ function wcfmmp_get_user_vendor_distance( $store_id ) {
 	
 	$distance = '';
 	if( $wcfmmp_radius_lat && $wcfmmp_radius_lng ) {
+		 
+		 
+		 
+		$wcfmmp_radius_lat = floatval( $wcfmmp_radius_lat );
+		$wcfmmp_radius_lng = floatval( $wcfmmp_radius_lng );
+
 		$radius_unit   = isset( $WCFMmp->wcfmmp_marketplace_options['radius_unit'] ) ? $WCFMmp->wcfmmp_marketplace_options['radius_unit'] : 'km';
 		$earth_surface = ( 'mi' === $radius_unit ) ? 3959 : 6371;
-		
+
 		$store_query = " SELECT (
 			{$earth_surface} * acos(
 				cos( radians( {$wcfmmp_radius_lat} ) ) *

@@ -742,12 +742,19 @@ class WCFMmp_Shortcode {
 	
 
 
-	public function wcfmmp_store_info_shortcode( $attr ) {
+	public function wcfmmp_store_info_shortcode( $atts ) {
 		global $WCFM, $WCFMmp, $wp, $WCFM_Query, $post;
 		
-		$store_id = '';
-		if ( isset( $attr['id'] ) && !empty( $attr['id'] ) ) { $store_id = absint($attr['id']); }
-		
+		$defaults = array(
+			'id'    => '',
+			'data'  => '',
+			'label' => '',
+			'icon'  => '',
+		);
+		$attr = shortcode_atts( apply_filters( 'wcfmmp_store_info_default_args', $defaults ), $atts );
+
+		$store_id = $attr['id'] ? absint( $attr['id'] ) : '';
+
 		if ( !$store_id && wcfm_is_store_page() ) {
 			$wcfm_store_url = wcfm_get_option( 'wcfm_store_url', 'store' );
 			$store_name = apply_filters( 'wcfmmp_store_query_var', get_query_var( $wcfm_store_url ) );
@@ -766,8 +773,7 @@ class WCFMmp_Shortcode {
 			$store_id = $post->post_author;
 		}
 		
-		$data_info = '';
-		if ( isset( $attr['data'] ) && !empty( $attr['data'] ) ) { $data_info = $attr['data']; }
+		$data_info = $attr['data'];
 		
 		if( !$store_id ) return;
 		if( !$data_info ) return;
@@ -777,24 +783,21 @@ class WCFMmp_Shortcode {
 			return;
 		}
 		
-		$label = '';
-		if ( isset( $attr['label'] ) && !empty( $attr['label'] ) ) { $label = $attr['label']; }
-		
-		$icon = '';
-		if ( isset( $attr['icon'] ) && !empty( $attr['icon'] ) ) { $icon = $attr['icon']; }
+		$label = $attr['label'];
+		$icon  = $attr['icon'];
 		
 		$store_user  = wcfmmp_get_store( $store_id );
 		$store_info  = $store_user->get_shop_info();
 		$address     = $store_user->get_address_string(); 
 		
-		$content = '<div class="wcfmmp_store_info wcfmmp_store_info_' . $data_info . '">';
+		$content = '<div class="wcfmmp_store_info wcfmmp_store_info_' . esc_attr( $data_info ) . '">';
 		
 		if( $icon ) {
-			$content .= '<i style="display:inline-block" class="wcfmfa fa-' . $icon . ' wcfmmp_store_info_icon wcfmmp_store_info_iconl_' . $data_info . '"></i>&nbsp&nbsp';
+			$content .= '<i style="display:inline-block" class="wcfmfa fa-' . esc_attr( $icon ) . ' wcfmmp_store_info_icon wcfmmp_store_info_iconl_' . esc_attr( $data_info ) . '"></i>&nbsp&nbsp';
 		}
 		
 		if( $label ) {
-			$content .= '<span style="display:inline-block" class="wcfmmp_store_info_label wcfmmp_store_info_label_' . $data_info . '">' . $label . '</span>:&nbsp';
+			$content .= '<span style="display:inline-block" class="wcfmmp_store_info_label wcfmmp_store_info_label_' . esc_attr( $data_info ) . '">' . esc_html( $label ) . '</span>:&nbsp';
 		}
 		
 		switch( $data_info ) {
@@ -807,15 +810,15 @@ class WCFMmp_Shortcode {
 				break;
 				
 			case 'store_address':
-				$content .= '<span style="display:inline-block" class="wcfmmp_store_info_content wcfmmp_store_info_content_' . $data_info . '">' . apply_filters( 'wcfmmp_additional_store_info', $store_user->get_address_string(), $data_info, $store_id ) . '</span>';
+				$content .= '<span style="display:inline-block" class="wcfmmp_store_info_content wcfmmp_store_info_content_' . esc_attr( $data_info ) . '">' . apply_filters( 'wcfmmp_additional_store_info', $store_user->get_address_string(), $data_info, $store_id ) . '</span>';
 				break;
 				
 		  case 'store_email':
-				$content .= '<span style="display:inline-block" class="wcfmmp_store_info_content wcfmmp_store_info_content_' . $data_info . '">' . apply_filters( 'wcfmmp_additional_store_info', apply_filters( 'wcfmmp_mailto_email', $store_user->get_email(), $store_id ), $data_info, $store_id ) . '</span>';
+				$content .= '<span style="display:inline-block" class="wcfmmp_store_info_content wcfmmp_store_info_content_' . esc_attr( $data_info ) . '">' . apply_filters( 'wcfmmp_additional_store_info', apply_filters( 'wcfmmp_mailto_email', $store_user->get_email(), $store_id ), $data_info, $store_id ) . '</span>';
 				break;
 			
 			case 'store_phone':
-				$content .=  '<span style="display:inline-block" class="wcfmmp_store_info_content wcfmmp_store_info_content_' . $data_info . '">' . apply_filters( 'wcfmmp_additional_store_info', $store_user->get_phone(), $data_info, $store_id ) . '</span>';
+				$content .=  '<span style="display:inline-block" class="wcfmmp_store_info_content wcfmmp_store_info_content_' . esc_attr( $data_info ) . '">' . apply_filters( 'wcfmmp_additional_store_info', $store_user->get_phone(), $data_info, $store_id ) . '</span>';
 				break;
 				
 			case 'store_gravatar':
@@ -881,7 +884,7 @@ class WCFMmp_Shortcode {
 			case 'register_on':
 				$data_value = get_user_meta( $store_id, 'wcfm_register_on', true );
 				if( $data_value ) {
-					$content .=  '<span style="display:inline-block" class="wcfmmp_store_info_content wcfmmp_store_info_content_' . $data_info . '">' . apply_filters( 'wcfmmp_additional_store_info', date( wc_date_format(), $data_value ), $data_info, $store_id ) . '</span>';
+					$content .=  '<span style="display:inline-block" class="wcfmmp_store_info_content wcfmmp_store_info_content_' . esc_attr( $data_info ) . '">' . apply_filters( 'wcfmmp_additional_store_info', date( wc_date_format(), $data_value ), $data_info, $store_id ) . '</span>';
 				}
 				break;
 				
@@ -890,7 +893,7 @@ class WCFMmp_Shortcode {
 				if( $data_value && is_array( $data_value ) ) {
 					$data_value = implode( ", ", $data_value );
 				}
-				$content .=  '<span style="display:inline-block" class="wcfmmp_store_info_content wcfmmp_store_info_content_' . $data_info . '">' . apply_filters( 'wcfmmp_additional_store_info', $data_value, $data_info, $store_id ) . '</span>';
+				$content .=  '<span style="display:inline-block" class="wcfmmp_store_info_content wcfmmp_store_info_content_' . esc_attr( $data_info ) . '">' . apply_filters( 'wcfmmp_additional_store_info', $data_value, $data_info, $store_id ) . '</span>';
 			  break;
 		}
 		

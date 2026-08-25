@@ -63,7 +63,7 @@ class WCFMmp_Refund_Requests_Form_Controller {
 			}
 
 			$current_user_id = get_current_user_id();
-			$is_order_customer = ( $order->get_customer_id() == $current_user_id );
+			$is_order_customer = is_user_logged_in() && ( (int) $order->get_customer_id() === (int) $current_user_id );
 			$current_vendor_id = wcfm_is_vendor() ? (int) apply_filters( 'wcfm_current_vendor_id', $current_user_id ) : 0;
 			
 			$can_refund_as_customer = $is_order_customer && apply_filters('wcfm_is_allow_customer_refund', true);

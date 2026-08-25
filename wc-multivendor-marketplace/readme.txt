@@ -7,7 +7,7 @@ Tested up to: 7.0.2
 WC requires at least: 7.0
 WC tested up to: 11.0
 Requires PHP: 7.4
-Stable tag: 3.8.1
+Stable tag: 3.8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -253,8 +253,19 @@ Explore the frontend interfaces and management screens included in WCFM Marketpl
 
 Below is a record of updates, features, and fixes across all releases.
 
+= 3.8.2 =
+*Updated - 25/08/2026*
+
+* Fixed   - Stored Cross-Site Scripting (XSS) vulnerability in the [wcfm_store_info] shortcode, where a contributor-level user could break out of a class attribute through the data, icon and label attributes and inject executable HTML, reported by Ananda Dhakal (Patchstack), Credit goes to Ananda Dhakal for identifying this issue.
+* Security - The [wcfm_store_info] shortcode now escapes the data, icon and label attribute values before they are rendered into the store-info markup.
+* Fixed   - Unauthenticated SQL Injection vulnerability in the distance-based shipping method, where a customer's checkout location coordinates were used in the store-distance query without numeric validation, reported by Ivaylo Atanassov, Credit goes to Ivaylo Atanassov for identifying this issue.
+* Security - Store-distance calculations now force all incoming location coordinates to numeric values before they are used in any database query.
+* Fixed   - Unauthenticated refund request creation on guest-checkout orders, where an anonymous visitor could submit refund requests against any guest order, reported by Shikhali Jamalzade, Credit goes to Shikhali Jamalzade for identifying this issue.
+* Security - Refund request submissions now require an authenticated customer and verify order ownership with a strict match.
+* Enhance - WooCommerce 11.0+ compatibility check added
+
 = 3.8.1 =
-*Updated - 14/08/2026*
+*Updated - 30/07/2026*
 
 * Fixed   - Insecure Direct Object Reference allowing a vendor to unapprove or delete another vendor's store review, reported by Mustafa Ahmed, Credit goes to Mustafa Ahmed for identifying this issue.
 * Security - Strengthened product review status updates to prevent cross-vendor manipulation.
@@ -1810,6 +1821,6 @@ Below is a record of updates, features, and fixes across all releases.
 
 == Upgrade Notice ==
 
-= 3.8.1 =
+= 3.8.2 =
 
-* Insecure Direct Object Reference vulnerability reported by Mustafa Ahmed, Credit goes to Mustafa Ahmed for identifying this issue. A marketplace vendor could unapprove or delete another vendor's store review without any ownership check. Update recommended for all sites.
+* Security release: fixes a stored XSS in the store-info shortcode, an unauthenticated SQL injection in distance-based shipping, and unauthenticated refund requests on guest orders. Adds WooCommerce 11.0 compatibility. Update recommended for all sites.
