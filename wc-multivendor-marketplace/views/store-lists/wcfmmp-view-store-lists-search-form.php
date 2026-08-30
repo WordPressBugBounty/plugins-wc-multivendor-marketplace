@@ -83,7 +83,7 @@ $args = array(
 );
 
 if ( ! empty( $search_query ) ) {
-	printf( '<h2>' . __( 'Search Results for: %s', 'wc-multivendor-marketplace' ) . '</h2>', $search_query );
+	printf( '<h2>' . __( 'Search Results for: %s', 'wc-multivendor-marketplace' ) . '</h2>', esc_html( $search_query ) );
 }
 
 $display_vendor_term = array();
@@ -255,13 +255,13 @@ $display_vendor_term = array();
 			<i class="wcfmmmp_locate_icon" style="background-image: url(<?php echo esc_url($WCFMmp->plugin_url); ?>assets/images/locate.svg)"></i>
 		</div>
 		<div class="wcfm_radius_slidecontainer">
-			<input class="wcfmmp_radius_range" name="wcfmmp_radius_range" id="wcfmmp_radius_range" type="range" value="<?php echo $search_radius_range ? $search_radius_range : absint( apply_filters( 'wcfmmp_radius_filter_max_distance', $max_radius_to_search )/apply_filters( 'wcfmmp_radius_filter_start_distance', 10 ) ); ?>" min="0" max="<?php echo apply_filters( 'wcfmmp_radius_filter_max_distance', $max_radius_to_search ); ?>" steps="6" />
+			<input class="wcfmmp_radius_range" name="wcfmmp_radius_range" id="wcfmmp_radius_range" type="range" value="<?php echo esc_attr( $search_radius_range ? $search_radius_range : absint( apply_filters( 'wcfmmp_radius_filter_max_distance', $max_radius_to_search )/apply_filters( 'wcfmmp_radius_filter_start_distance', 10 ) ) ); ?>" min="0" max="<?php echo apply_filters( 'wcfmmp_radius_filter_max_distance', $max_radius_to_search ); ?>" steps="6" />
 			<span class="wcfmmp_radius_range_start">0</span>
-			<span class="wcfmmp_radius_range_cur"><?php echo $search_radius_range ? $search_radius_range : (absint(apply_filters( 'wcfmmp_radius_filter_max_distance', $max_radius_to_search ))/apply_filters( 'wcfmmp_radius_filter_start_distance', 10)); ?> <?php echo ucfirst( $radius_unit ); ?></span>
+			<span class="wcfmmp_radius_range_cur"><?php echo esc_html( $search_radius_range ? $search_radius_range : (absint(apply_filters( 'wcfmmp_radius_filter_max_distance', $max_radius_to_search ))/apply_filters( 'wcfmmp_radius_filter_start_distance', 10)) ); ?> <?php echo ucfirst( $radius_unit ); ?></span>
 			<span class="wcfmmp_radius_range_end"><?php echo apply_filters( 'wcfmmp_radius_filter_max_distance', $max_radius_to_search ); ?></span>
 		</div>
-		<input type="hidden" id="wcfmmp_radius_lat" name="wcfmmp_radius_lat" value="<?php echo $search_radius_lat; ?>">
-		<input type="hidden" id="wcfmmp_radius_lng" name="wcfmmp_radius_lng" value="<?php echo $search_radius_lng; ?>">
+		<input type="hidden" id="wcfmmp_radius_lat" name="wcfmmp_radius_lat" value="<?php echo esc_attr( $search_radius_lat ); ?>">
+		<input type="hidden" id="wcfmmp_radius_lng" name="wcfmmp_radius_lng" value="<?php echo esc_attr( $search_radius_lng ); ?>">
 		<?php do_action( 'wcfmmp_after_store_list_radius_filter', $args ); ?>
   <?php } ?>
 	

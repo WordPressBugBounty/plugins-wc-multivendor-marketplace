@@ -54,7 +54,7 @@ $store_description = $store_user->get_shop_description();
 		<div class="store-content">
 		  <?php if( apply_filters( 'wcfmmp_is_allow_full_store_card_linked', false ) && apply_filters( 'wcfmmp_is_allow_sold_by_linked', true ) ) { ?><a href="<?php echo esc_url($store_url); ?>"><?php } ?>
 				<?php if( $banner_type == 'video' ) { ?>
-					<div class="store-info"><?php echo preg_replace("/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i", "<iframe width=\"100%\" height=\"315\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" src=\"//www.youtube.com/embed/$2?iv_load_policy=3&enablejsapi=1&disablekb=1&autoplay=0&controls=0&showinfo=0&rel=0&loop=1&wmode=transparent&widgetid=1\" allowfullscreen></iframe>", $banner_video); ?></div>
+					<div class="store-info"><?php $wcfmmp_banner_video_embed = preg_replace("/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i", "<iframe width=\"100%\" height=\"315\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" src=\"//www.youtube.com/embed/$2?iv_load_policy=3&enablejsapi=1&disablekb=1&autoplay=0&controls=0&showinfo=0&rel=0&loop=1&wmode=transparent&widgetid=1\" allowfullscreen></iframe>", $banner_video ); echo   ( $wcfmmp_banner_video_embed !== $banner_video ) ? $wcfmmp_banner_video_embed : ''; ?></div>
 				<?php } else { ?>
 					<div class="store-info" style="background-image: url( '<?php echo esc_url($banner); ?>');"></div>
 				<?php } ?>

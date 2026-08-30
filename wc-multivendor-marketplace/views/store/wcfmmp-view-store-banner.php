@@ -131,7 +131,7 @@ $store_banner_mheight = isset( $WCFMmp->wcfmmp_marketplace_options['store_banner
 					</style>
 				<?php } ?>
 				<div class="banner_video">
-					<?php echo apply_filters( 'wcfmmp_store_banner_display', preg_replace("/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i", "<iframe width=\"100%\" height=\"315\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media\" src=\"//www.youtube.com/embed/$2?iv_load_policy=3&enablejsapi=1&disablekb=1&autoplay=1&controls=0&showinfo=0&rel=0&loop=1&wmode=transparent&widgetid=1\" allowfullscreen=\"1\"></iframe>", $banner_video ), $banner_video ); ?>
+					<?php $wcfmmp_banner_video_embed = preg_replace("/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i", "<iframe width=\"100%\" height=\"315\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media\" src=\"//www.youtube.com/embed/$2?iv_load_policy=3&enablejsapi=1&disablekb=1&autoplay=1&controls=0&showinfo=0&rel=0&loop=1&wmode=transparent&widgetid=1\" allowfullscreen=\"1\"></iframe>", $banner_video ); echo   apply_filters( 'wcfmmp_store_banner_display', ( $wcfmmp_banner_video_embed !== $banner_video ) ? $wcfmmp_banner_video_embed : '', $banner_video ); ?>
 				
 					<?php if( ( $WCFMmp->wcfmmp_vendor->get_vendor_name_position( $store_user->get_id() ) == 'on_banner' ) && apply_filters( 'wcfm_is_allow_store_name_on_banner', true ) ) { ?>
 						<div class="video_text">

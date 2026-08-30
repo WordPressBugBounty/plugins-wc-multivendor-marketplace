@@ -7,7 +7,7 @@ Tested up to: 7.0.2
 WC requires at least: 7.0
 WC tested up to: 11.0
 Requires PHP: 7.4
-Stable tag: 3.8.2
+Stable tag: 3.8.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -252,6 +252,14 @@ Explore the frontend interfaces and management screens included in WCFM Marketpl
 == Changelog ==
 
 Below is a record of updates, features, and fixes across all releases.
+
+= 3.8.3 =
+*Updated - 30/08/2026*
+
+* Fixed   - Stored Cross-Site Scripting (XSS) vulnerability in the store banner and store list card, where a vendor's video banner value was rendered without escaping whenever it was not a valid YouTube URL.
+* Security - Store video banners now render an embed only for a valid YouTube URL and no longer output the raw banner value.
+* Fixed   - Stored Cross-Site Scripting (XSS) vulnerability in the [wcfm_stores] and [wcfm_stores_map] shortcodes, where a contributor-level user could inject executable HTML through the store search and radius filter attributes, reported by Ananda Dhakal (Patchstack), Credit goes to Ananda Dhakal for identifying this issue.
+* Security - The store list search form now escapes the search query along with the radius range and coordinate values before they are rendered into the search form markup.
 
 = 3.8.2 =
 *Updated - 25/08/2026*
@@ -1821,6 +1829,6 @@ Below is a record of updates, features, and fixes across all releases.
 
 == Upgrade Notice ==
 
-= 3.8.2 =
+= 3.8.3 =
 
-* Security release: fixes a stored XSS in the store-info shortcode, an unauthenticated SQL injection in distance-based shipping, and unauthenticated refund requests on guest orders. Adds WooCommerce 11.0 compatibility. Update recommended for all sites.
+* Security release: fixes stored XSS in the store list shortcodes (store search and radius filter attributes) and in the store video banner. Update recommended for all sites.
